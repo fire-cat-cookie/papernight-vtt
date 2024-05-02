@@ -1,0 +1,107 @@
+#sheet {
+  max-width: 800px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .dice-roller {
+    flex-grow: 1;
+    align-content: flex-end;
+  }
+}
+
+.sheet-row {
+  display: flex;
+  flex-wrap: wrap;
+  > * {
+    flex-grow: 1;
+  }
+}
+
+.sheet-column {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.sheet-grouping {
+  outline: 1px solid aliceblue;
+  padding: 8px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  > .label-heading {
+    width: 100%;
+  }
+}
+
+.sheet-field-annotated {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet-de-emphasized{
+  color: grey;
+}
+
+.sheet-input-tiny {
+  max-width: 24px;
+}
+
+#sheet-con-group-initiative {
+  width: 115px;
+}
+
+#sheet-con-group-hp {
+  width: 240px;
+}
+
+#sheet-con-group-hitdice {
+  width: 130px;
+}
+
+#sheet-input-conditions{
+  width: 180px;
+  height: 64px;
+}
+
+#sheet-con-group-abilities {
+  height: 564px;
+  justify-content: space-between;
+  > div {
+    row-gap: 4px;
+  }
+}
+
+#sheet-con-group-proficiencies{
+  width: 139px;
+  gap: 8px;
+  > div {
+    > textarea {
+      width: 120px;
+      height: 48px;
+    }
+  }
+}
+
+#sheet-con-group-inventory{
+  width: 261px;
+  > textarea {
+    flex-grow: 1;
+  }
+}
+
+#sheet-con-group-skills{
+  height: 564px;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  grid-template-rows: 30px;
+  grid-auto-rows: 20px;
+  align-items: start;
+  gap: 8px;
+}
+
+#sheet-con-group-traits{
+  width: 340px;
+  > textarea {
+    flex-grow: 1;
+  }
+}
