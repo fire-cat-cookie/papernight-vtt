@@ -1,109 +1,159 @@
-import { useState } from "react"
+import { useState } from 'react'
 import DiceRoller from './DiceRoller'
 import './CharacterSheet.scss'
+import { CreatureSize } from "../types/CreatureSize"
+import { Bonus } from "../types/Bonus"
+import { HitDice } from '../types/HitDice';
 
-export default function CharacterSheet(){
+
+export default function CharacterSheet(props: any){
+
+  const [diceRollerVisible, setDiceRollerVisible] = useState(false)
+  const [diceRollerPosition, setDiceRollerPosition] = useState({x: 0, y: 0})
+
+  function openDiceRoller(event: any){
+    setDiceRollerVisible(true);
+    setDiceRollerPosition({x: event.clientX, y: event.clientY})
+  }
+
+  function getDisplayBonus(adds : Bonus[]){
+    let result = 0;
+    adds.forEach((add) => {result += add.flat});
+    return result;
+  }
+
+  function getAC(){
+    return 10 + getAbilityMod(props.charData.abilities.dex_score) + getDisplayBonus(props.charData.ac_adds)
+  }
+
+  function getAbilityMod(score: number){
+    if (score >= 10 && score <= 11){
+      return 0
+    } else if (score <= 8){
+      return Math.ceil((Math.abs(10-score)/2)) * -1
+    } else {
+      return Math.floor((score-10)/2)
+    }
+  }
+
+  function displayHitDice(displayType : "remaining"|"total"){
+    let result = ""
+    props.charData.hitDice.forEach((hd : HitDice) => {
+      let nextDice = displayType=="remaining" ? hd.remaining : hd.total
+      if (nextDice > 0){
+        result += nextDice + "d" + hd.type + "  "
+      }
+    })
+    return result
+  }
+
+  function stringArrayToString(strings: []){
+    let result = "";
+    strings.forEach((e : string) => {result += e + "\n"});
+    return result;
+  }
 
   return (
     <div id="sheet">
+      
+      {/* 1st row */}
       <div className="sheet-grouping sheet-row">
-
         <div id="sheet-con-charname">
-          <label>Character Name</label><br/>
-          <input type="text" id="sheet-input-charname"></input>
+          <label id="sheet-data-charname">{props.charData.name}</label>
         </div>
         <div id="sheet-con-classlevel">
-          <label>Class & Level</label><br/>
-          <input type="text" id="sheet-input-classlevel"></input>
+          <label id="sheet-data-classlevel">{props.charData.classLevel}</label><br/>
         </div>
         <div id="sheet-con-lineage">
-          <label>Lineage</label><br/>
-          <input type="text" id="sheet-input-lineage"></input>
+          <label id="sheet-data-lineage">{props.charData.lineage}</label><br/>
         </div>
-
       </div>
 
+      {/* 2nd row */}
       <div className="sheet-grouping sheet-row">
-
         <div className="sheet-grouping sheet-row" id="sheet-con-group-initiative">
           <div id="sheet-con-initiative">
             <label>Initiative</label><br/>
-            <input type="text" className="sheet-input-tiny" id="sheet-input-initiative"></input>
+            <button id="sheet-data-initiative" onClick={openDiceRoller}>{
+              "+" +
+              (getAbilityMod(props.charData.abilities.dex_score)
+              + getDisplayBonus(props.charData.initiative_adds))}
+            </button>
           </div>
           <div id="sheet-con-ac">
             <label>AC</label><br/>
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-ac"></input>
+            <label id="sheet-data-ac">{getAC()}</label>
           </div>
           <div id="sheet-con-inspiration">
             <label>Inspiration</label><br/>
-            <input type="checkbox" className="sheet-input-tiny"  id="sheet-input-inspiration"></input>
+            <input type="checkbox" id="sheet-data-inspiration"
+            checked={props.charData.inspiration}
+            onChange={()=>{}}></input>
           </div>
         </div>
-
         <div className="sheet-grouping sheet-row" id="sheet-con-group-hp">
           <label className="label-heading">Hit Points</label>
           <div className="sheet-field-annotated">
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-hp-current"></input>
-            <label className="sheet-de-emphasized">Current</label>
+          <label className="sheet-de-emphasized">Current</label>
+            <label id="sheet-data-hp-current">{props.charData.hp.current}</label>
           </div>
           <div className="sheet-field-annotated">
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-hp-max"></input>
-            <label className="sheet-de-emphasized">Maximum</label>
+          <label className="sheet-de-emphasized">Maximum</label>
+            <label id="sheet-data-hp-max">{props.charData.hp.max + getDisplayBonus(props.charData.hp.max_adds)}</label>
           </div>
           <div className="sheet-field-annotated">
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-hp-temp"></input>
-            <label className="sheet-de-emphasized">Temporary</label>
+          <label className="sheet-de-emphasized">Temporary</label>
+            <label id="sheet-data-hp-temp">{props.charData.hp.temp}</label>
           </div>
         </div>
-
         <div className="sheet-grouping sheet-row" id="sheet-con-group-hitdice">
           <label className="label-heading">Hit Dice</label>
           <div className="sheet-field-annotated">
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-hitdice-remaining"></input>
-            <label className="sheet-de-emphasized">Remaining</label>
+          <label className="sheet-de-emphasized">Remaining</label>
+            <label id="sheet-data-hitdice-remaining">{displayHitDice("remaining")}</label>
           </div>
+          <span className="gap-vertical"/>
           <div className="sheet-field-annotated">
-            <input type="text" className="sheet-input-tiny"  id="sheet-input-hitdice-total"></input>
-            <label className="sheet-de-emphasized">Total</label>
+          <label className="sheet-de-emphasized">Total</label>
+            <label id="sheet-data-hitdice-total">{displayHitDice("total")}</label>
           </div>
         </div>
-
         <div className="sheet-grouping sheet-row" id="sheet-con-group-conditions">
           <div id="sheet-con-conditions">
             <label>Conditions</label><br/>
-            <textarea id="sheet-input-conditions"></textarea>
+            <textarea disabled id="sheet-data-conditions"
+            value={stringArrayToString(props.charData.conditions)}></textarea>
           </div>
         </div>
-        
       </div>
 
+      {/* 3rd row */}
       <div className="sheet-grouping sheet-row">
-
         <div className="sheet-row" id="sheet-con-group-anatomy">
           <div id="sheet-con-speed">
             <label>Speed</label><br/>
-            <input type="text" id="sheet-input-speed"></input>
+            <label id="sheet-data-speed">{props.charData.speed}</label>
           </div>
           <div id="sheet-con-creaturetype">
             <label>Creature Type</label><br/>
-            <input type="text" id="sheet-input-creaturetype"></input>
+            <label id="sheet-data-creaturetype">{props.charData.creatureType}</label>
           </div>
           <div id="sheet-con-size">
             <label>Size</label><br/>
-            <input type="text" id="sheet-input-size"></input>
+            <label id="sheet-data-size">{CreatureSize[props.charData.size]}</label>
           </div>
           <div id="sheet-con-senses">
             <label>Senses</label><br/>
-            <input type="text" id="sheet-input-senses"></input>
+            <label id="sheet-data-senses">{stringArrayToString(props.charData.senses)}</label>
           </div>
         </div>
-
       </div>
 
       <div className="sheet-row" id="sheet-con-group-main">
-
         <div className="sheet-column">
           <div className="sheet-row">
+
+            {/* saving throws */}
             <div className="sheet-grouping sheet-column" id="sheet-con-group-abilities">
               <div className="sheet-grouping sheet-ability sheet-column" id="sheet-con-str">
                 <div className="sheet-row">
@@ -167,8 +217,9 @@ export default function CharacterSheet(){
               </div>
             </div>
 
-            <div className="sheet-grouping"  id="sheet-con-group-skills">
 
+            {/* skills */}
+            <div className="sheet-grouping"  id="sheet-con-group-skills">
               <label id="sheet-label-proficiency-bonus">Proficiency Bonus</label>
               <input type="text" className="sheet-input-tiny"></input>
               <div></div>
@@ -249,11 +300,12 @@ export default function CharacterSheet(){
               <input type="text" className="sheet-skill-input sheet-input-tiny"></input>
               <input type="radio" name="sheet-skill-prof-survival" value="proficient"></input>
               <input type="radio" name="sheet-skill-prof-survival" value="expertise"></input>
-
             </div>
 
           </div>
           <div className="sheet-row">
+
+            {/* misc. proficiencies*/}
             <div className="sheet-grouping sheet-row" id="sheet-con-group-proficiencies">
               <div>
                 <label className="label-heading">Languages</label><br/>
@@ -268,13 +320,17 @@ export default function CharacterSheet(){
                 <textarea></textarea>
               </div>
             </div>
+
+            {/* inventory*/}
             <div className="sheet-grouping sheet-column" id="sheet-con-group-inventory">
               <label>Inventory</label><br/>
               <textarea></textarea>
             </div>
+
           </div>
         </div>
 
+        {/* traits */}
         <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
           <label className="label-heading">Features, Traits, Spells</label><br/>
           <textarea></textarea>
@@ -282,7 +338,12 @@ export default function CharacterSheet(){
 
       </div>
 
-      <DiceRoller></DiceRoller>
+      {/* dice roller dialog */}
+      {diceRollerVisible ?
+      <div style={{position: "absolute", left: diceRollerPosition.x + "px", top: diceRollerPosition.y + "px"}}>
+        <DiceRoller></DiceRoller>
+      </div>
+      : null}
     </div>
   )
 

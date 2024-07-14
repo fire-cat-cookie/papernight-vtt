@@ -1,4 +1,8 @@
+@use '../variables';
+
 .dice-roller {
+  background: variables.$background-color;
+  outline: 1px solid aliceblue;
   padding: 8px;
   > div {
     display: flex;
