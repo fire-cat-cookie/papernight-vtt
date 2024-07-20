@@ -1,7 +1,7 @@
 import { useState } from "react"
 import './DiceRoller.scss'
 
-export default function DiceRoller(){
+export default function DiceRoller(props: any){
   const [dice, setDice] = useState("1d20")
   const [bonus, setBonus] = useState("+3")
   const [advantage1, setAdvantage1] = useState(0)

@@ -10,10 +10,16 @@ export default function CharacterSheet(props: any){
 
   const [diceRollerVisible, setDiceRollerVisible] = useState(false)
   const [diceRollerPosition, setDiceRollerPosition] = useState({x: 0, y: 0})
+  const id_dice_roller_container = "dice-roller-container"
+
+  function closeModalDialogs(){
+    setDiceRollerVisible(false)
+    console.log("meow")
+  }
 
   function openDiceRoller(event: any){
     setDiceRollerVisible(true);
-    setDiceRollerPosition({x: event.clientX, y: event.clientY})
+    setDiceRollerPosition({x: event.target.offsetLeft + event.target.offsetWidth + 5, y: event.target.offsetTop})
   }
 
   function getDisplayBonus(adds : Bonus[]){
@@ -338,12 +344,24 @@ export default function CharacterSheet(props: any){
 
       </div>
 
-      {/* dice roller dialog */}
+      {/* modal overlay */}
       {diceRollerVisible ?
-      <div style={{position: "absolute", left: diceRollerPosition.x + "px", top: diceRollerPosition.y + "px"}}>
-        <DiceRoller></DiceRoller>
-      </div>
-      : null}
+        <div className="sheet-modal-overlay" onClick={closeModalDialogs}>
+          <div className="sheet-modal-overlay-inner" onClick={e => e.stopPropagation()}>
+            {/* dice roller dialog */}
+            {diceRollerVisible ?
+              <>
+                <div id="dice-roller-offset-left" style={{width: diceRollerPosition.x}}></div>
+                <div id={id_dice_roller_container} style={{top: diceRollerPosition.y}}>
+                  <DiceRoller></DiceRoller>
+                </div>
+              </>
+              : null
+            }
+          </div>
+        </div>
+        : null
+      }
     </div>
   )
 
