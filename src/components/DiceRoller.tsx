@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import './DiceRoller.scss'
 
-export default function DiceRoller(props: any){
-  const [dice, setDice] = useState("1d20")
-  const [bonus, setBonus] = useState("+3")
+type Props = {
+  initialDice: string, initialBonus: string
+}
+
+export default function DiceRoller({initialDice, initialBonus} : Props){
+  const [dice, setDice] = useState(initialDice)
+  const [bonus, setBonus] = useState(initialBonus)
   const [advantage1, setAdvantage1] = useState(0)
   const [advantage2, setAdvantage2] = useState(0)
   const [result, setResult] = useState("-")

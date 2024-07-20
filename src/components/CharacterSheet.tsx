@@ -9,17 +9,26 @@ import { HitDice } from '../types/HitDice';
 export default function CharacterSheet(props: any){
 
   const [diceRollerVisible, setDiceRollerVisible] = useState(false)
+  const [nextRoll, setNextRoll] = useState({dice: "1d20", bonus: "+0"})
   const [diceRollerPosition, setDiceRollerPosition] = useState({x: 0, y: 0})
-  const id_dice_roller_container = "dice-roller-container"
 
   function closeModalDialogs(){
     setDiceRollerVisible(false)
     console.log("meow")
   }
 
-  function openDiceRoller(event: any){
+  function openDiceRoller(event: any, roll : {dice: string, bonus: string}){
     setDiceRollerVisible(true);
     setDiceRollerPosition({x: event.target.offsetLeft + event.target.offsetWidth + 5, y: event.target.offsetTop})
+    setNextRoll(roll);
+  }
+
+  function getInitiativeBonus() : string {
+    let bonus = (
+      getAbilityMod(props.charData.abilities.dex_score)
+      + getDisplayBonus(props.charData.initiative_adds)
+    )
+    return bonus >= 0 ? "+"+bonus : "-"+bonus
   }
 
   function getDisplayBonus(adds : Bonus[]){
@@ -80,10 +89,17 @@ export default function CharacterSheet(props: any){
         <div className="sheet-grouping sheet-row" id="sheet-con-group-initiative">
           <div id="sheet-con-initiative">
             <label>Initiative</label><br/>
-            <button id="sheet-data-initiative" onClick={openDiceRoller}>{
-              "+" +
-              (getAbilityMod(props.charData.abilities.dex_score)
-              + getDisplayBonus(props.charData.initiative_adds))}
+            <button id="sheet-data-initiative" onClick={
+              (event) => {
+                openDiceRoller(
+                  event,
+                  {
+                    dice: "1d20",
+                    bonus: getInitiativeBonus()
+                  }
+                )}
+              }
+            >{getInitiativeBonus()}
             </button>
           </div>
           <div id="sheet-con-ac">
@@ -352,8 +368,8 @@ export default function CharacterSheet(props: any){
             {diceRollerVisible ?
               <>
                 <div id="dice-roller-offset-left" style={{width: diceRollerPosition.x}}></div>
-                <div id={id_dice_roller_container} style={{top: diceRollerPosition.y}}>
-                  <DiceRoller></DiceRoller>
+                <div id="dice-roller-container" style={{top: diceRollerPosition.y}}>
+                  <DiceRoller initialDice={nextRoll.dice} initialBonus={nextRoll.bonus}></DiceRoller>
                 </div>
               </>
               : null
