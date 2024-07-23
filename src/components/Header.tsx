@@ -1,9 +1,7 @@
 type Props = {
-  title: string
-}
+  title: string;
+};
 
-export default function Header({title}: Props){
-  return (
-    <h1>{title}</h1>
-  )
+export default function Header({ title }: Props) {
+  return <h1>{title}</h1>;
 }

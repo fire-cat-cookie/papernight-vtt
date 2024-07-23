@@ -1,30 +1,32 @@
-import { useState } from 'react'
-import './App.scss'
-import CharacterSheet from './CharacterSheet'
-import Header from './Header'
-import { CreatureSize } from "../types/CreatureSize"
-import { HitDice } from "../types/HitDice"
+import { useState } from "react";
+import "./App.scss";
+import CharacterSheet from "./CharacterSheet";
+import Header from "./Header";
+import { CreatureSize } from "../types/CreatureSize";
+import { HitDice } from "../types/HitDice";
+import { Ability } from "../types/Ability";
 
 export default function App() {
-
   const [charData, setCharData] = useState({
     name: "Amalia",
-    classLevel: "1 Warlock",
+    classLevel: "3 Warlock (Archfey)",
     lineage: "Tiefling (Winged)",
     initiative_adds: [],
-    ac_adds: [{flat: 2, dice: "", name: "Armor"}],
+    ac_adds: [{ flat: 3, dice: "", name: "Mage Armor" }],
     inspiration: false,
     hp: {
-      current: 8,
-      max: 8,
+      current: 21,
+      max: 21,
       temp: 0,
-      max_adds: []
+      max_adds: [],
     },
-    hitDice: [{
-      type: 8,
-      remaining: 1,
-      total: 1
-    }],
+    hitDice: [
+      {
+        type: 8,
+        remaining: 3,
+        total: 3,
+      },
+    ],
     conditions: ["Stunned", "Paralyzed"],
     speed: 30,
     speed_adds: [],
@@ -33,82 +35,164 @@ export default function App() {
     senses: ["Darkvision 60ft."],
     proficiency_bonus: 2,
     abilities: {
-      str_score: 10,
-      str_prof: false,
-      str_score_adds: [],
-      str_save_adds: [],
-      dex_score: 12,
-      dex_prof: false,
-      dex_score_adds: [],
-      dex_save_adds: [],
-      con_score: 10,
-      con_prof: false,
-      con_score_adds: [],
-      con_save_adds: [],
-      int_score: 10,
-      int_prof: false,
-      int_score_adds: [],
-      int_save_adds: [],
-      wis_score: 10,
-      wis_prof: false,
-      wis_score_adds: [],
-      wis_save_adds: [],
-      cha_score: 10,
-      cha_prof: false,
-      cha_score_adds: [],
-      cha_save_adds: []
+      str: {
+        score: 8,
+        proficient: false,
+        score_adds: [],
+        save_adds: [],
+      },
+      dex: {
+        score: 14,
+        proficient: false,
+        score_adds: [],
+        save_adds: [],
+      },
+      con: {
+        score: 12,
+        proficient: false,
+        score_adds: [],
+        save_adds: [],
+      },
+      int: {
+        score: 12,
+        proficient: false,
+        score_adds: [],
+        save_adds: [],
+      },
+      wis: {
+        score: 14,
+        proficient: true,
+        score_adds: [],
+        save_adds: [],
+      },
+      cha: {
+        score: 16,
+        proficient: true,
+        score_adds: [],
+        save_adds: [],
+      },
     },
-    skill_proficiency_multipliers: {
-      acrobatics: 0,
-      animal: 0,
-      arcana: 0,
-      athletics: 0,
-      deception: 0,
-      history: 0,
-      insight: 0,
-      intimidation: 0,
-      investigation: 0,
-      medicine: 0,
-      nature: 0,
-      perception: 0,
-      performance: 0,
-      persuasion: 0,
-      religion: 0,
-      sleight: 0,
-      stealth: 0,
-      survival: 0
+    skills: {
+      acrobatics: {
+        ability: Ability.dex,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      animal_handling: {
+        ability: Ability.wis,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      arcana: {
+        ability: Ability.int,
+        proficiency_multiplier: 1,
+        adds: [],
+      },
+      athletics: {
+        ability: Ability.str,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      deception: {
+        ability: Ability.cha,
+        proficiency_multiplier: 2,
+        adds: [],
+      },
+      history: {
+        ability: Ability.int,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      insight: {
+        ability: Ability.wis,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      intimidation: {
+        ability: Ability.cha,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      investigation: {
+        ability: Ability.int,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      medicine: {
+        ability: Ability.wis,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      nature: {
+        ability: Ability.int,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      perception: {
+        ability: Ability.wis,
+        proficiency_multiplier: 1,
+        adds: [],
+      },
+      performance: {
+        ability: Ability.cha,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      persuasion: {
+        ability: Ability.cha,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      religion: {
+        ability: Ability.int,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      sleight_of_hand: {
+        ability: Ability.dex,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
+      stealth: {
+        ability: Ability.dex,
+        proficiency_multiplier: 1,
+        adds: [],
+      },
+      survival: {
+        ability: Ability.wis,
+        proficiency_multiplier: 0,
+        adds: [],
+      },
     },
-    skill_adds: {
-      acrobatics: [],
-      animal: [],
-      arcana: [],
-      athletics: [],
-      deception: [],
-      history: [],
-      insight: [],
-      intimidation: [],
-      investigation: [],
-      medicine: [],
-      nature: [],
-      perception: [],
-      performance: [],
-      persuasion: [],
-      religion: [],
-      sleight: [],
-      stealth: [],
-      survival: []
-    },
-    traits: [],
-    inventory: [],
-    languages: [],
-    tool_prof: [],
-    armor_weapon_prof: []
-  })
+    traits: `Hellish Resistance: You have resistance to fire damage.
+
+Winged Tiefling: You have a flying speed of 30 feet while you aren’t wearing heavy armor.
+
+Fey Presence: Once per short rest, as an action, you can cause each creature in a 10-ft. cube from you to make a WIS saving throw (DC 13) or become charmed or frightened by you (your choice) until the end of your next turn.
+    
+Invocation - Armor of Shadows: You can cast mage armor on yourself at will, without expending a spell slot or material components.
+
+Invocation - Agonizing Blast: When you cast eldritch blast, add +3 to the damage it deals on a hit.
+    
+----Spells----
+Cantrips: Create Bonfire, Eldritch Blast, Mage Hand, Minor Illusion, Spare the Dying
+
+At will: Mage Armor
+
+2nd [2/2 Spell Slots]: Armor of Agathys, Charm Person, Shatter, Sleep
+`,
+    inventory: `15gp
+
+Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10), Rations (x10), Rope (50ft.), Tinderbox, Torch (x10), Waterskin`,
+    languages: `Common, Infernal`,
+    tool_prof: `Flute, Playing Card Set`,
+    armor_weapon_prof: `Light Armor, Simple Weapons`,
+  });
 
   return (
     <>
-      <Header title="Papernight VTT"/>
+      <Header title="Papernight VTT" />
       <CharacterSheet charData={charData} setCharData={setCharData} />
     </>
-  )
+  );
 }

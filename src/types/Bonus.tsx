@@ -1,5 +1,5 @@
 export interface Bonus {
-  flat: number,
-  dice: string,
-  name: string
+  flat: number;
+  dice: string;
+  name: string;
 }

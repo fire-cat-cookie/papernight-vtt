@@ -1,5 +1,5 @@
 export interface HitDice {
-  type: number
-  remaining: number
-  total: number
+  type: number;
+  remaining: number;
+  total: number;
 }
