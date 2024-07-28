@@ -5,6 +5,8 @@ import Header from "./Header";
 import { CreatureSize } from "../types/CreatureSize";
 import { HitDice } from "../types/HitDice";
 import { Ability } from "../types/Ability";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import CharacterBuilder from "./CharacterBuilder";
 
 export default function App() {
   const [charData, setCharData] = useState({
@@ -190,9 +192,15 @@ Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10
   });
 
   return (
-    <>
+    <Router>
       <Header title="Papernight VTT" />
-      <CharacterSheet charData={charData} setCharData={setCharData} />
-    </>
+      <Routes>
+        <Route
+          path="/"
+          element={<CharacterSheet charData={charData} setCharData={setCharData} />}
+        ></Route>
+        <Route path="/builder" element={<CharacterBuilder />}></Route>
+      </Routes>
+    </Router>
   );
 }

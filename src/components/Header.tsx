@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Header.scss";
 
 type Props = {
@@ -9,8 +10,8 @@ export default function Header({ title }: Props) {
     <div className="top-navbar">
       <h1>{title}</h1>
       <div className="top-navbar-nav">
-        <a>Character Builder</a>
-        <a>Game View</a>
+        <Link to="/builder">Character Builder</Link>
+        <Link to="/">Game View</Link>
       </div>
     </div>
   );

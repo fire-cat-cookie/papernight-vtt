@@ -22,6 +22,8 @@ a {
   outline: 1px solid variables.$border-color;
   border-radius: 7px;
   user-select: none;
+  text-decoration: none;
+  color: inherit;
 }
 
 a:hover {
