@@ -7,8 +7,14 @@ import { HitDice } from "../types/HitDice";
 import { AbilityData } from "../types/AbilityData";
 import SkillData from "../types/SkillData";
 import { Ability } from "../types/Ability";
+import { CharData } from "../types/CharData";
 
-export default function CharacterSheet(props: any) {
+type Props = {
+  charData: CharData;
+  setCharData: React.Dispatch<React.SetStateAction<CharData>>;
+};
+
+export default function CharacterSheet(props: Props) {
   const [diceRollerVisible, setDiceRollerVisible] = useState(false);
   const [nextRoll, setNextRoll] = useState({ dice: "1d20", bonus: 0 });
   const [diceRollerPosition, setDiceRollerPosition] = useState({ x: 0, y: 0 });
@@ -87,7 +93,7 @@ export default function CharacterSheet(props: any) {
     return result;
   }
 
-  function stringArrayToString(strings: []) {
+  function stringArrayToString(strings: string[]) {
     let result = "";
     strings.forEach((e: string) => {
       result += e + "\n";

@@ -10,7 +10,7 @@ export default function Header({ title }: Props) {
     <div className="top-navbar">
       <h1>{title}</h1>
       <div className="top-navbar-nav">
-        <Link to="/builder">Character Builder</Link>
+        <Link to="/builder/lineage">Character Builder</Link>
         <Link to="/">Game View</Link>
       </div>
     </div>

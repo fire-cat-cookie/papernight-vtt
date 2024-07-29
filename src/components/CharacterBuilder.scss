@@ -1,0 +1,32 @@
+@use "../variables";
+
+#builder {
+  max-width: 800px;
+  height: 100%;
+  margin: 0 auto 0 auto;
+}
+
+#builder-tabs {
+  display: flex;
+  gap: 14px;
+}
+
+#builder {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.builder-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+
+section {
+  display: flex;
+  gap: 10px;
+}
+
+#builder-section-top {
+}

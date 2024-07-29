@@ -3,13 +3,19 @@ import "./App.scss";
 import CharacterSheet from "./CharacterSheet";
 import Header from "./Header";
 import { CreatureSize } from "../types/CreatureSize";
-import { HitDice } from "../types/HitDice";
 import { Ability } from "../types/Ability";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import CharacterBuilder from "./CharacterBuilder";
+import CharacterBuilder, {
+  CharacterBuilderAbilities,
+  CharacterBuilderBackground,
+  CharacterBuilderClass,
+  CharacterBuilderEquipment,
+  CharacterBuilderLineage,
+} from "./CharacterBuilder";
+import { CharData } from "../types/CharData";
 
 export default function App() {
-  const [charData, setCharData] = useState({
+  const [charData, setCharData] = useState<CharData>({
     name: "Amalia",
     classLevel: "3 Warlock (Archfey)",
     lineage: "Tiefling (Winged)",
@@ -199,7 +205,31 @@ Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10
           path="/"
           element={<CharacterSheet charData={charData} setCharData={setCharData} />}
         ></Route>
-        <Route path="/builder" element={<CharacterBuilder />}></Route>
+        <Route
+          path="/builder"
+          element={<CharacterBuilder charData={charData} setCharData={setCharData} />}
+        >
+          <Route
+            path="lineage"
+            element={<CharacterBuilderLineage charData={charData} setCharData={setCharData} />}
+          ></Route>
+          <Route
+            path="class"
+            element={<CharacterBuilderClass charData={charData} setCharData={setCharData} />}
+          ></Route>
+          <Route
+            path="abilities"
+            element={<CharacterBuilderAbilities charData={charData} setCharData={setCharData} />}
+          ></Route>
+          <Route
+            path="background"
+            element={<CharacterBuilderBackground charData={charData} setCharData={setCharData} />}
+          ></Route>
+          <Route
+            path="equipment"
+            element={<CharacterBuilderEquipment charData={charData} setCharData={setCharData} />}
+          ></Route>
+        </Route>
       </Routes>
     </Router>
   );
