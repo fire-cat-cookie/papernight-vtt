@@ -5,168 +5,168 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
 
-.sheet-modal-overlay {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  position: absolute;
-}
-
-.sheet-modal-overlay-inner {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 0;
-}
-
-#dice-roller-offset {
-  flex-shrink: 1;
-}
-
-#dice-roller-container {
-  flex-shrink: 0;
-  position: relative;
-  margin-right: 15px;
-}
-
-.sheet-row {
-  display: flex;
-  flex-wrap: wrap;
-  > * {
-    flex-grow: 1;
-  }
-}
-
-.sheet-column {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-}
-
-.sheet-grouping {
-  outline: 1px solid variables.$border-color;
-  padding: 8px;
-  margin-bottom: 1px;
-  margin-left: 1px;
-  > .label-heading {
+  .sheet-modal-overlay {
     width: 100%;
+    height: 100%;
+    top: 0;
+    position: absolute;
   }
-}
 
-.sheet-field-annotated {
-  display: flex;
-  flex-direction: column;
-}
-
-.sheet-de-emphasized {
-  color: grey;
-}
-
-.sheet-button-tiny {
-  border-color: variables.$border-color;
-  border-radius: 7px;
-  min-width: 32px;
-  max-width: 32px;
-}
-
-#sheet-label-proficiency-bonus {
-  min-width: 28px;
-  max-width: 28px;
-  text-align: center;
-}
-
-#sheet-data-hitdice-remaining,
-#sheet-data-hitdice-total {
-  width: 60px;
-}
-
-#sheet-con-group-initiative {
-  width: 115px;
-}
-
-#sheet-con-group-hp {
-  width: 240px;
-}
-
-#sheet-con-group-hitdice {
-  width: 150px;
-}
-
-#sheet-data-conditions {
-  width: 180px;
-  height: 64px;
-}
-
-#sheet-con-group-abilities {
-  height: 564px;
-  justify-content: space-between;
-  > div {
-    row-gap: 4px;
+  .sheet-modal-overlay-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 0;
   }
-}
 
-.sheet-con-ability {
+  #dice-roller-offset {
+    flex-shrink: 1;
+  }
+
+  #dice-roller-container {
+    flex-shrink: 0;
+    position: relative;
+    margin-right: 15px;
+  }
+
   .sheet-row {
+    display: flex;
+    flex-wrap: wrap;
+    > * {
+      flex-grow: 1;
+    }
+  }
+
+  .sheet-column {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .sheet-grouping {
+    outline: 1px solid variables.$border-color;
+    padding: 8px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    > .label-heading {
+      width: 100%;
+    }
+  }
+
+  .sheet-field-annotated {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sheet-de-emphasized {
+    color: grey;
+  }
+
+  .sheet-button-tiny {
+    border-color: variables.$border-color;
+    border-radius: 7px;
+    min-width: 32px;
+    max-width: 32px;
+  }
+
+  #sheet-label-proficiency-bonus {
+    min-width: 28px;
+    max-width: 28px;
+    text-align: center;
+  }
+
+  #sheet-data-hitdice-remaining,
+  #sheet-data-hitdice-total {
+    width: 60px;
+  }
+
+  #sheet-con-group-initiative {
+    width: 115px;
+  }
+
+  #sheet-con-group-hp {
+    width: 240px;
+  }
+
+  #sheet-con-group-hitdice {
+    width: 150px;
+  }
+
+  #sheet-data-conditions {
+    width: 180px;
+    height: 64px;
+  }
+
+  #sheet-con-group-abilities {
+    height: 564px;
     justify-content: space-between;
-    label {
-      flex-grow: 0;
-    }
-    input {
-      max-width: 20px;
-      text-align: center;
+    > div {
+      row-gap: 4px;
     }
   }
-}
 
-#sheet-con-group-proficiencies {
-  width: 139px;
-  gap: 8px;
-  > div {
+  .sheet-con-ability {
+    .sheet-row {
+      justify-content: space-between;
+      label {
+        flex-grow: 0;
+      }
+      input {
+        max-width: 20px;
+        text-align: center;
+      }
+    }
+  }
+
+  #sheet-con-group-proficiencies {
+    width: 139px;
+    gap: 8px;
+    > div {
+      > textarea {
+        width: 120px;
+        height: 48px;
+      }
+    }
+  }
+
+  #sheet-con-group-inventory {
+    min-width: 270px;
+    max-width: 270px;
     > textarea {
-      width: 120px;
-      height: 48px;
+      flex-grow: 1;
     }
   }
-}
 
-#sheet-con-group-inventory {
-  min-width: 270px;
-  max-width: 270px;
-  > textarea {
-    flex-grow: 1;
+  #sheet-con-group-skills {
+    min-width: 270px;
+    max-width: 270px;
+    height: 564px;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    grid-template-rows: 30px;
+    grid-auto-rows: 20px;
+    align-items: start;
+    gap: 8px;
   }
-}
 
-#sheet-con-group-skills {
-  min-width: 270px;
-  max-width: 270px;
-  height: 564px;
-  display: grid;
-  grid-template-columns: auto 1fr 1fr 1fr;
-  grid-template-rows: 30px;
-  grid-auto-rows: 20px;
-  align-items: start;
-  gap: 8px;
-}
+  .sheet-skill-prof {
+    clip-path: circle(100% at 50% 50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: auto;
+    border: 2.5px solid grey;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .sheet-skill-prof:checked {
+    background-color: grey;
+  }
 
-.sheet-skill-prof {
-  clip-path: circle(100% at 50% 50%);
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  margin: auto;
-  border: 2.5px solid grey;
-  appearance: none;
-  -webkit-appearance: none;
-}
-.sheet-skill-prof:checked {
-  background-color: grey;
-}
-
-#sheet-con-group-traits {
-  width: 340px;
-  > textarea {
-    flex-grow: 1;
+  #sheet-con-group-traits {
+    width: 340px;
+    > textarea {
+      flex-grow: 1;
+    }
   }
 }

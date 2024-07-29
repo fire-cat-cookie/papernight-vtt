@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import "./CharacterBuilder.scss";
 import { CharData } from "../types/CharData";
 
@@ -11,28 +11,33 @@ export default function CharacterBuilder(props: Props) {
   return (
     <div id="builder">
       <h1>Character Builder</h1>
+      <section id="builder-section-top">
+        <img
+          className="builder-avatar"
+          src="../assets/avatar-placeholder.jpg"
+          width="80"
+          height="80"
+        ></img>
+        <div>
+          <label>{"Character Name:"}</label> <br />
+          <input
+            type="text"
+            id="builder-input-nametag"
+            value={props.charData.name}
+            onChange={(e) => {
+              props.setCharData({ ...props.charData, name: e.target.value });
+            }}
+          ></input>
+        </div>
+      </section>
       <div id="builder-tabs">
-        <Link to="/builder/lineage">Lineage</Link>
-        <Link to="/builder/class">Class</Link>
-        <Link to="/builder/abilities">Abilities</Link>
-        <Link to="/builder/background">Background</Link>
-        <Link to="/builder/equipment">Equipment</Link>
+        <NavLink to="/builder/lineage">Lineage</NavLink>
+        <NavLink to="/builder/class">Class</NavLink>
+        <NavLink to="/builder/abilities">Abilities</NavLink>
+        <NavLink to="/builder/background">Background</NavLink>
+        <NavLink to="/builder/equipment">Equipment</NavLink>
       </div>
       <div id="builder-main">
-        <section id="builder-section-top">
-          <img className="builder-avatar" src="../assets/avatar-placeholder.jpg"></img>
-          <div>
-            <label>{"Character Name:"}</label> <br />
-            <input
-              type="text"
-              id="builder-input-nametag"
-              value={props.charData.name}
-              onChange={(e) => {
-                props.setCharData({ ...props.charData, name: e.target.value });
-              }}
-            ></input>
-          </div>
-        </section>
         <Outlet />
       </div>
     </div>
