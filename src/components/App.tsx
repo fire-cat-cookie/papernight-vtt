@@ -5,14 +5,13 @@ import Header from "./Header";
 import { CreatureSize } from "../types/CreatureSize";
 import { Ability } from "../types/Ability";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import CharacterBuilder, {
-  CharacterBuilderAbilities,
-  CharacterBuilderBackground,
-  CharacterBuilderClass,
-  CharacterBuilderEquipment,
-  CharacterBuilderLineage,
-} from "./CharacterBuilder";
+import CharacterBuilder from "./CharacterBuilder";
 import { CharData } from "../types/CharData";
+import CharacterBuilderLineage from "./CharacterBuilderLineage";
+import CharacterBuilderClass from "./CharacterBuilderClass";
+import CharacterBuilderAbilities from "./CharacterBuilderAbilities";
+import CharacterBuilderBackground from "./CharacterBuilderBackground";
+import CharacterBuilderEquipment from "./CharacterBuilderEquipment";
 
 export default function App() {
   const [charData, setCharData] = useState<CharData>({

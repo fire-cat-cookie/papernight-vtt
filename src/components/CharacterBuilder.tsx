@@ -1,24 +1,19 @@
 import { NavLink, Outlet } from "react-router-dom";
 import "./CharacterBuilder.scss";
-import { CharData } from "../types/CharData";
+import { CharDataSetter } from "../types/CharDataSetter";
 
-type Props = {
-  charData: CharData;
-  setCharData: React.Dispatch<React.SetStateAction<CharData>>;
-};
-
-export default function CharacterBuilder(props: Props) {
+export default function CharacterBuilder(props: CharDataSetter) {
   return (
     <div id="builder">
       <h1>Character Builder</h1>
-      <section id="builder-section-top">
+      <section className="builder-section" id="builder-section-top">
         <img
           className="builder-avatar"
           src="../assets/avatar-placeholder.jpg"
           width="80"
           height="80"
         ></img>
-        <div>
+        <div className="builder-group">
           <label>{"Character Name:"}</label> <br />
           <input
             type="text"
@@ -44,41 +39,50 @@ export default function CharacterBuilder(props: Props) {
   );
 }
 
-export function CharacterBuilderLineage(props: Props) {
+export function CharacterBuilderLineage(props: CharDataSetter) {
   return (
-    <div id="builder-lineage">
-      <p>Lineage settings</p>
+    <div className="builder-tabcontent" id="builder-lineage">
+      <section className="builder-section">
+        <div className="builder-group">
+          <label htmlFor="lineage">Choose a lineage:</label>
+          <br />
+          <select name="lineage" id="lineage">
+            <option value="halfling">Halfling</option>
+            <option value="tiefling">Tiefling</option>
+          </select>
+        </div>
+      </section>
     </div>
   );
 }
 
-export function CharacterBuilderClass(props: Props) {
+export function CharacterBuilderClass(props: CharDataSetter) {
   return (
-    <div id="builder-class">
+    <div className="builder-tabcontent" id="builder-class">
       <p>Class settings</p>
     </div>
   );
 }
 
-export function CharacterBuilderAbilities(props: Props) {
+export function CharacterBuilderAbilities(props: CharDataSetter) {
   return (
-    <div id="builder-abilities">
+    <div className="builder-tabcontent" id="builder-abilities">
       <p>Ability settings</p>
     </div>
   );
 }
 
-export function CharacterBuilderBackground(props: Props) {
+export function CharacterBuilderBackground(props: CharDataSetter) {
   return (
-    <div id="builder-background">
+    <div className="builder-tabcontent" id="builder-background">
       <p>Background settings</p>
     </div>
   );
 }
 
-export function CharacterBuilderEquipment(props: Props) {
+export function CharacterBuilderEquipment(props: CharDataSetter) {
   return (
-    <div id="builder-equipment">
+    <div className="builder-tabcontent" id="builder-equipment">
       <p>Equipment settings</p>
     </div>
   );

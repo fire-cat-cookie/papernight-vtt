@@ -8,13 +8,19 @@
   flex-direction: column;
   gap: 14px;
 
-  section {
+  .builder-section {
     display: flex;
     gap: 10px;
   }
 
   .builder-avatar {
     border-radius: 10px;
+  }
+
+  .builder-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 }
 
