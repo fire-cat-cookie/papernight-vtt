@@ -9,12 +9,12 @@ export default function CharacterBuilder(props: CharDataSetter) {
       <section className="builder-section" id="builder-section-top">
         <img
           className="builder-avatar"
-          src="../assets/avatar-placeholder.jpg"
+          src="../content/avatar-placeholder.jpg"
           width="80"
           height="80"
         ></img>
         <div className="builder-group">
-          <label>{"Character Name:"}</label> <br />
+          <label>{"Character Name:"}</label>
           <input
             type="text"
             id="builder-input-nametag"
@@ -35,55 +35,6 @@ export default function CharacterBuilder(props: CharDataSetter) {
       <div id="builder-main">
         <Outlet />
       </div>
-    </div>
-  );
-}
-
-export function CharacterBuilderLineage(props: CharDataSetter) {
-  return (
-    <div className="builder-tabcontent" id="builder-lineage">
-      <section className="builder-section">
-        <div className="builder-group">
-          <label htmlFor="lineage">Choose a lineage:</label>
-          <br />
-          <select name="lineage" id="lineage">
-            <option value="halfling">Halfling</option>
-            <option value="tiefling">Tiefling</option>
-          </select>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-export function CharacterBuilderClass(props: CharDataSetter) {
-  return (
-    <div className="builder-tabcontent" id="builder-class">
-      <p>Class settings</p>
-    </div>
-  );
-}
-
-export function CharacterBuilderAbilities(props: CharDataSetter) {
-  return (
-    <div className="builder-tabcontent" id="builder-abilities">
-      <p>Ability settings</p>
-    </div>
-  );
-}
-
-export function CharacterBuilderBackground(props: CharDataSetter) {
-  return (
-    <div className="builder-tabcontent" id="builder-background">
-      <p>Background settings</p>
-    </div>
-  );
-}
-
-export function CharacterBuilderEquipment(props: CharDataSetter) {
-  return (
-    <div className="builder-tabcontent" id="builder-equipment">
-      <p>Equipment settings</p>
     </div>
   );
 }

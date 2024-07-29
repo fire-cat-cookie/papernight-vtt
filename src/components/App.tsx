@@ -17,7 +17,7 @@ export default function App() {
   const [charData, setCharData] = useState<CharData>({
     name: "Amalia",
     classLevel: "3 Warlock (Archfey)",
-    lineage: "Tiefling (Winged)",
+    lineage: "Tiefling",
     initiative_adds: [],
     ac_adds: [{ flat: 3, dice: "", name: "Mage Armor" }],
     inspiration: false,

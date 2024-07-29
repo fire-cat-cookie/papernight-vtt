@@ -8,9 +8,20 @@
   flex-direction: column;
   gap: 14px;
 
+  .builder-tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
   .builder-section {
     display: flex;
     gap: 10px;
+
+    p {
+      color: rgba(variables.$text-color, 0.4);
+      margin: 0;
+    }
   }
 
   .builder-avatar {

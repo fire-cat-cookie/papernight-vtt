@@ -3,7 +3,7 @@ import "./CharacterBuilder.scss";
 
 export default function CharacterBuilderAbilities(props: CharDataSetter) {
   return (
-    <div className="builder-tabcontent" id="builder-abilities">
+    <div className="builder-tab-content" id="builder-abilities">
       <p>Ability settings</p>
     </div>
   );

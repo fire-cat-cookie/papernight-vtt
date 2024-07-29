@@ -3,7 +3,7 @@ import "./CharacterBuilder.scss";
 
 export default function CharacterBuilderBackground(props: CharDataSetter) {
   return (
-    <div className="builder-tabcontent" id="builder-background">
+    <div className="builder-tab-content" id="builder-background">
       <p>Background settings</p>
     </div>
   );

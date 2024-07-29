@@ -1,8 +1,8 @@
 export enum CreatureSize {
-  Tiny,
-  Small,
-  Medium,
-  Large,
-  Huge,
-  Gargantuan,
+  Tiny = "Tiny",
+  Small = "Small",
+  Medium = "Medium",
+  Large = "Large",
+  Huge = "Huge",
+  Gargantuan = "Gargantuan",
 }
