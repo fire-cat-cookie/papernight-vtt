@@ -40,15 +40,19 @@ export default function CharacterSheet(props: Props) {
     return addBonuses(10 + getAbilityMod(props.charData.abilities.dex), props.charData.ac_adds);
   }
 
+  function getAbilityTotal(ability: AbilityData) {
+    return addBonuses(ability.score, ability.score_adds);
+  }
+
   function getAbilityMod(ability: AbilityData) {
-    let score = ability.score;
+    let score = addBonuses(ability.score, ability.score_adds);
     let mod = 0;
     if (score <= 8) {
       mod = Math.ceil(Math.abs(10 - score) / 2) * -1;
     } else if (score >= 12) {
       mod = Math.floor((score - 10) / 2);
     }
-    return addBonuses(mod, ability.score_adds);
+    return mod;
   }
 
   function getSavingThrowMod(ability: AbilityData) {
@@ -67,7 +71,11 @@ export default function CharacterSheet(props: Props) {
       [Ability.cha, props.charData.abilities.cha],
     ]);
     let abilityData = abilityDataMap.get(skill.ability);
-    return addBonuses(getAbilityMod(abilityData) + proficiency, skill.adds);
+    let abilityMod = 0;
+    if (abilityData) {
+      abilityMod = getAbilityMod(abilityData);
+    }
+    return addBonuses(abilityMod + proficiency, skill.adds);
   }
 
   function addBonuses(base: number, adds: Bonus[]) {
@@ -227,7 +235,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-str">
                 <div className="sheet-row">
                   <label>{"Strength:"}</label>
-                  <input disabled value={props.charData.abilities.str.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.str)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>
@@ -255,7 +263,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-dex">
                 <div className="sheet-row">
                   <label>{"Dexterity:"}</label>
-                  <input disabled value={props.charData.abilities.dex.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.dex)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>
@@ -283,7 +291,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-con">
                 <div className="sheet-row">
                   <label>{"Consitution:"}</label>
-                  <input disabled value={props.charData.abilities.con.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.con)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>
@@ -311,7 +319,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-int">
                 <div className="sheet-row">
                   <label>{"Intelligence:"}</label>
-                  <input disabled value={props.charData.abilities.int.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.int)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>
@@ -339,7 +347,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-wis">
                 <div className="sheet-row">
                   <label>{"Wisdom:"}</label>
-                  <input disabled value={props.charData.abilities.wis.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.wis)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>
@@ -367,7 +375,7 @@ export default function CharacterSheet(props: Props) {
               <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-cha">
                 <div className="sheet-row">
                   <label>{"Charisma:"}</label>
-                  <input disabled value={props.charData.abilities.cha.score}></input>
+                  <input disabled value={getAbilityTotal(props.charData.abilities.cha)}></input>
                 </div>
                 <div className="sheet-row">
                   <label className="sheet-de-emphasized">Mod</label>

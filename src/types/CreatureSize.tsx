@@ -5,4 +5,5 @@ export enum CreatureSize {
   Large = "Large",
   Huge = "Huge",
   Gargantuan = "Gargantuan",
+  Error = "Error",
 }

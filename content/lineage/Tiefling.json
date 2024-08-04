@@ -3,5 +3,9 @@
   "description": "Because of their fiendish ancestry, Tieflings tend to be mistrusted, which often leads to them being pushed into the lower classes of society. In some regions, they are openly hunted and executed.",
   "age": "Tieflings mature at the same rate as humans but live a few years longer.",
   "size": "Medium",
-  "languages": ["Common", "Infernal"]
+  "languages": ["Common", "Infernal"],
+  "ability_scores": [
+    { "score": "Charisma", "bonus": 2 },
+    { "score": "Intelligence", "bonus": 1 }
+  ]
 }
