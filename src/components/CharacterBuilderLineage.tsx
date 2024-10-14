@@ -1,81 +1,14 @@
-import { CharDataSetter } from "../types/CharDataSetter";
+import { CharDataAction } from "../operations/CharDataReducer";
 import "./CharacterBuilder.scss";
-import { lineagesJson } from "../index";
-import { CreatureSize } from "../types/CreatureSize";
 import { CharData } from "../types/CharData";
+import { getLineageData, getLineageNames } from "../operations/GetLineageData";
 
-export default function CharacterBuilderLineage(props: CharDataSetter) {
-  function selectLineage(lineage: string) {
-    let charData = props.charData;
-    let lineageData = getLineageData(lineage);
-    charData.lineage = lineageData.name;
-    charData = setSize(lineageData, charData);
-    charData = setAbilityScoreBonuses(lineageData, charData);
-    props.setCharData({ ...props.charData });
-  }
+type Props = {
+  charData: CharData;
+  updateCharData: React.Dispatch<CharDataAction>;
+};
 
-  function getLineageData(lineageName: string): any {
-    return (
-      lineagesJson.find((lineage) => {
-        return lineage.name == lineageName;
-      }) ?? {}
-    );
-  }
-
-  function setSize(lineageData: any, charData: CharData): CharData {
-    let size = lineageData.size;
-    if (!size) {
-      charData.size = CreatureSize.Error;
-    }
-    charData.size = size;
-    return charData;
-  }
-
-  function setAbilityScoreBonuses(lineageData: any, charData: CharData): CharData {
-    let lineageAbilities = lineageData.ability_scores;
-    clearLineageAbilityScores(charData);
-    if (!lineageAbilities) {
-      return charData;
-    }
-    let charDataAbilities = props.charData.abilities;
-    let charDataScoreAddsMap = new Map([
-      ["Strength", charDataAbilities.str.score_adds],
-      ["Dexterity", charDataAbilities.dex.score_adds],
-      ["Constitution", charDataAbilities.con.score_adds],
-      ["Intelligence", charDataAbilities.int.score_adds],
-      ["Wisdom", charDataAbilities.wis.score_adds],
-      ["Charisma", charDataAbilities.cha.score_adds],
-    ]);
-    lineageAbilities.forEach((ability: any) => {
-      let charDataScoreAdds = charDataScoreAddsMap.get(ability.score);
-      charDataScoreAdds?.push({
-        flat: ability.bonus,
-        dice: "",
-        name: "Lineage",
-      });
-    });
-    charData.abilities = charDataAbilities;
-    return charData;
-  }
-
-  function clearLineageAbilityScores(charData: CharData): CharData {
-    let abilities = charData.abilities;
-    let abilityDataArray = [
-      abilities.str,
-      abilities.dex,
-      abilities.con,
-      abilities.int,
-      abilities.wis,
-      abilities.cha,
-    ];
-    abilityDataArray.forEach((ability) => {
-      ability.score_adds = ability.score_adds.filter((scoreBonus) => {
-        scoreBonus.name != "Lineage";
-      });
-    });
-    return charData;
-  }
-
+export default function CharacterBuilderLineage(props: Props) {
   function displayAbilityScores(): string {
     let abilities: any[] = getLineageData(props.charData.lineage)?.ability_scores;
     if (!abilities) {
@@ -99,11 +32,11 @@ export default function CharacterBuilderLineage(props: CharDataSetter) {
             id="lineage"
             value={props.charData.lineage}
             onChange={(e) => {
-              selectLineage(e.target.value);
+              props.updateCharData({ type: "set-lineage", lineage: e.target.value });
             }}
           >
-            {lineagesJson.map((lineage) => {
-              return <option key={lineage.name}>{lineage.name}</option>;
+            {getLineageNames().map((lineageName) => {
+              return <option key={lineageName}>{lineageName}</option>;
             })}
           </select>
         </div>

@@ -8,10 +8,11 @@ import { AbilityData } from "../types/AbilityData";
 import SkillData from "../types/SkillData";
 import { Ability } from "../types/Ability";
 import { CharData } from "../types/CharData";
+import { CharDataAction } from "../operations/CharDataReducer";
 
 type Props = {
   charData: CharData;
-  setCharData: React.Dispatch<React.SetStateAction<CharData>>;
+  updateCharData: React.Dispatch<CharDataAction>;
 };
 
 export default function CharacterSheet(props: Props) {

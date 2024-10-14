@@ -1,7 +1,13 @@
-import { CharDataSetter } from "../types/CharDataSetter";
+import { CharDataAction } from "../operations/CharDataReducer";
+import { CharData } from "../types/CharData";
 import "./CharacterBuilder.scss";
 
-export default function CharacterBuilderBackground(props: CharDataSetter) {
+type Props = {
+  charData: CharData;
+  updateCharData: React.Dispatch<CharDataAction>;
+};
+
+export default function CharacterBuilderBackground(props: Props) {
   return (
     <div className="builder-tab-content" id="builder-background">
       <p>Background settings</p>
