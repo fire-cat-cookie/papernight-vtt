@@ -1,8 +1,14 @@
 import { NavLink, Outlet } from "react-router-dom";
 import "./CharacterBuilder.scss";
-import { CharDataSetter } from "../types/CharDataSetter";
+import { CharData } from "../types/CharData";
+import { CharDataAction } from "../operations/CharDataReducer";
 
-export default function CharacterBuilder(props: CharDataSetter) {
+type Props = {
+  charData: CharData;
+  updateCharData: React.Dispatch<CharDataAction>;
+};
+
+export default function CharacterBuilder(props: Props) {
   return (
     <div id="builder">
       <h1>Character Builder</h1>
@@ -20,7 +26,7 @@ export default function CharacterBuilder(props: CharDataSetter) {
             id="builder-input-nametag"
             value={props.charData.name}
             onChange={(e) => {
-              props.setCharData({ ...props.charData, name: e.target.value });
+              props.updateCharData({ type: "set-name", name: e.target.value });
             }}
           ></input>
         </div>
