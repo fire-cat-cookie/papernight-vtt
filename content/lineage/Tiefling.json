@@ -7,5 +7,6 @@
   "ability_scores": [
     { "score": "Charisma", "bonus": 2 },
     { "score": "Intelligence", "bonus": 1 }
-  ]
+  ],
+  "speed": 30
 }

@@ -22,19 +22,39 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     let lineageData = getLineageData(lineage);
     charData.lineage = lineageData.name;
     charData = setSize(lineageData, charData);
-    charData = setAbilityBonuses(lineageData, charData);
+    charData = setLineageLanguages(lineageData, charData);
+    charData = setSpeed(lineageData, charData);
+    charData = setLineageAbilityBonuses(lineageData, charData);
+  }
+
+  function setLineageLanguages(lineageData: any, charData: CharData): CharData {
+    let languages = lineageData.languages;
+    charData.languages = charData.languages.filter((lang) => lang.source != "Lineage");
+    languages.forEach((lang: string) => {
+      charData.languages.push({ language: lang, source: "Lineage" });
+    });
+    return charData;
   }
 
   function setSize(lineageData: any, charData: CharData): CharData {
     let size = lineageData.size;
     if (!size) {
-      charData.size = CreatureSize.Error;
+      size = CreatureSize.Error;
     }
     charData.size = size;
     return charData;
   }
 
-  function setAbilityBonuses(lineageData: any, charData: CharData): CharData {
+  function setSpeed(lineageData: any, charData: CharData): CharData {
+    let speed = lineageData.speed;
+    if (!speed) {
+      speed = 30;
+    }
+    charData.speed = speed;
+    return charData;
+  }
+
+  function setLineageAbilityBonuses(lineageData: any, charData: CharData): CharData {
     let lineageAbilities = lineageData.ability_scores;
     clearLineageAbilityBonuses(charData);
     if (!lineageAbilities) {
@@ -72,9 +92,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       abilities.cha,
     ];
     abilityDataArray.forEach((ability) => {
-      ability.score_adds = ability.score_adds.filter((scoreBonus) => {
-        scoreBonus.name != "Lineage";
-      });
+      ability.score_adds = ability.score_adds.filter((scoreBonus) => scoreBonus.name != "Lineage");
     });
     return charData;
   }

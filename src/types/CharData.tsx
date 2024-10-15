@@ -2,6 +2,7 @@ import { AbilityData } from "./AbilityData";
 import { Bonus } from "./Bonus";
 import { CreatureSize } from "./CreatureSize";
 import { HitDice } from "./HitDice";
+import { Language } from "./Language";
 import SkillData from "./SkillData";
 
 export interface CharData {
@@ -55,7 +56,7 @@ export interface CharData {
   };
   traits: string;
   inventory: string;
-  languages: string;
+  languages: Language[];
   tool_prof: string;
   armor_weapon_prof: string;
 }

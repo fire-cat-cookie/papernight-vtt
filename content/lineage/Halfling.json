@@ -4,5 +4,6 @@
   "age": "A halfling reaches adulthood at the age of 20 and generally lives into the middle of his or her second century.",
   "size": "Small",
   "languages": ["Common", "Halfling"],
-  "ability_scores": [{ "score": "Dexterity", "bonus": 2 }]
+  "ability_scores": [{ "score": "Dexterity", "bonus": 2 }],
+  "speed": 25
 }

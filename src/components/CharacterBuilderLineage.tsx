@@ -43,6 +43,12 @@ export default function CharacterBuilderLineage(props: Props) {
       </section>
       <section className="builder-section">
         <div className="builder-group">
+          <label>Age:</label>
+          <p>{getLineageData(props.charData.lineage)?.age}</p>
+        </div>
+      </section>
+      <section className="builder-section">
+        <div className="builder-group">
           <label>Description:</label>
           <p>{getLineageData(props.charData.lineage)?.description}</p>
         </div>
@@ -55,8 +61,20 @@ export default function CharacterBuilderLineage(props: Props) {
       </section>
       <section className="builder-section">
         <div className="builder-group">
+          <label>Languages:</label>
+          <p>{getLineageData(props.charData.lineage)?.languages.join(", ")}</p>
+        </div>
+      </section>
+      <section className="builder-section">
+        <div className="builder-group">
           <label>Ability Scores:</label>
           <p>{displayAbilityScores()}</p>
+        </div>
+      </section>
+      <section className="builder-section">
+        <div className="builder-group">
+          <label>Speed:</label>
+          <p>{getLineageData(props.charData.lineage)?.speed + "ft"}</p>
         </div>
       </section>
     </div>

@@ -9,6 +9,7 @@ import SkillData from "../types/SkillData";
 import { Ability } from "../types/Ability";
 import { CharData } from "../types/CharData";
 import { CharDataAction } from "../operations/CharDataReducer";
+import { Util } from "../operations/Util";
 
 type Props = {
   charData: CharData;
@@ -208,7 +209,7 @@ export default function CharacterSheet(props: Props) {
           <div id="sheet-con-speed">
             <label>Speed</label>
             <br />
-            <label id="sheet-data-speed">{props.charData.speed}</label>
+            <label id="sheet-data-speed">{props.charData.speed + " ft."}</label>
           </div>
           <div id="sheet-con-creaturetype">
             <label>Creature Type</label>
@@ -803,7 +804,13 @@ export default function CharacterSheet(props: Props) {
               <div>
                 <label className="label-heading">Languages</label>
                 <br />
-                <textarea disabled value={props.charData.languages}></textarea>
+                <textarea
+                  disabled
+                  value={Util.ListDistinct(
+                    props.charData.languages.map((lang) => lang.language),
+                    ", "
+                  )}
+                ></textarea>
               </div>
               <div>
                 <label className="label-heading">Tool Proficiencies</label>

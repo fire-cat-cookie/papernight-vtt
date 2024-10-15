@@ -1,5 +1,6 @@
 import { CreatureSize } from "../types/CreatureSize";
 import { Ability } from "../types/Ability";
+import { Language } from "../types/Language";
 import { CharData } from "../types/CharData";
 
 export const initialCharData: CharData = {
@@ -179,7 +180,7 @@ At will: Mage Armor
   inventory: `15gp
 
 Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10), Rations (x10), Rope (50ft.), Tinderbox, Torch (x10), Waterskin`,
-  languages: `Common, Infernal`,
+  languages: [{ language: "Common", source: "TestData" }],
   tool_prof: `Flute, Playing Card Set`,
   armor_weapon_prof: `Light Armor, Simple Weapons`,
 };
