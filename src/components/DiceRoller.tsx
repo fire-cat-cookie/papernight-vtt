@@ -1,14 +1,20 @@
 import { useState } from "react";
 import "./DiceRoller.scss";
+import { CharData } from "../types/CharData";
+import { Util } from "../operations/Util";
+import { EffectTag } from "../types/EffectTag";
+import { ConditionalEffect } from "../types/ConditionalEffect";
 
 type Props = {
   initialDice: string;
   initialBonus: string;
+  charData: CharData;
+  conditionalEffectsFilter: EffectTag[];
 };
 
-export default function DiceRoller({ initialDice, initialBonus }: Props) {
-  const [dice, setDice] = useState(initialDice);
-  const [bonus, setBonus] = useState(initialBonus);
+export default function DiceRoller(props: Props) {
+  const [dice, setDice] = useState(props.initialDice);
+  const [bonus, setBonus] = useState(props.initialBonus);
   const [advantage1, setAdvantage1] = useState(0);
   const [advantage2, setAdvantage2] = useState(0);
   const [result, setResult] = useState("-");
@@ -75,9 +81,28 @@ export default function DiceRoller({ initialDice, initialBonus }: Props) {
     }
   }
 
+  function displayConditionalEffects() {
+    let filteredEffects: ConditionalEffect[] = [];
+    props.charData.features?.forEach((feature) => {
+      filterConditionalEffects(feature.conditional_effects)?.forEach((effect) =>
+        filteredEffects.push(effect)
+      );
+    });
+
+    return <>{filteredEffects.map((effect) => effect.info)}</>;
+  }
+
+  function filterConditionalEffects(effects: ConditionalEffect[]) {
+    return effects?.filter((effect) =>
+      props.conditionalEffectsFilter.some((filterTag) => {
+        return filterTag == effect.tag;
+      })
+    );
+  }
+
   return (
     <div className="dice-roller">
-      <div>
+      <section>
         <input type="text" value={dice} onChange={(e) => setDice(e.target.value)} />
         <input type="text" value={bonus} onChange={(e) => setBonus(e.target.value)} />
         <button onClick={() => setAdvantage1(toggleAdvantage(advantage1))}>
@@ -89,10 +114,13 @@ export default function DiceRoller({ initialDice, initialBonus }: Props) {
         <button onClick={() => setResult(parseRoll(dice, bonus, advantage1 + advantage2))}>
           Roll
         </button>
-      </div>
-      <div>
+      </section>
+      <br />
+      Conditional Bonuses:
+      <div className="dice-roller-conditions-list">{displayConditionalEffects()}</div>
+      <section>
         <p>Result: {result}</p>
-      </div>
+      </section>
     </div>
   );
 }

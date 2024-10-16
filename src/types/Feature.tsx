@@ -1,9 +1,8 @@
-import { EffectTag } from "./EffectTag";
+import { ConditionalEffect } from "./ConditionalEffect";
 
 export interface Feature {
   name: string;
   source: string;
   description: string;
-  effectTags: EffectTag[];
-  tag_info: string;
+  conditional_effects: ConditionalEffect[];
 }

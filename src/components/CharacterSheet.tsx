@@ -10,6 +10,7 @@ import { Ability } from "../types/Ability";
 import { CharData } from "../types/CharData";
 import { CharDataAction } from "../operations/CharDataReducer";
 import { Util } from "../operations/Util";
+import { EffectTag } from "../types/EffectTag";
 
 type Props = {
   charData: CharData;
@@ -833,11 +834,16 @@ export default function CharacterSheet(props: Props) {
           </div>
         </div>
 
-        {/* traits */}
+        {/* features */}
         <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
-          <label className="label-heading">Features, Traits, Spells</label>
+          <label className="label-heading">Features</label>
           <br />
-          <textarea disabled value={props.charData.traits}></textarea>
+          <textarea
+            disabled
+            value={props.charData.features
+              .map((feature) => feature.name + ": " + feature.description)
+              .join("\n\n")}
+          ></textarea>
         </div>
       </div>
 
@@ -853,6 +859,8 @@ export default function CharacterSheet(props: Props) {
                   <DiceRoller
                     initialDice={nextRoll.dice}
                     initialBonus={displayBonus(nextRoll.bonus)}
+                    charData={props.charData}
+                    conditionalEffectsFilter={[EffectTag.SavingThrows]}
                   ></DiceRoller>
                 </div>
               </>

@@ -1,5 +1,7 @@
 import { CharData } from "../types/CharData.tsx";
+import { ConditionalEffect } from "../types/ConditionalEffect.tsx";
 import { CreatureSize } from "../types/CreatureSize.tsx";
+import { Feature } from "../types/Feature.tsx";
 import { getLineageData } from "./GetLineageData.tsx";
 
 export type CharDataAction =
@@ -25,6 +27,21 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     charData = setLineageLanguages(lineageData, charData);
     charData = setSpeed(lineageData, charData);
     charData = setLineageAbilityBonuses(lineageData, charData);
+    charData = setLineageFeatures(lineageData, charData);
+  }
+
+  function setLineageFeatures(lineageData: any, charData: CharData): CharData {
+    let features: any = lineageData.features;
+    charData.features = charData.features.filter((feature) => feature.source != "Lineage");
+    features?.forEach((feature: any) => {
+      charData.features.push({
+        name: feature.name,
+        source: "Lineage",
+        description: feature.description,
+        conditional_effects: feature.conditional_effects,
+      });
+    });
+    return charData;
   }
 
   function setLineageLanguages(lineageData: any, charData: CharData): CharData {

@@ -160,6 +160,8 @@ export const initialCharData: CharData = {
       adds: [],
     },
   },
+  features: [],
+
   traits: `Hellish Resistance: You have resistance to fire damage.
 
 Winged Tiefling: You have a flying speed of 30 feet while you aren’t wearing heavy armor.

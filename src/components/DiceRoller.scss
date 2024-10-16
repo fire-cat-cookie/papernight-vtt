@@ -4,8 +4,9 @@
   background: variables.$background-color;
   outline: 1px solid aliceblue;
   padding: 8px;
-  > div {
+  > section {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     button {
       padding: 0 12px 0 12px;
@@ -15,5 +16,8 @@
     input {
       width: 48px;
     }
+  }
+  .dice-roller-conditions-list {
+    color: grey;
   }
 }

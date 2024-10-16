@@ -1,6 +1,7 @@
 import { AbilityData } from "./AbilityData";
 import { Bonus } from "./Bonus";
 import { CreatureSize } from "./CreatureSize";
+import { Feature } from "./Feature";
 import { HitDice } from "./HitDice";
 import { Language } from "./Language";
 import SkillData from "./SkillData";
@@ -54,6 +55,7 @@ export interface CharData {
     stealth: SkillData;
     survival: SkillData;
   };
+  features: Feature[];
   traits: string;
   inventory: string;
   languages: Language[];

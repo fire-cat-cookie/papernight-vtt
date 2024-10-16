@@ -9,8 +9,10 @@ type Props = {
 };
 
 export default function CharacterBuilderLineage(props: Props) {
+  let lineageData = getLineageData(props.charData.lineage);
+
   function displayAbilityScores(): string {
-    let abilities: any[] = getLineageData(props.charData.lineage)?.ability_scores;
+    let abilities: any[] = lineageData?.ability_scores;
     if (!abilities) {
       return "No data";
     }
@@ -44,25 +46,25 @@ export default function CharacterBuilderLineage(props: Props) {
       <section className="builder-section">
         <div className="builder-group">
           <label>Age:</label>
-          <p>{getLineageData(props.charData.lineage)?.age}</p>
+          <p>{lineageData?.age}</p>
         </div>
       </section>
       <section className="builder-section">
         <div className="builder-group">
           <label>Description:</label>
-          <p>{getLineageData(props.charData.lineage)?.description}</p>
+          <p>{lineageData?.description}</p>
         </div>
       </section>
       <section className="builder-section">
         <div className="builder-group">
           <label>Size:</label>
-          <p>{getLineageData(props.charData.lineage)?.size}</p>
+          <p>{lineageData?.size}</p>
         </div>
       </section>
       <section className="builder-section">
         <div className="builder-group">
           <label>Languages:</label>
-          <p>{getLineageData(props.charData.lineage)?.languages.join(", ")}</p>
+          <p>{lineageData?.languages.join(", ")}</p>
         </div>
       </section>
       <section className="builder-section">
@@ -74,9 +76,19 @@ export default function CharacterBuilderLineage(props: Props) {
       <section className="builder-section">
         <div className="builder-group">
           <label>Speed:</label>
-          <p>{getLineageData(props.charData.lineage)?.speed + "ft"}</p>
+          <p>{lineageData?.speed + "ft"}</p>
         </div>
       </section>
+      {lineageData?.features?.map((feature: any) => {
+        return (
+          <section key={feature.name} className="builder-section">
+            <div className="builder-group">
+              <label>{feature.name}</label>
+              <p>{feature.description}</p>
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

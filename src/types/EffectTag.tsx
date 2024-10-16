@@ -1,3 +1,3 @@
 export enum EffectTag {
-  SavingThrows,
+  SavingThrows = "SavingThrows",
 }
