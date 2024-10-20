@@ -7,6 +7,7 @@ export const initialCharData: CharData = {
   name: "Amalia",
   classLevel: "3 Warlock (Archfey)",
   lineage: "Tiefling",
+  sublineage: "Winged Tiefling",
   initiative_adds: [],
   ac_adds: [{ flat: 3, dice: "", name: "Mage Armor" }],
   inspiration: false,

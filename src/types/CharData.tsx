@@ -10,6 +10,7 @@ export interface CharData {
   name: string;
   classLevel: string;
   lineage: string;
+  sublineage: string;
   initiative_adds: Bonus[];
   ac_adds: Bonus[];
   inspiration: boolean;

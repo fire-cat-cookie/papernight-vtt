@@ -21,7 +21,36 @@
       "conditional_effects": [
         {
           "tag": "SavingThrows",
-          "info": "[Halfling] Advantage against being frightened"
+          "info": "Advantage against being frightened"
+        }
+      ]
+    }
+  ],
+  "sublineages": [
+    {
+      "name": "Stout Halfling",
+      "ability_scores": [{ "score": "Constitution", "bonus": 1 }],
+      "features": [
+        {
+          "name": "Stout Resilience",
+          "description": "You have advantage on saving throws against poison, and you have resistance against poison damage.",
+          "resistance": "poison",
+          "conditional_effects": [
+            {
+              "tag": "SavingThrows",
+              "info": "Advantage against being poisoned"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lightfoot Halfling",
+      "ability_scores": [{ "score": "Charisma", "bonus": 1 }],
+      "features": [
+        {
+          "name": "Naturally Stealthy",
+          "description": "You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
         }
       ]
     }

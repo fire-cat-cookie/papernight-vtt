@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import "./DiceRoller.scss";
 import { CharData } from "../types/CharData";
 import { Util } from "../operations/Util";
@@ -81,20 +81,18 @@ export default function DiceRoller(props: Props) {
   }
 
   function displayConditionalEffects() {
-    let filteredEffects: ConditionalEffect[] = [];
+    let filteredEffects: ReactElement[] = [];
     props.charData.features?.forEach((feature) => {
-      filterConditionalEffects(feature.conditional_effects)?.forEach((effect) =>
-        filteredEffects.push(effect)
-      );
+      filterConditionalEffects(feature.conditional_effects)?.forEach((effect) => {
+        let info = "[" + feature.source + "] " + effect.info;
+        filteredEffects.push(
+          <div key={info} className="dice-roller-de-emphasize">
+            {info}
+          </div>
+        );
+      });
     });
-
-    return filteredEffects.length > 0 ? (
-      <>
-        <div className="dice-roller-de-emphasize">
-          {filteredEffects.map((effect) => effect.info)}
-        </div>
-      </>
-    ) : null;
+    return filteredEffects;
   }
 
   function filterConditionalEffects(effects: ConditionalEffect[]) {
