@@ -4,20 +4,31 @@
   background: variables.$background-color;
   outline: 1px solid aliceblue;
   padding: 8px;
-  > section {
+  .dice-roller-section {
     display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    button {
-      padding: 0 12px 0 12px;
-      min-height: 32px;
-      min-width: 32px;
-    }
-    input {
-      width: 48px;
-    }
+    gap: 8px;
+    margin-bottom: 8px;
   }
-  .dice-roller-conditions-list {
+  button {
+    padding: 0 12px 0 12px;
+    height: 28px;
+    min-width: 36px;
+  }
+  .dice-roller-input-small {
+    height: 24px;
+    width: 48px;
+    text-align: center;
+  }
+  .dice-roller-input-tiny {
+    height: 24px;
+    width: 32px;
+    text-align: center;
+  }
+  .dice-roller-de-emphasize {
     color: grey;
+  }
+  .dice-roller-label-group {
+    display: flex;
+    flex-direction: column;
   }
 }

@@ -15,8 +15,7 @@ type Props = {
 export default function DiceRoller(props: Props) {
   const [dice, setDice] = useState(props.initialDice);
   const [bonus, setBonus] = useState(props.initialBonus);
-  const [advantage1, setAdvantage1] = useState(0);
-  const [advantage2, setAdvantage2] = useState(0);
+  const [advantage, setAdvantage] = useState(0);
   const [result, setResult] = useState("-");
 
   function parseRoll(dice: string, bonus: string, advantageState: number): string {
@@ -89,7 +88,13 @@ export default function DiceRoller(props: Props) {
       );
     });
 
-    return <>{filteredEffects.map((effect) => effect.info)}</>;
+    return filteredEffects.length > 0 ? (
+      <>
+        <div className="dice-roller-de-emphasize">
+          {filteredEffects.map((effect) => effect.info)}
+        </div>
+      </>
+    ) : null;
   }
 
   function filterConditionalEffects(effects: ConditionalEffect[]) {
@@ -102,24 +107,34 @@ export default function DiceRoller(props: Props) {
 
   return (
     <div className="dice-roller">
-      <section>
-        <input type="text" value={dice} onChange={(e) => setDice(e.target.value)} />
-        <input type="text" value={bonus} onChange={(e) => setBonus(e.target.value)} />
-        <button onClick={() => setAdvantage1(toggleAdvantage(advantage1))}>
-          {displayAdvantage(advantage1)}
-        </button>
-        <button onClick={() => setAdvantage2(toggleAdvantage(advantage2))}>
-          {displayAdvantage(advantage2)}
-        </button>
-        <button onClick={() => setResult(parseRoll(dice, bonus, advantage1 + advantage2))}>
-          Roll
-        </button>
+      <section className="dice-roller-section">
+        <div className="dice-roller-label-group">
+          <input
+            className="dice-roller-input-small"
+            type="text"
+            value={dice}
+            onChange={(e) => setDice(e.target.value)}
+          />
+        </div>
+        <div className="dice-roller-label-group">
+          <input
+            className="dice-roller-input-tiny"
+            type="text"
+            value={bonus}
+            onChange={(e) => setBonus(e.target.value)}
+          />
+        </div>
+        <div className="dice-roller-label-group">
+          <button onClick={() => setAdvantage(toggleAdvantage(advantage))}>
+            {displayAdvantage(advantage)}
+          </button>
+        </div>
       </section>
+      {displayConditionalEffects()}
       <br />
-      Conditional Bonuses:
-      <div className="dice-roller-conditions-list">{displayConditionalEffects()}</div>
-      <section>
-        <p>Result: {result}</p>
+      <section className="dice-roller-section">
+        <button onClick={() => setResult(parseRoll(dice, bonus, advantage))}>Roll</button>
+        Result: {result}
       </section>
     </div>
   );
