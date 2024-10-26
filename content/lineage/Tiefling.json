@@ -14,5 +14,12 @@
       "name": "Darkvision",
       "range": 60
     }
+  ],
+  "features": [
+    {
+      "name": "Hellish Resistance",
+      "description": "You have resistance to fire damage.",
+      "resistances": ["Fire"]
+    }
   ]
 }

@@ -1,0 +1,15 @@
+export enum DamageType {
+  bludgeoning = "Bludgeoning",
+  piercing = "Piercing",
+  slashing = "Slashing",
+  fire = "Fire",
+  acid = "Acid",
+  cold = "Cold",
+  lightning = "Lightning",
+  poison = "Poison",
+  force = "Force",
+  radiant = "Radiant",
+  necrotic = "Necrotic",
+  psychic = "Psychic",
+  thunder = "Thunder",
+}
