@@ -29,7 +29,7 @@ export const initialCharData: CharData = {
   speed_adds: [],
   creatureType: "Humanoid",
   size: CreatureSize.Medium,
-  senses: ["Darkvision 60ft."],
+  senses: [],
   proficiency_bonus: 2,
   abilities: {
     str: {

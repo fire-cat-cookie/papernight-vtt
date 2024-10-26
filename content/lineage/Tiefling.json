@@ -8,5 +8,11 @@
     { "score": "Charisma", "bonus": 2 },
     { "score": "Intelligence", "bonus": 1 }
   ],
-  "speed": 30
+  "speed": 30,
+  "senses": [
+    {
+      "name": "Darkvision",
+      "range": 60
+    }
+  ]
 }

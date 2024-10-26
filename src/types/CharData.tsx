@@ -4,6 +4,7 @@ import { CreatureSize } from "./CreatureSize";
 import { Feature } from "./Feature";
 import { HitDice } from "./HitDice";
 import { Language } from "./Language";
+import { Sense } from "./Sense";
 import SkillData from "./SkillData";
 
 export interface CharData {
@@ -26,7 +27,7 @@ export interface CharData {
   speed_adds: Bonus[];
   creatureType: string;
   size: CreatureSize;
-  senses: string[];
+  senses: Sense[];
   proficiency_bonus: number;
   abilities: {
     str: AbilityData;

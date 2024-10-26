@@ -89,6 +89,18 @@ export default function CharacterBuilderLineage(props: Props) {
           <p>{lineageData?.speed + "ft"}</p>
         </div>
       </section>
+      {lineageData?.senses ? (
+        <section className="builder-section">
+          <div className="builder-group">
+            <label>Senses:</label>
+            <p>
+              {lineageData?.senses
+                ?.map((sense: any) => sense.name + " " + sense.range + "ft.")
+                .join(", ")}
+            </p>
+          </div>
+        </section>
+      ) : null}
       {lineageData?.features?.map((feature: any) => {
         return (
           <section key={feature.name} className="builder-section">
@@ -165,6 +177,18 @@ export default function CharacterBuilderLineage(props: Props) {
               <div className="builder-group">
                 <label>Speed:</label>
                 <p>{lineageData?.speed + "ft"}</p>
+              </div>
+            </section>
+          ) : null}
+          {sublineageData?.senses ? (
+            <section className="builder-section">
+              <div className="builder-group">
+                <label>Senses:</label>
+                <p>
+                  {sublineageData?.senses
+                    ?.map((sense: any) => sense.name + ": " + sense.range + "ft.")
+                    .join(", ")}
+                </p>
               </div>
             </section>
           ) : null}

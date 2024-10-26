@@ -31,6 +31,8 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     clearLanguages(previousLineageName, charData);
     setLineageLanguages(lineageData, charData);
     setSpeed(lineageData, charData);
+    clearSenses(previousLineageName, charData);
+    setLineageSenses(lineageData, charData);
     clearAbilityBonuses(previousLineageName, charData);
     setLineageAbilityBonuses(lineageData, charData);
     clearFeatures(previousLineageName, charData);
@@ -47,10 +49,28 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     clearLanguages(previousSublineageName, charData);
     setLineageLanguages(sublineageData, charData);
     setSpeed(sublineageData, charData);
+    clearSenses(previousSublineageName, charData);
+    setLineageSenses(sublineageData, charData);
     clearAbilityBonuses(previousSublineageName, charData);
     setLineageAbilityBonuses(sublineageData, charData);
     clearFeatures(previousSublineageName, charData);
     setLineageFeatures(sublineageData, charData);
+  }
+
+  function clearSenses(source: string, charData: CharData) {
+    charData.senses = charData.senses.filter((sense) => sense.source != source);
+  }
+
+  function setLineageSenses(lineageData: any, charData: CharData) {
+    let senses: any = lineageData.senses;
+    senses?.forEach((sense: any) => {
+      charData.senses.push({
+        name: sense.name,
+        range: sense.range,
+        source: lineageData.name,
+      });
+    });
+    return charData;
   }
 
   function setLineageFeatures(lineageData: any, charData: CharData): CharData {

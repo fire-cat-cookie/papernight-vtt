@@ -227,7 +227,11 @@ export default function CharacterSheet(props: Props) {
           <div id="sheet-con-senses">
             <label>Senses</label>
             <br />
-            <label id="sheet-data-senses">{stringArrayToString(props.charData.senses)}</label>
+            <label id="sheet-data-senses">
+              {props.charData.senses
+                ?.map((sense: any) => sense.name + " " + sense.range + "ft.")
+                .join(", ")}
+            </label>
           </div>
         </div>
       </div>
