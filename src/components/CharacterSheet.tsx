@@ -124,7 +124,9 @@ export default function CharacterSheet(props: Props) {
           <br />
         </div>
         <div id="sheet-con-lineage">
-          <label id="sheet-data-lineage">{props.charData.lineage}</label>
+          <label id="sheet-data-lineage">
+            {props.charData.sublineage ? props.charData.sublineage : props.charData.lineage}
+          </label>
           <br />
         </div>
       </div>
