@@ -22,20 +22,28 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       return { ...charData };
   }
 
+  function clearLineage(charData: CharData, previousLineageName: string) {
+    clearLanguages(previousLineageName, charData);
+    clearSenses(previousLineageName, charData);
+    clearAbilityBonuses(previousLineageName, charData);
+    clearFeatures(previousLineageName, charData);
+  }
+
   function setLineage(charData: CharData, lineage: string) {
     let lineageData = getLineageData(lineage);
-    let previousLineageName = getLineageData(charData.lineage).name;
-    charData.lineage = lineageData.name;
+
+    if (charData.sublineage) {
+      clearLineage(charData, charData.sublineage);
+    }
     charData.sublineage = "";
+    clearLineage(charData, getLineageData(charData.lineage).name);
+
+    charData.lineage = lineageData.name;
     setSize(lineageData, charData);
-    clearLanguages(previousLineageName, charData);
     setLineageLanguages(lineageData, charData);
     setSpeed(lineageData, charData);
-    clearSenses(previousLineageName, charData);
     setLineageSenses(lineageData, charData);
-    clearAbilityBonuses(previousLineageName, charData);
     setLineageAbilityBonuses(lineageData, charData);
-    clearFeatures(previousLineageName, charData);
     setLineageFeatures(lineageData, charData);
   }
 
@@ -43,17 +51,17 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     let sublineageData = getLineageData(charData.lineage)?.sublineages?.find(
       (sublineageToFilter: any) => sublineageToFilter.name == sublineage
     );
-    let previousSublineageName = charData.sublineage;
+
+    if (charData.sublineage) {
+      clearLineage(charData, charData.sublineage);
+    }
+
     charData.sublineage = sublineage;
     setSize(sublineageData, charData);
-    clearLanguages(previousSublineageName, charData);
     setLineageLanguages(sublineageData, charData);
     setSpeed(sublineageData, charData);
-    clearSenses(previousSublineageName, charData);
     setLineageSenses(sublineageData, charData);
-    clearAbilityBonuses(previousSublineageName, charData);
     setLineageAbilityBonuses(sublineageData, charData);
-    clearFeatures(previousSublineageName, charData);
     setLineageFeatures(sublineageData, charData);
   }
 
