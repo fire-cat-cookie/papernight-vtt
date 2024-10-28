@@ -169,4 +169,33 @@
       flex-grow: 1;
     }
   }
+
+  .sheet-tab-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #sheet-tab-row-actions {
+    margin-bottom: 8px;
+  }
+
+  .sheet-tab {
+    padding: 5px 8px 5px 8px;
+    border-radius: 5px;
+  }
+
+  .sheet-tab-active {
+    background-color: rgba(variables.$border-color, 0.3);
+  }
+
+  .sheet-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    p {
+      color: rgba(variables.$text-color, 0.4);
+      margin: 0;
+    }
+  }
 }

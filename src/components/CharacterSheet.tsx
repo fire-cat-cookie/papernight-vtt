@@ -21,6 +21,7 @@ export default function CharacterSheet(props: Props) {
   const [diceRollerVisible, setDiceRollerVisible] = useState(false);
   const [nextRoll, setNextRoll] = useState({ dice: "1d20", bonus: 0 });
   const [diceRollerPosition, setDiceRollerPosition] = useState({ x: 0, y: 0 });
+  const [selectedActionsTab, setSelectedActionsTab] = useState("actions");
 
   function closeModalDialogs() {
     setDiceRollerVisible(false);
@@ -840,16 +841,52 @@ export default function CharacterSheet(props: Props) {
           </div>
         </div>
 
-        {/* features */}
+        {/* actions & features */}
         <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
-          <label className="label-heading">Features</label>
-          <br />
-          <textarea
-            disabled
-            value={props.charData.features
-              .map((feature) => feature.name + ": " + feature.description)
-              .join("\n\n")}
-          ></textarea>
+          <div className="sheet-tab-row" id="sheet-tab-row-actions">
+            <button
+              className={
+                selectedActionsTab === "actions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
+              }
+              onClick={() => setSelectedActionsTab("actions")}
+            >
+              Actions
+            </button>
+            <button
+              className={
+                selectedActionsTab === "bonus actions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
+              }
+              onClick={() => setSelectedActionsTab("bonus actions")}
+            >
+              Bonus actions
+            </button>
+            <button
+              className={
+                selectedActionsTab === "reactions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
+              }
+              onClick={() => setSelectedActionsTab("reactions")}
+            >
+              Reactions
+            </button>
+            <button
+              className={
+                selectedActionsTab === "features" ? "sheet-tab sheet-tab-active" : "sheet-tab"
+              }
+              onClick={() => setSelectedActionsTab("features")}
+            >
+              Features
+            </button>
+          </div>
+          {selectedActionsTab === "features" ? (
+            <div className="sheet-sections">
+              {props.charData.features.map((feature) => (
+                <div className="sheet-column" key={feature.name}>
+                  <label className="label-heading">{feature.name}</label>
+                  <p>{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
 
