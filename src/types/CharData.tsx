@@ -6,9 +6,11 @@ import { HitDice } from "./HitDice";
 import { Language } from "./Language";
 import { Sense } from "./Sense";
 import SkillData from "./SkillData";
+import { Spell } from "./Spell";
 
 export interface CharData {
   name: string;
+  level: number;
   classLevel: string;
   lineage: string;
   sublineage: string;
@@ -63,4 +65,5 @@ export interface CharData {
   languages: Language[];
   tool_prof: string;
   armor_weapon_prof: string;
+  spells: Spell[];
 }

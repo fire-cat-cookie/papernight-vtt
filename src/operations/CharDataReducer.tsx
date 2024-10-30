@@ -1,6 +1,6 @@
 import { CharData } from "../types/CharData.tsx";
 import { Feature } from "../types/Feature.tsx";
-import { getLineageData } from "./GetLineageData.tsx";
+import { getLineageData, getSpells } from "./GetStaticData.tsx";
 
 export type CharDataAction =
   | { type: "set-lineage"; lineage: string }
@@ -27,6 +27,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     clearSenses(previousLineageName, charData);
     clearAbilityBonuses(previousLineageName, charData);
     clearFeatures(previousLineageName, charData);
+    clearSpells(previousLineageName, charData);
   }
 
   function setLineage(charData: CharData, lineage: string) {
@@ -93,10 +94,28 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     charData.features = charData.features.filter((feature) => feature.source != source);
   }
 
+  function clearSpells(source: string, charData: CharData) {
+    charData.spells = charData.spells.filter((spell) => spell.source != source);
+  }
+
   function addFeature(charData: CharData, feature: Feature, source: string) {
     feature.source = source;
     charData.features.push(feature);
+    feature.gainSpells?.spells?.forEach((spell: any) => {
+      if (!spell.levelRequirement || charData.level >= spell.levelRequirement) {
+        addSpell(spell.name, charData, source);
+      }
+    });
     return charData;
+  }
+
+  function addSpell(spellName: string, charData: CharData, source: string) {
+    let spellData = getSpells();
+    let spell: any = spellData.find((spell) => spell.name == spellName);
+    if (spell) {
+      spell.source = source;
+      charData.spells.push(spell);
+    }
   }
 
   function setLineageLanguages(lineageData: any, charData: CharData): CharData {

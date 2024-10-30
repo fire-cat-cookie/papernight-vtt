@@ -11,6 +11,7 @@ import { CharData } from "../types/CharData";
 import { CharDataAction } from "../operations/CharDataReducer";
 import { Util } from "../operations/Util";
 import { EffectTag } from "../types/EffectTag";
+import { CastingTime } from "../types/CastingTime";
 
 type Props = {
   charData: CharData;
@@ -885,6 +886,18 @@ export default function CharacterSheet(props: Props) {
                   <p>{feature.description}</p>
                 </div>
               ))}
+            </div>
+          ) : null}
+          {selectedActionsTab === "actions" ? (
+            <div className="sheet-sections">
+              {props.charData.spells
+                .filter((spell) => spell.casting_time == CastingTime.Action)
+                .map((spell) => (
+                  <div className="sheet-column" key={spell.name}>
+                    <label className="label-heading">{spell.name}</label>
+                    <p>{spell.description}</p>
+                  </div>
+                ))}
             </div>
           ) : null}
         </div>

@@ -1,10 +1,10 @@
 import { CreatureSize } from "../types/CreatureSize";
 import { Ability } from "../types/Ability";
-import { Language } from "../types/Language";
 import { CharData } from "../types/CharData";
 
 export const initialCharData: CharData = {
   name: "Amalia",
+  level: 3,
   classLevel: "3 Warlock (Archfey)",
   lineage: "Tiefling",
   sublineage: "Winged Tiefling",
@@ -186,4 +186,5 @@ Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10
   languages: [{ language: "Common", source: "TestData" }],
   tool_prof: `Flute, Playing Card Set`,
   armor_weapon_prof: `Light Armor, Simple Weapons`,
+  spells: [],
 };

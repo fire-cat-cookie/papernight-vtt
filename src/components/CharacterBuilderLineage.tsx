@@ -1,7 +1,7 @@
 import { CharDataAction } from "../operations/CharDataReducer";
 import "./CharacterBuilder.scss";
 import { CharData } from "../types/CharData";
-import { getLineageData, getLineageNames } from "../operations/GetLineageData";
+import { getLineageData, getLineageNames } from "../operations/GetStaticData";
 
 type Props = {
   charData: CharData;

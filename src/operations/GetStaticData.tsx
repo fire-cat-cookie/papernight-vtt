@@ -1,4 +1,4 @@
-import { lineagesJson } from "../index";
+import { lineagesJson, spellsJson } from "../index";
 
 export function getLineageData(lineageName: string): any {
   return (
@@ -10,4 +10,8 @@ export function getLineageData(lineageName: string): any {
 
 export function getLineageNames() {
   return lineagesJson.map((lineage) => lineage.name);
+}
+
+export function getSpells() {
+  return spellsJson;
 }
