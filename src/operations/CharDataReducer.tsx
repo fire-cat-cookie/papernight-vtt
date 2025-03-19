@@ -1,4 +1,5 @@
 import { CharData } from "../types/CharData.tsx";
+import { CreatureSize } from "../types/CreatureSize.tsx";
 import { Feature } from "../types/Feature.tsx";
 import { getLineageData, getSpells } from "./GetStaticData.tsx";
 
@@ -28,6 +29,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     clearAbilityBonuses(previousLineageName, charData);
     clearFeatures(previousLineageName, charData);
     clearSpells(previousLineageName, charData);
+    charData.speed = 0;
+    clearSpeed(previousLineageName, charData);
+    charData.size = CreatureSize.None;
   }
 
   function setLineage(charData: CharData, lineage: string) {
@@ -66,10 +70,6 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     setLineageFeatures(sublineageData, charData);
   }
 
-  function clearSenses(source: string, charData: CharData) {
-    charData.senses = charData.senses.filter((sense) => sense.source != source);
-  }
-
   function setLineageSenses(lineageData: any, charData: CharData) {
     let senses: any = lineageData.senses;
     senses?.forEach((sense: any) => {
@@ -88,14 +88,6 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       addFeature(charData, feature, lineageData.name);
     });
     return charData;
-  }
-
-  function clearFeatures(source: string, charData: CharData) {
-    charData.features = charData.features.filter((feature) => feature.source != source);
-  }
-
-  function clearSpells(source: string, charData: CharData) {
-    charData.spells = charData.spells.filter((spell) => spell.source != source);
   }
 
   function addFeature(charData: CharData, feature: Feature, source: string) {
@@ -124,10 +116,6 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       charData.languages.push({ language: lang, source: lineageData.name });
     });
     return charData;
-  }
-
-  function clearLanguages(source: string, charData: CharData) {
-    charData.languages = charData.languages.filter((lang) => lang.source != source);
   }
 
   function setSize(lineageData: any, charData: CharData): CharData {
@@ -166,10 +154,31 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
         flat: ability.bonus,
         dice: "",
         name: lineageData.name,
+        source: lineageData.name,
       });
     });
     charData.abilities = charDataAbilities;
     return charData;
+  }
+
+  function clearSpeed(source: string, charData: CharData) {
+    charData.speed_adds = charData.speed_adds.filter((bonus) => bonus.source != source);
+  }
+
+  function clearSenses(source: string, charData: CharData) {
+    charData.senses = charData.senses.filter((sense) => sense.source != source);
+  }
+
+  function clearFeatures(source: string, charData: CharData) {
+    charData.features = charData.features.filter((feature) => feature.source != source);
+  }
+
+  function clearSpells(source: string, charData: CharData) {
+    charData.spells = charData.spells.filter((spell) => spell.source != source);
+  }
+
+  function clearLanguages(source: string, charData: CharData) {
+    charData.languages = charData.languages.filter((lang) => lang.source != source);
   }
 
   function clearAbilityBonuses(source: string, charData: CharData): CharData {

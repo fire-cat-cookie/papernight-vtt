@@ -30,7 +30,7 @@ export default function CharacterBuilderLineage(props: Props) {
     <div className="builder-tab-content" id="builder-lineage">
       <section className="builder-section">
         <div className="builder-group">
-          <label htmlFor="lineage">Choose a lineage:</label>
+          <label htmlFor="lineage">Lineage:</label>
           <select
             name="lineage"
             id="lineage"
@@ -39,6 +39,7 @@ export default function CharacterBuilderLineage(props: Props) {
               props.updateCharData({ type: "set-lineage", lineage: e.target.value });
             }}
           >
+            <option key="" value=""></option>
             {getLineageNames().map((lineageName) => {
               return <option key={lineageName}>{lineageName}</option>;
             })}
@@ -61,12 +62,14 @@ export default function CharacterBuilderLineage(props: Props) {
           </div>
         </section>
       ) : null}
-      <section className="builder-section">
-        <div className="builder-group">
-          <label>Size:</label>
-          <p>{lineageData?.size}</p>
-        </div>
-      </section>
+      {lineageData?.size ? (
+        <section className="builder-section">
+          <div className="builder-group">
+            <label>Size:</label>
+            <p>{lineageData?.size}</p>
+          </div>
+        </section>
+      ) : null}
       {lineageData?.languages ? (
         <section className="builder-section">
           <div className="builder-group">
@@ -83,12 +86,14 @@ export default function CharacterBuilderLineage(props: Props) {
           </div>
         </section>
       ) : null}
-      <section className="builder-section">
-        <div className="builder-group">
-          <label>Speed:</label>
-          <p>{lineageData?.speed + "ft"}</p>
-        </div>
-      </section>
+      {lineageData?.speed ? (
+        <section className="builder-section">
+          <div className="builder-group">
+            <label>Speed:</label>
+            <p>{lineageData?.speed + "ft"}</p>
+          </div>
+        </section>
+      ) : null}
       {lineageData?.senses ? (
         <section className="builder-section">
           <div className="builder-group">

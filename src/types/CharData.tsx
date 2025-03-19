@@ -11,7 +11,11 @@ import { Spell } from "./Spell";
 export interface CharData {
   name: string;
   level: number;
-  classLevel: string;
+  classLevel: {
+    class: string;
+    subclass: string;
+    level: number;
+  }[];
   lineage: string;
   sublineage: string;
   initiative_adds: Bonus[];

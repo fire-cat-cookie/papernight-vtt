@@ -17,7 +17,6 @@ export default function App() {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    updateCharData({ type: "set-lineage", lineage: "Tiefling" });
     setIsInitialized(true);
   }, []);
 

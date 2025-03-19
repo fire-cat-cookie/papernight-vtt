@@ -3,25 +3,202 @@ import { Ability } from "../types/Ability";
 import { CharData } from "../types/CharData";
 
 export const initialCharData: CharData = {
+  name: "",
+  level: 0,
+  classLevel: [],
+  lineage: "",
+  sublineage: "",
+  initiative_adds: [],
+  ac_adds: [],
+  inspiration: false,
+  hp: {
+    current: 0,
+    max: 0,
+    temp: 0,
+    max_adds: [],
+  },
+  hitDice: [
+    {
+      type: 0,
+      remaining: 0,
+      total: 0,
+    },
+  ],
+  conditions: [],
+  speed: 0,
+  speed_adds: [],
+  creatureType: "",
+  size: CreatureSize.Medium,
+  senses: [],
+  proficiency_bonus: 0,
+  abilities: {
+    str: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+    dex: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+    con: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+    int: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+    wis: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+    cha: {
+      score: 0,
+      proficient: false,
+      score_adds: [],
+      save_adds: [],
+    },
+  },
+  skills: {
+    acrobatics: {
+      ability: Ability.dex,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    animal_handling: {
+      ability: Ability.wis,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    arcana: {
+      ability: Ability.int,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    athletics: {
+      ability: Ability.str,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    deception: {
+      ability: Ability.cha,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    history: {
+      ability: Ability.int,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    insight: {
+      ability: Ability.wis,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    intimidation: {
+      ability: Ability.cha,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    investigation: {
+      ability: Ability.int,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    medicine: {
+      ability: Ability.wis,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    nature: {
+      ability: Ability.int,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    perception: {
+      ability: Ability.wis,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    performance: {
+      ability: Ability.cha,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    persuasion: {
+      ability: Ability.cha,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    religion: {
+      ability: Ability.int,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    sleight_of_hand: {
+      ability: Ability.dex,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    stealth: {
+      ability: Ability.dex,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+    survival: {
+      ability: Ability.wis,
+      proficiency_multiplier: 0,
+      adds: [],
+    },
+  },
+  features: [],
+
+  traits: "",
+  inventory: "",
+  languages: [],
+  tool_prof: "",
+  armor_weapon_prof: "",
+  spells: [],
+};
+
+/* Pre-made character
+
+export const initialCharData: CharData = {
   name: "Amalia",
-  level: 3,
-  classLevel: "3 Warlock (Archfey)",
+  level: 1,
+  classLevel: [
+    {
+      class: "Warlock",
+      subclass: "Archfey",
+      level: 1,
+    },
+  ],
   lineage: "Tiefling",
   sublineage: "Winged Tiefling",
   initiative_adds: [],
   ac_adds: [{ flat: 3, dice: "", name: "Mage Armor" }],
   inspiration: false,
   hp: {
-    current: 21,
-    max: 21,
+    current: 9,
+    max: 9,
     temp: 0,
     max_adds: [],
   },
   hitDice: [
     {
       type: 8,
-      remaining: 3,
-      total: 3,
+      remaining: 1,
+      total: 1,
     },
   ],
   conditions: ["Stunned", "Paralyzed"],
@@ -188,3 +365,5 @@ Arcane Focus, Bedroll, Dagger (x2), Flute, Backpack, Crowbar, Hammer, Piton (x10
   armor_weapon_prof: `Light Armor, Simple Weapons`,
   spells: [],
 };
+
+*/

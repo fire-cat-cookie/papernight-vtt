@@ -106,6 +106,15 @@ export default function CharacterSheet(props: Props) {
     return result;
   }
 
+  function displayClassLevel() {
+    let output = "";
+    let classLevelsSorted = props.charData.classLevel.slice().sort((a, b) => a.level - b.level);
+    for (let c of classLevelsSorted) {
+      output += c.level + " " + c.class + " (" + c.subclass + ") ";
+    }
+    return output;
+  }
+
   function stringArrayToString(strings: string[]) {
     let result = "";
     strings.forEach((e: string) => {
@@ -122,7 +131,7 @@ export default function CharacterSheet(props: Props) {
           <label id="sheet-data-charname">{props.charData.name}</label>
         </div>
         <div id="sheet-con-classlevel">
-          <label id="sheet-data-classlevel">{props.charData.classLevel}</label>
+          <label id="sheet-data-classlevel">{displayClassLevel()}</label>
           <br />
         </div>
         <div id="sheet-con-lineage">

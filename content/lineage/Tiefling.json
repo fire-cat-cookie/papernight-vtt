@@ -3,6 +3,7 @@
   "description": "Tieflings are born from partially fiendish ancestries that often go back many generations. They are often seen as outsiders and troublemakers to the communities they are born in.",
   "age": "Tieflings mature at the same rate as humans but live a few years longer.",
   "size": "Medium",
+  "creature_type": "Humanoid",
   "languages": ["Common", "Infernal"],
   "ability_scores": [
     { "score": "Charisma", "bonus": 2 },
