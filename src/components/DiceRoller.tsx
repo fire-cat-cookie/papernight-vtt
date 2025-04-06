@@ -1,14 +1,13 @@
 import { ReactElement, useState } from "react";
 import "./DiceRoller.scss";
-import { CharData } from "../types/CharData";
-import { Util } from "../operations/Util";
 import { EffectTag } from "../types/EffectTag";
 import { ConditionalEffect } from "../types/ConditionalEffect";
+import { CharComposed } from "../types/CharComposed";
 
 type Props = {
   initialDice: string;
   initialBonus: string;
-  charData: CharData;
+  char: CharComposed;
   conditionalEffectsFilter: EffectTag[];
 };
 
@@ -82,7 +81,7 @@ export default function DiceRoller(props: Props) {
 
   function displayConditionalEffects() {
     let filteredEffects: ReactElement[] = [];
-    props.charData.features?.forEach((feature) => {
+    props.char.features?.forEach((feature) => {
       filterConditionalEffects(feature.conditional_effects)?.forEach((effect) => {
         let info = "[" + feature.source + "] " + effect.info;
         filteredEffects.push(

@@ -1,8 +1,8 @@
 export enum Ability {
-  str,
-  dex,
-  con,
-  int,
-  wis,
-  cha,
+  str = "Strength",
+  dex = "Dexterity",
+  con = "Constitution",
+  int = "Intelligence",
+  wis = "Wisdom",
+  cha = "Charisma",
 }

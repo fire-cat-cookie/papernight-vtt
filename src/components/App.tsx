@@ -11,10 +11,12 @@ import CharacterBuilderBackground from "./CharacterBuilderBackground";
 import CharacterBuilderEquipment from "./CharacterBuilderEquipment";
 import { charDataReducer as charDataReducer } from "../operations/CharDataReducer";
 import { initialCharData } from "../operations/InitCharData";
+import { ComposeChar } from "../operations/ComposeChar";
 
 export default function App() {
   const [charData, updateCharData] = useReducer(charDataReducer, initialCharData);
   const [isInitialized, setIsInitialized] = useState(false);
+  let charComposed = ComposeChar(charData);
 
   useEffect(() => {
     setIsInitialized(true);
@@ -30,7 +32,7 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<CharacterSheet charData={charData} updateCharData={updateCharData} />}
+          element={<CharacterSheet char={charComposed} updateCharData={updateCharData} />}
         ></Route>
         <Route
           path="/builder"

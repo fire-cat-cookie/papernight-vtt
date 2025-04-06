@@ -4,10 +4,21 @@
   "age": "A halfling reaches adulthood at the age of 20 and generally lives into the middle of his or her second century.",
   "size": "Small",
   "creature_type": "Humanoid",
-  "languages": ["Common", "Halfling"],
-  "ability_scores": [{ "score": "Dexterity", "bonus": 2 }],
   "speed": 25,
   "features": [
+    {
+      "name": "Languages",
+      "languages": ["Common", "Halfling"]
+    },
+    {
+      "name": "Ability Scores",
+      "bonuses": [
+        {
+          "target": "dex_score",
+          "flat": 2
+        }
+      ]
+    },
     {
       "name": "Lucky",
       "description": "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll."
@@ -30,8 +41,16 @@
   "sublineages": [
     {
       "name": "Stout Halfling",
-      "ability_scores": [{ "score": "Constitution", "bonus": 1 }],
       "features": [
+        {
+          "name": "Ability Scores",
+          "bonuses": [
+            {
+              "target": "con_score",
+              "flat": 1
+            }
+          ]
+        },
         {
           "name": "Stout Resilience",
           "description": "You have advantage on saving throws against poison, and you have resistance against poison damage.",
@@ -47,8 +66,16 @@
     },
     {
       "name": "Lightfoot Halfling",
-      "ability_scores": [{ "score": "Charisma", "bonus": 1 }],
       "features": [
+        {
+          "name": "Ability Scores",
+          "bonuses": [
+            {
+              "target": "cha_score",
+              "flat": 1
+            }
+          ]
+        },
         {
           "name": "Naturally Stealthy",
           "description": "You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."

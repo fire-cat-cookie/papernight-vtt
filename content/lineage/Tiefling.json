@@ -4,19 +4,34 @@
   "age": "Tieflings mature at the same rate as humans but live a few years longer.",
   "size": "Medium",
   "creature_type": "Humanoid",
-  "languages": ["Common", "Infernal"],
-  "ability_scores": [
-    { "score": "Charisma", "bonus": 2 },
-    { "score": "Intelligence", "bonus": 1 }
-  ],
   "speed": 30,
-  "senses": [
+  "features": [
+    {
+      "name": "Languages",
+      "languages": ["Common", "Infernal"]
+    },
+    {
+      "name": "Ability Scores",
+      "bonuses": [
+        {
+          "target": "cha_score",
+          "flat": 2
+        },
+        {
+          "target": "int_score",
+          "flat": 1
+        }
+      ]
+    },
     {
       "name": "Darkvision",
-      "range": 60
-    }
-  ],
-  "features": [
+      "senses": [
+        {
+          "name": "Darkvision",
+          "range": 60
+        }
+      ]
+    },
     {
       "name": "Hellish Resistance",
       "description": "You have resistance to fire damage.",
@@ -45,7 +60,7 @@
             }
           }
         ],
-        "spellMod": "Charisma"
+        "spellMod": "cha"
       }
     }
   ]
