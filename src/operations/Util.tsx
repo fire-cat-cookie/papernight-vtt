@@ -26,4 +26,8 @@ export const Util = {
         return 5;
     }
   },
+
+  Clamp: function (value: number, min: number, max: number) {
+    return Math.max(min, Math.min(value, max));
+  },
 };

@@ -22,7 +22,6 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       return { ...charData };
     case "set-ability-score":
       charData.base_ability_scores[Util.AbilityIndex(action.ability)].score = action.value;
-      console.log(charData);
       return { ...charData };
     default:
       return { ...charData };

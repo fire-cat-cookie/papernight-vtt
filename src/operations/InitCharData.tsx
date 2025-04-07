@@ -7,27 +7,27 @@ export const initialCharData: CharData = {
   base_ability_scores: [
     {
       ability: Ability.str,
-      score: 0,
+      score: 8,
     },
     {
       ability: Ability.dex,
-      score: 0,
+      score: 8,
     },
     {
       ability: Ability.con,
-      score: 0,
+      score: 8,
     },
     {
       ability: Ability.int,
-      score: 0,
+      score: 8,
     },
     {
       ability: Ability.wis,
-      score: 0,
+      score: 8,
     },
     {
       ability: Ability.cha,
-      score: 0,
+      score: 8,
     },
   ],
   lineage: undefined,
