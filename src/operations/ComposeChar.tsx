@@ -120,6 +120,7 @@ function maxHP(charData: CharData) {
       result += Math.round(Util.AverageRoll({ amount: 1, sides: class_.hitDie }));
     }
   }
+  result += abilityMod(charData, Ability.con) * charData.level;
   let bonuses = allBonuses(charData).filter((b) => b.target == Target.hp);
   bonuses.forEach((b) => (result += b.flat));
   if (charData.status?.hp_reduction) {
