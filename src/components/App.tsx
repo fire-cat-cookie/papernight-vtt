@@ -51,7 +51,11 @@ export default function App() {
           <Route
             path="abilities"
             element={
-              <CharacterBuilderAbilities charData={charData} updateCharData={updateCharData} />
+              <CharacterBuilderAbilities
+                charData={charData}
+                charComposed={charComposed}
+                updateCharData={updateCharData}
+              />
             }
           ></Route>
           <Route

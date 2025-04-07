@@ -1,3 +1,4 @@
+import { Ability } from "./Ability";
 import { CharStatus } from "./CharStatus";
 import { CreatureSize } from "./CreatureSize";
 import { Dice } from "./Dice";
@@ -32,6 +33,12 @@ export interface CharComposed {
   cha_score: number;
   cha_mod: number;
   cha_save: number;
+  abilities: {
+    ability: Ability;
+    score: number;
+    mod: number;
+    save: number;
+  }[];
   skillMods: {
     acrobatics: number;
     animal_handling: number;

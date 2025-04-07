@@ -34,6 +34,44 @@ export function ComposeChar(charData: CharData): CharComposed {
     cha_score: abilityScore(charData, Ability.cha),
     cha_mod: abilityMod(charData, Ability.cha),
     cha_save: savingThrowMod(charData, Ability.cha),
+    abilities: [
+      {
+        ability: Ability.str,
+        score: abilityScore(charData, Ability.str),
+        mod: abilityMod(charData, Ability.str),
+        save: savingThrowMod(charData, Ability.str),
+      },
+      {
+        ability: Ability.dex,
+        score: abilityScore(charData, Ability.dex),
+        mod: abilityMod(charData, Ability.dex),
+        save: savingThrowMod(charData, Ability.dex),
+      },
+      {
+        ability: Ability.con,
+        score: abilityScore(charData, Ability.con),
+        mod: abilityMod(charData, Ability.con),
+        save: savingThrowMod(charData, Ability.con),
+      },
+      {
+        ability: Ability.int,
+        score: abilityScore(charData, Ability.int),
+        mod: abilityMod(charData, Ability.int),
+        save: savingThrowMod(charData, Ability.int),
+      },
+      {
+        ability: Ability.wis,
+        score: abilityScore(charData, Ability.wis),
+        mod: abilityMod(charData, Ability.wis),
+        save: savingThrowMod(charData, Ability.wis),
+      },
+      {
+        ability: Ability.cha,
+        score: abilityScore(charData, Ability.cha),
+        mod: abilityMod(charData, Ability.cha),
+        save: savingThrowMod(charData, Ability.cha),
+      },
+    ],
     skillMods: {
       acrobatics: skillMod(charData, Skill.acrobatics),
       animal_handling: skillMod(charData, Skill.animal_handling),
