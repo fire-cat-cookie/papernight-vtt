@@ -35,7 +35,7 @@ export const initialCharData: CharData = {
   background: undefined,
   custom_features: [],
   status: {
-    hp_current: 0,
+    hp_missing: 0,
     hp_temp: 0,
     inspiration: false,
     hp_reduction: 0,

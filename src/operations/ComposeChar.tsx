@@ -113,6 +113,7 @@ export function ComposeChar(charData: CharData): CharComposed {
       survival: skillProf(charData, Skill.survival),
     },
     hp_max: maxHP(charData),
+    hp_current: Math.max(0, maxHP(charData) - charData.status.hp_missing),
     initiative: initiative(charData),
     ac: AC(charData),
     hit_dice_total: hitDice(charData),
@@ -164,7 +165,7 @@ function maxHP(charData: CharData) {
   if (charData.status?.hp_reduction) {
     result -= charData.status.hp_reduction;
   }
-  return result;
+  return Math.max(0, result);
 }
 
 function classLevel(charData: CharData) {

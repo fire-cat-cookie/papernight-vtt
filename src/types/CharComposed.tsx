@@ -15,6 +15,7 @@ export interface CharComposed {
   lineage: string;
   sublineage: string;
   hp_max: number;
+  hp_current: number;
   str_score: number;
   str_mod: number;
   str_save: number;

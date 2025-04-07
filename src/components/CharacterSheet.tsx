@@ -126,7 +126,7 @@ export default function CharacterSheet(props: Props) {
           <label className="label-heading">Hit Points</label>
           <div className="sheet-field-annotated">
             <label className="sheet-de-emphasized">Current</label>
-            <label id="sheet-data-hp-current">{char.status.hp_current}</label>
+            <label id="sheet-data-hp-current">{char.hp_current}</label>
           </div>
           <div className="sheet-field-annotated">
             <label className="sheet-de-emphasized">Maximum</label>
