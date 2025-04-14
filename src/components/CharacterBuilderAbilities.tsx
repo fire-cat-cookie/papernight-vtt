@@ -12,6 +12,11 @@ type Props = {
   updateCharData: React.Dispatch<CharDataAction>;
 };
 
+type PositionedNumber = {
+  value: number;
+  position: number;
+};
+
 export default function CharacterBuilderAbilities(props: Props) {
   let charData = props.charData;
   let charComposed = props.charComposed;
@@ -22,8 +27,19 @@ export default function CharacterBuilderAbilities(props: Props) {
   let standardArray = [15, 14, 13, 12, 10, 8];
   let inputVisible = ["Manual", "Point Buy", ""].indexOf(generationMethod) != -1;
   let dropdownVisible = ["Rolled", "Standard Array"].indexOf(generationMethod) != -1;
-  const [numbersAvailable, setNumbersAvailable] = useState([0, 0, 0, 0, 0, 0]);
-  const [numbersChosen, setNumbersChosen] = useState([0, 0, 0, 0, 0, 0]);
+  const [numbersAvailable, setNumbersAvailable] = useState<number[]>([]);
+  const [numbersChosen, setNumbersChosen] = useState<PositionedNumber[]>(initialNumbersChosen());
+
+  function initialNumbersChosen() {
+    return [
+      { position: -1, value: 8 },
+      { position: -1, value: 8 },
+      { position: -1, value: 8 },
+      { position: -1, value: 8 },
+      { position: -1, value: 8 },
+      { position: -1, value: 8 },
+    ];
+  }
 
   function pointsRemaining() {
     return Math.min(
@@ -46,25 +62,32 @@ export default function CharacterBuilderAbilities(props: Props) {
     return total;
   }
 
-  function chooseNumber(value: number, index: number, ability: Ability) {
-    let newNumbers = numbersChosen;
+  function chooseNumber(value: PositionedNumber, index: number, ability: Ability) {
+    let newNumbers = numbersChosen.slice();
     newNumbers[index] = value;
     setNumbersChosen(newNumbers);
-    props.updateCharData({ type: "set-ability-score", ability: ability, value: value });
-    console.log(value);
-    console.log(numbersAvailable);
+    props.updateCharData({ type: "set-ability-score", ability: ability, value: value.value });
   }
 
-  function numbersAvailableForIndex(index: number) {
-    let numbersAllowed = numbersAvailable.slice();
-    for (let chosen of numbersChosen) {
-      let foundIndex = numbersAllowed.indexOf(chosen);
+  function numbersAvailableForIndex(index: number): PositionedNumber[] {
+    let numbersAllowed = [];
+    for (let i = 0; i < numbersAvailable.length; i++) {
+      numbersAllowed.push({ value: numbersAvailable[i], position: i });
+    }
+    for (let i = 0; i < numbersChosen.length; i++) {
+      let foundIndex = -1;
+      for (let ii = 0; ii < numbersAllowed.length; ii++) {
+        if (
+          numbersAllowed[ii].position == numbersChosen[i].position &&
+          numbersAllowed[ii].value == numbersChosen[i].value &&
+          i != index
+        ) {
+          foundIndex = ii;
+        }
+      }
       if (foundIndex != -1) {
         numbersAllowed.splice(foundIndex, 1);
       }
-    }
-    if (numbersChosen[index] != 0) {
-      numbersAllowed.push(numbersChosen[index]);
     }
     return numbersAllowed;
   }
@@ -92,7 +115,7 @@ export default function CharacterBuilderAbilities(props: Props) {
   function getMinMaxScore(): { min: number; max: number } {
     switch (generationMethod) {
       case "Rolled":
-        return { min: 5, max: 18 };
+        return { min: 3, max: 18 };
       case "Manual":
         return { min: 1, max: 20 };
       case "Point Buy":
@@ -101,6 +124,43 @@ export default function CharacterBuilderAbilities(props: Props) {
       default:
         return { min: 0, max: 20 };
     }
+  }
+
+  function displayNumbersRolled() {
+    if (numbersAvailable.indexOf(0) == -1) {
+      return (
+        numbersAvailable.join(", ") +
+        " (Total: " +
+        numbersAvailable.reduce((a, b) => a + b, 0) +
+        ")"
+      );
+    }
+    return "";
+  }
+
+  function rollNumbers() {
+    let newScores = [];
+    for (let i = 0; i < 6; i++) {
+      let score = [];
+      for (let j = 0; j < 4; j++) {
+        score.push(Util.Roll(1, 6));
+      }
+      score.sort((a, b) => b - a);
+      score.pop();
+      newScores.push(score[0] + score[1] + score[2]);
+    }
+    newScores.sort((a, b) => b - a);
+    setNumbersAvailable(newScores);
+  }
+
+  function resetNumbersChosen() {
+    chooseNumber({ value: 8, position: -1 }, 0, Ability.str);
+    chooseNumber({ value: 8, position: -1 }, 1, Ability.dex);
+    chooseNumber({ value: 8, position: -1 }, 2, Ability.con);
+    chooseNumber({ value: 8, position: -1 }, 3, Ability.int);
+    chooseNumber({ value: 8, position: -1 }, 4, Ability.wis);
+    chooseNumber({ value: 8, position: -1 }, 5, Ability.cha);
+    setNumbersChosen(initialNumbersChosen());
   }
 
   return (
@@ -116,6 +176,11 @@ export default function CharacterBuilderAbilities(props: Props) {
               setGenerationMethod(e.target.value);
               if (e.target.value == "Standard Array") {
                 setNumbersAvailable(standardArray);
+                resetNumbersChosen();
+              }
+              if (e.target.value == "Rolled") {
+                setNumbersAvailable([]);
+                resetNumbersChosen();
               }
             }}
           >
@@ -140,6 +205,25 @@ export default function CharacterBuilderAbilities(props: Props) {
           <div className="builder-con-group">
             <label>Numbers available: </label>
             <p>{standardArray.join(", ")}</p>
+          </div>
+        </section>
+      ) : null}
+      {generationMethod == "Rolled" ? (
+        <section className="builder-section">
+          <div className="builder-con-group">
+            <button
+              className="builder-abilities-roll-button"
+              onClick={() => {
+                rollNumbers();
+                resetNumbersChosen();
+              }}
+            >
+              Roll
+            </button>
+          </div>
+          <div className="builder-con-group">
+            <label>Numbers rolled: </label>
+            <p>{displayNumbersRolled()}</p>
           </div>
         </section>
       ) : null}
@@ -178,12 +262,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 0, Ability.str);
+                  chooseNumber(JSON.parse(e.target.value), 0, Ability.str);
                 }}
               >
-                <option key="" value={0}></option>
-                {numbersAvailableForIndex(0).map((n) => {
-                  return <option key={n}>{n}</option>;
+                <option key="" value={JSON.stringify({ value: 8, position: -1 })}></option>
+                {numbersAvailableForIndex(0).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}
@@ -224,12 +312,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 1, Ability.dex);
+                  chooseNumber(JSON.parse(e.target.value), 1, Ability.dex);
                 }}
               >
                 <option key="" value={0}></option>
-                {numbersAvailableForIndex(1).map((n) => {
-                  return <option key={n}>{n}</option>;
+                {numbersAvailableForIndex(1).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}
@@ -270,12 +362,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 2, Ability.con);
+                  chooseNumber(JSON.parse(e.target.value), 2, Ability.con);
                 }}
               >
                 <option key="" value={0}></option>
-                {numbersAvailableForIndex(2).map((n) => {
-                  return <option key={n}>{n}</option>;
+                {numbersAvailableForIndex(2).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}
@@ -316,12 +412,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 3, Ability.int);
+                  chooseNumber(JSON.parse(e.target.value), 3, Ability.int);
                 }}
               >
                 <option key="" value={0}></option>
-                {numbersAvailableForIndex(3).map((n) => {
-                  return <option key={n}>{n}</option>;
+                {numbersAvailableForIndex(3).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}
@@ -362,12 +462,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 4, Ability.wis);
+                  chooseNumber(JSON.parse(e.target.value), 4, Ability.wis);
                 }}
               >
                 <option key="" value={0}></option>
-                {numbersAvailableForIndex(4).map((n) => {
-                  return <option key={n}>{n}</option>;
+                {numbersAvailableForIndex(4).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}
@@ -408,12 +512,16 @@ export default function CharacterBuilderAbilities(props: Props) {
               <select
                 className="builder-abilities-select"
                 onChange={(e) => {
-                  chooseNumber(+e.target.value, 5, Ability.cha);
+                  chooseNumber(JSON.parse(e.target.value), 5, Ability.cha);
                 }}
               >
                 <option key="" value={0}></option>
-                {numbersAvailableForIndex(5).map((n) => {
-                  return <option key={n}>{n}</option>;
+                {numbersAvailableForIndex(5).map((n: PositionedNumber) => {
+                  return (
+                    <option key={n.position + " " + n.value} value={JSON.stringify(n)}>
+                      {n.value}
+                    </option>
+                  );
                 })}
               </select>
             ) : null}

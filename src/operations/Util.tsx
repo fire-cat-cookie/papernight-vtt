@@ -30,4 +30,12 @@ export const Util = {
   Clamp: function (value: number, min: number, max: number) {
     return Math.max(min, Math.min(value, max));
   },
+
+  Roll: function (amount: number, sides: number) {
+    let result = 0;
+    for (let i = 0; i < amount; i++) {
+      result += Math.floor(Math.random() * sides + 1);
+    }
+    return result;
+  },
 };
