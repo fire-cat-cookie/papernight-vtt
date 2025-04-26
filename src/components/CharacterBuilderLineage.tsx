@@ -125,6 +125,23 @@ export default function CharacterBuilderLineage(props: Props) {
     );
   }
 
+  function renderSublineageSection() {
+    return (
+      <div>
+        {renderSublineageSelect()}
+        {renderLabelledSection(sublineageData?.age, "Age:", sublineageData?.age)}
+        {renderLabelledSection(
+          sublineageData?.description,
+          "Description:",
+          sublineageData?.description
+        )}
+        {renderLabelledSection(sublineageData?.size, "Size:", sublineageData?.size)}
+        {renderLabelledSection(sublineageData?.speed, "Speed:", sublineageData?.speed + "ft")}
+        {renderFeatures(sublineageData?.features)}
+      </div>
+    );
+  }
+
   return (
     <div className="builder-tab-content" id="builder-lineage">
       {/*Lineage*/}
@@ -135,20 +152,7 @@ export default function CharacterBuilderLineage(props: Props) {
       {renderLabelledSection(lineageData?.speed, "Speed:", lineageData?.speed + "ft")}
       {renderFeatures(lineageData?.features)}
       {/*Sublineage*/}
-      {lineageData?.sublineages?.length > 0 ? (
-        <div>
-          {renderSublineageSelect()}
-          {renderLabelledSection(sublineageData?.age, "Age:", sublineageData?.age)}
-          {renderLabelledSection(
-            sublineageData?.description,
-            "Description:",
-            sublineageData?.description
-          )}
-          {renderLabelledSection(sublineageData?.size, "Size:", sublineageData?.size)}
-          {renderLabelledSection(sublineageData?.speed, "Speed:", sublineageData?.speed + "ft")}
-          {renderFeatures(sublineageData?.features)}
-        </div>
-      ) : null}
+      {lineageData?.sublineages?.length > 0 && renderSublineageSection()}
     </div>
   );
 }
