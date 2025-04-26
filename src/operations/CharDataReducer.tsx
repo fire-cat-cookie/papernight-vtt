@@ -60,7 +60,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       features: classData.features,
       savingThrowProf: classData.savingThrows,
     });
-    charData.firstClass = className;
+    if (charData.classes.length == 1) {
+      charData.firstClass = className;
+    }
   }
 
   function setLineage(charData: CharData, lineage: string) {
