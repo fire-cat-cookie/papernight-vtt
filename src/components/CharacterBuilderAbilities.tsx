@@ -164,7 +164,7 @@ export default function CharacterBuilderAbilities(props: Props) {
   }
 
   return (
-    <div className="builder-tab-content" id="builder-abilities">
+    <div className="builder-tab-content builder-sections" id="builder-abilities">
       <section className="builder-section">
         <div className="builder-group">
           <label htmlFor="generation-method">Generation Method:</label>

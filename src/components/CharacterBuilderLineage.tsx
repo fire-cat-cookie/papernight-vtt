@@ -127,7 +127,7 @@ export default function CharacterBuilderLineage(props: Props) {
 
   function renderSublineageSection() {
     return (
-      <div>
+      <div className="builder-sections">
         {renderSublineageSelect()}
         {renderLabelledSection(sublineageData?.age, "Age:", sublineageData?.age)}
         {renderLabelledSection(
@@ -144,13 +144,15 @@ export default function CharacterBuilderLineage(props: Props) {
 
   return (
     <div className="builder-tab-content" id="builder-lineage">
-      {/*Lineage*/}
-      {renderLineageSelect()}
-      {renderLabelledSection(lineageData?.age, "Age:", lineageData?.age)}
-      {renderLabelledSection(lineageData?.description, "Description:", lineageData?.description)}
-      {renderLabelledSection(lineageData?.size, "Size:", lineageData?.size)}
-      {renderLabelledSection(lineageData?.speed, "Speed:", lineageData?.speed + "ft")}
-      {renderFeatures(lineageData?.features)}
+      <div className="builder-sections">
+        {/*Lineage*/}
+        {renderLineageSelect()}
+        {renderLabelledSection(lineageData?.age, "Age:", lineageData?.age)}
+        {renderLabelledSection(lineageData?.description, "Description:", lineageData?.description)}
+        {renderLabelledSection(lineageData?.size, "Size:", lineageData?.size)}
+        {renderLabelledSection(lineageData?.speed, "Speed:", lineageData?.speed + "ft")}
+        {renderFeatures(lineageData?.features)}
+      </div>
       {/*Sublineage*/}
       {lineageData?.sublineages?.length > 0 && renderSublineageSection()}
     </div>
