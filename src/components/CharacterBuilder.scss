@@ -69,4 +69,10 @@
     flex-direction: column;
     gap: 2px;
   }
+
+  .builder-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
 }

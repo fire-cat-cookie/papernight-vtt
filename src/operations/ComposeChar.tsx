@@ -12,7 +12,7 @@ import { Util } from "./Util";
 export function ComposeChar(charData: CharData): CharComposed {
   return {
     name: charData.name,
-    level: charData.level,
+    level: level(charData),
     classLevel: classLevel(charData),
     lineage: charData.lineage ? charData.lineage.name : "",
     sublineage: charData.lineage?.sublineage ? charData.lineage.sublineage.name : "",
@@ -126,6 +126,14 @@ export function ComposeChar(charData: CharData): CharComposed {
   };
 }
 
+function level(charData: CharData): number {
+  let level = 0;
+  for (let class_ of charData.classes) {
+    level += class_.level;
+  }
+  return level;
+}
+
 function speed(charData: CharData): number {
   let result = 0;
   if (charData.lineage) {
@@ -159,7 +167,7 @@ function maxHP(charData: CharData) {
       result += Math.round(Util.AverageRoll({ amount: 1, sides: class_.hitDie }));
     }
   }
-  result += abilityMod(charData, Ability.con) * charData.level;
+  result += abilityMod(charData, Ability.con) * level(charData);
   let bonuses = allBonuses(charData).filter((b) => b.target == Target.hp);
   bonuses.forEach((b) => (result += b.flat));
   if (charData.status?.hp_reduction) {
@@ -310,13 +318,14 @@ function targetSavingThrow(ability: Ability): Target {
 }
 
 function proficiencyBonus(charData: CharData) {
-  if (charData.level >= 17) {
+  let charLevel = level(charData);
+  if (charLevel >= 17) {
     return 6;
-  } else if (charData.level >= 13) {
+  } else if (charLevel >= 13) {
     return 5;
-  } else if (charData.level >= 9) {
+  } else if (charLevel >= 9) {
     return 4;
-  } else if (charData.level >= 5) {
+  } else if (charLevel >= 5) {
     return 3;
   } else {
     return 2;

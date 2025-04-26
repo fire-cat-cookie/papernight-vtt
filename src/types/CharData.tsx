@@ -7,7 +7,6 @@ import { Lineage } from "./Lineage";
 
 export interface CharData {
   name: string;
-  level: number;
   base_ability_scores: [
     {
       ability: Ability.str;

@@ -6,7 +6,7 @@ export interface Class {
   name: string;
   level: number;
   hitDie: number;
-  subclass: Subclass;
+  subclass: Subclass | undefined;
   features: Feature[];
   savingThrowProf: Ability[];
 }

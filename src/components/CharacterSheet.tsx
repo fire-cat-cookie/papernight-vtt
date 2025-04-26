@@ -48,7 +48,11 @@ export default function CharacterSheet(props: Props) {
     let output = "";
     let classLevelsSorted = char.classLevel.slice().sort((a, b) => a.level - b.level);
     for (let c of classLevelsSorted) {
-      output += c.level + " " + c.class + " (" + c.subclass + ") ";
+      output += c.class + " " + c.level;
+      if (c.subclass) {
+        output += " (" + c.subclass + ")";
+      }
+      output += " ";
     }
     return output;
   }
@@ -62,14 +66,6 @@ export default function CharacterSheet(props: Props) {
       return senses.map((sense: any) => sense.name + " " + sense.range + "ft.").join(", ");
     }
     return "";
-  }
-
-  function stringArrayToString(strings: string[]) {
-    let result = "";
-    strings.forEach((e: string) => {
-      result += e + "\n";
-    });
-    return result;
   }
 
   return (

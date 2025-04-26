@@ -3,7 +3,6 @@ import { CharData } from "../types/CharData";
 
 export const initialCharData: CharData = {
   name: "",
-  level: 1,
   base_ability_scores: [
     {
       ability: Ability.str,
