@@ -1,0 +1,38 @@
+@use "../variables";
+
+.builder-con-abilities {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  align-items: start;
+  gap: 5px;
+}
+
+.builder-abilities-col {
+  min-height: 25px;
+}
+
+.builder-abilities-input {
+  min-height: 20px;
+  width: 45px;
+}
+
+.builder-abilities-input-disabled {
+  /* Chrome, Safari, Edge, Opera */
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Firefox */
+  -moz-appearance: textfield;
+}
+
+.builder-abilities-roll-button {
+  height: 40px;
+  width: 50px;
+}
+
+.builder-abilities-heading {
+  min-height: 25px;
+  padding-bottom: 5px;
+}

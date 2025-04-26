@@ -4,6 +4,7 @@ import { Ability } from "../types/Ability";
 import { CharComposed } from "../types/CharComposed";
 import { CharData } from "../types/CharData";
 import "./CharacterBuilder.scss";
+import "./CharacterBuilderAbilities.scss";
 import { Util } from "../operations/Util";
 
 type Props = {
