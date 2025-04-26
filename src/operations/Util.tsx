@@ -1,4 +1,5 @@
 import { Ability } from "../types/Ability";
+import { Target } from "../types/Bonus";
 import { Dice } from "../types/Dice";
 
 export const Util = {
@@ -37,5 +38,22 @@ export const Util = {
       result += Math.floor(Math.random() * sides + 1);
     }
     return result;
+  },
+
+  TargetAbilityScore: function (target: Target) {
+    switch (target) {
+      case Target.str_score:
+        return "Strength";
+      case Target.dex_score:
+        return "Dexterity";
+      case Target.con_score:
+        return "Constitution";
+      case Target.int_score:
+        return "Intelligence";
+      case Target.wis_score:
+        return "Wisdom";
+      case Target.cha_score:
+        return "Charisma";
+    }
   },
 };

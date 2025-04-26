@@ -2,7 +2,7 @@ import { CharDataAction } from "../operations/CharDataReducer";
 import "./CharacterBuilder.scss";
 import { CharData } from "../types/CharData";
 import { getLineageData, getLineageNames } from "../operations/GetStaticData";
-import { Target } from "../types/Bonus";
+import { Util } from "../operations/Util";
 
 type Props = {
   charData: CharData;
@@ -31,7 +31,7 @@ export default function CharacterBuilderLineage(props: Props) {
       for (let i = 0; i < feature.bonuses.length; i++) {
         if (i > 0) result += ", ";
         result +=
-          "+" + feature.bonuses[i].flat + " " + targetAbilityScore(feature.bonuses[i].target);
+          "+" + feature.bonuses[i].flat + " " + Util.TargetAbilityScore(feature.bonuses[i].target);
       }
     } else if (feature.name == "Languages") {
       for (let i = 0; i < feature.languages.length; i++) {
@@ -45,25 +45,8 @@ export default function CharacterBuilderLineage(props: Props) {
     return result;
   }
 
-  function targetAbilityScore(target: Target) {
-    switch (target) {
-      case Target.str_score:
-        return "Strength";
-      case Target.dex_score:
-        return "Dexterity";
-      case Target.con_score:
-        return "Constitution";
-      case Target.int_score:
-        return "Intelligence";
-      case Target.wis_score:
-        return "Wisdom";
-      case Target.cha_score:
-        return "Charisma";
-    }
-  }
-
-  return (
-    <div className="builder-tab-content" id="builder-lineage">
+  function renderLineageSelect() {
+    return (
       <section className="builder-section">
         <div className="builder-group">
           <label htmlFor="lineage">Lineage:</label>
@@ -75,110 +58,95 @@ export default function CharacterBuilderLineage(props: Props) {
               props.updateCharData({ type: "set-lineage", lineage: e.target.value });
             }}
           >
-            <option key="" value=""></option>
+            <option hidden disabled key="" value=""></option>
             {getLineageNames().map((lineageName) => {
               return <option key={lineageName}>{lineageName}</option>;
             })}
           </select>
         </div>
       </section>
-      {lineageData?.age ? (
-        <section className="builder-section">
-          <div className="builder-group">
-            <label>Age:</label>
-            <p>{lineageData?.age}</p>
-          </div>
-        </section>
-      ) : null}
-      {lineageData?.description ? (
-        <section className="builder-section">
-          <div className="builder-group">
-            <label>Description:</label>
-            <p>{lineageData?.description}</p>
-          </div>
-        </section>
-      ) : null}
-      {lineageData?.size ? (
-        <section className="builder-section">
-          <div className="builder-group">
-            <label>Size:</label>
-            <p>{lineageData?.size}</p>
-          </div>
-        </section>
-      ) : null}
-      {lineageData?.speed ? (
-        <section className="builder-section">
-          <div className="builder-group">
-            <label>Speed:</label>
-            <p>{lineageData?.speed + "ft"}</p>
-          </div>
-        </section>
-      ) : null}
-      {lineageData?.features?.map((feature: any) => {
-        return (
-          <section key={feature.name} className="builder-section">
-            <div className="builder-group">
-              <label>{feature.name}</label>
-              <p>{getFeatureDescription(feature)}</p>
-            </div>
-          </section>
-        );
-      })}
+    );
+  }
+
+  function renderSublineageSelect() {
+    return (
+      <section className="builder-section">
+        <div className="builder-group">
+          <label htmlFor="sublineage">Sublineage:</label>
+          <select
+            name="sublineage"
+            id="sublineage"
+            defaultValue={sublineageData ? sublineageData.name : ""}
+            onChange={(e) => {
+              props.updateCharData({ type: "set-sublineage", sublineage: e.target.value });
+            }}
+          >
+            <option hidden disabled></option>
+            {lineageData.sublineages.map((sublineage: any) => {
+              return <option key={sublineage.name}>{sublineage.name}</option>;
+            })}
+          </select>
+        </div>
+      </section>
+    );
+  }
+
+  function renderLabelledSection(condition: boolean, label: string, description: string) {
+    if (!condition) {
+      return null;
+    }
+    return (
+      <section className="builder-section">
+        <div className="builder-group">
+          <label>{label}</label>
+          <p>{description}</p>
+        </div>
+      </section>
+    );
+  }
+
+  function renderFeatures(featureList: any[]) {
+    if (!featureList) {
+      return null;
+    }
+    return (
+      <>
+        {featureList.map((feature: any) => {
+          return (
+            <section key={feature.name} className="builder-section">
+              <div className="builder-group">
+                <label>{feature.name}</label>
+                <p>{getFeatureDescription(feature)}</p>
+              </div>
+            </section>
+          );
+        })}
+      </>
+    );
+  }
+
+  return (
+    <div className="builder-tab-content" id="builder-lineage">
+      {/*Lineage*/}
+      {renderLineageSelect()}
+      {renderLabelledSection(lineageData?.age, "Age:", lineageData?.age)}
+      {renderLabelledSection(lineageData?.description, "Description:", lineageData?.description)}
+      {renderLabelledSection(lineageData?.size, "Size:", lineageData?.size)}
+      {renderLabelledSection(lineageData?.speed, "Speed:", lineageData?.speed + "ft")}
+      {renderFeatures(lineageData?.features)}
       {/*Sublineage*/}
       {lineageData?.sublineages?.length > 0 ? (
         <div>
-          <section className="builder-section">
-            <div className="builder-group">
-              <label htmlFor="sublineage">Sublineage:</label>
-              <select
-                name="sublineage"
-                id="sublineage"
-                defaultValue={sublineageData ? sublineageData.name : ""}
-                onChange={(e) => {
-                  props.updateCharData({ type: "set-sublineage", sublineage: e.target.value });
-                }}
-              >
-                <option hidden disabled></option>
-                {lineageData.sublineages.map((sublineage: any) => {
-                  return <option key={sublineage.name}>{sublineage.name}</option>;
-                })}
-              </select>
-            </div>
-          </section>
-          {sublineageData?.age ? (
-            <section className="builder-section">
-              <div className="builder-group">
-                <label>Age:</label>
-                <p>{lineageData?.age}</p>
-              </div>
-            </section>
-          ) : null}
-          {sublineageData?.description ? (
-            <section className="builder-section">
-              <div className="builder-group">
-                <label>Description:</label>
-                <p>{lineageData?.description}</p>
-              </div>
-            </section>
-          ) : null}
-          {sublineageData?.size ? (
-            <section className="builder-section">
-              <div className="builder-group">
-                <label>Size:</label>
-                <p>{lineageData?.size}</p>
-              </div>
-            </section>
-          ) : null}
-          {sublineageData?.features?.map((feature: any) => {
-            return (
-              <section key={feature.name} className="builder-section">
-                <div className="builder-group">
-                  <label>{feature.name}</label>
-                  <p>{getFeatureDescription(feature)}</p>
-                </div>
-              </section>
-            );
-          })}
+          {renderSublineageSelect()}
+          {renderLabelledSection(sublineageData?.age, "Age:", sublineageData?.age)}
+          {renderLabelledSection(
+            sublineageData?.description,
+            "Description:",
+            sublineageData?.description
+          )}
+          {renderLabelledSection(sublineageData?.size, "Size:", sublineageData?.size)}
+          {renderLabelledSection(sublineageData?.speed, "Speed:", sublineageData?.speed + "ft")}
+          {renderFeatures(sublineageData?.features)}
         </div>
       ) : null}
     </div>
