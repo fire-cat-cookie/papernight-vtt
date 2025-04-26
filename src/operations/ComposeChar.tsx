@@ -230,7 +230,7 @@ function AC(charData: CharData) {
   let result = abilityMod(charData, Ability.dex);
   let bonuses = allBonuses(charData).filter((b) => b.target == Target.ac);
   bonuses.forEach((b) => (result += b.flat));
-  return result;
+  return 10 + result;
 }
 
 function abilityScore(charData: CharData, abilityType: Ability) {
