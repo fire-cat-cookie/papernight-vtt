@@ -6,6 +6,7 @@ import { Class } from "../types/Class";
 import "./CharacterBuilder.scss";
 import "./CharacterBuilderClass.scss";
 import { Feature } from "../types/Feature";
+import React from "react";
 
 type Props = {
   charData: CharData;
@@ -157,10 +158,10 @@ export default function CharacterBuilderClass(props: Props) {
       <div className="builder-section">
         <p>
           {description.map((line: string, index: number) => (
-            <>
+            <React.Fragment key={index}>
               {line}
               <br></br>
-            </>
+            </React.Fragment>
           ))}
         </p>
       </div>
