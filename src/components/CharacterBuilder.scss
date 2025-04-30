@@ -75,4 +75,19 @@
     flex-direction: row;
     gap: 20px;
   }
+
+  .builder-tab-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .builder-tab {
+    padding: 5px 8px 5px 8px;
+    border-radius: 5px;
+  }
+
+  .builder-tab-active {
+    background-color: rgba(variables.$border-color, 0.3);
+  }
 }

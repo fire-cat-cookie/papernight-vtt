@@ -6,9 +6,10 @@ import { Sense } from "./Sense";
 import { Skill } from "./Skill";
 
 export interface Feature {
+  level: number;
   name: string;
   source: string;
-  description: string;
+  description: string[];
   conditional_effects: ConditionalEffect[];
   resistances: DamageType[];
   gainSpells: GainSpells;
