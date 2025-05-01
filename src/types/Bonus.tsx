@@ -36,8 +36,6 @@ export enum Target {
 }
 
 export interface Bonus {
-  name: string;
-  source: string;
   target: Target;
   flat: number;
 }

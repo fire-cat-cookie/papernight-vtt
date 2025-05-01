@@ -1,7 +1,8 @@
 import { Ability } from "../types/Ability.tsx";
 import { CharData } from "../types/CharData.tsx";
+import { Feature } from "../types/Feature.tsx";
+import { GameUtil } from "./GameUtil.tsx";
 import { getClass, getLineageData } from "./GetStaticData.tsx";
-import { Util } from "./Util.tsx";
 
 export type CharDataAction =
   | { type: "set-lineage"; lineage: string }
@@ -9,6 +10,7 @@ export type CharDataAction =
   | { type: "set-name"; name: string }
   | { type: "set-ability-score"; ability: Ability; value: number }
   | { type: "set-class-level"; className: string; level: number }
+  | { type: "update-class-feature"; className: string; feature: Feature }
   | { type: "remove-class"; className: string };
 
 export function charDataReducer(charData: CharData, action: CharDataAction) {
@@ -23,10 +25,13 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       charData.name = action.name;
       return { ...charData };
     case "set-ability-score":
-      charData.base_ability_scores[Util.AbilityIndex(action.ability)].score = action.value;
+      charData.base_ability_scores[GameUtil.AbilityFromIndex(action.ability)].score = action.value;
       return { ...charData };
     case "set-class-level":
       setClassLevel(charData, action.className, action.level);
+      return { ...charData };
+    case "update-class-feature":
+      updateClassFeature(charData, action.className, action.feature);
       return { ...charData };
     case "remove-class":
       charData.classes = charData.classes.filter((c) => c.name != action.className);
@@ -36,6 +41,21 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       return { ...charData };
     default:
       return { ...charData };
+  }
+
+  function updateClassFeature(charData: CharData, className: string, feature: Feature) {
+    let newClasses = charData.classes.slice();
+    let newClass = charData.classes.find((c) => c.name == className);
+    let newFeatures = newClass?.features?.filter(
+      (f) => !(f.level == feature.level && f.name == feature.name)
+    );
+    newFeatures?.push(feature);
+    if (newClass && newFeatures) {
+      newClass.features = newFeatures;
+      newClasses = newClasses.filter((c) => c.name != className);
+      newClasses.push(newClass);
+    }
+    charData.classes = newClasses;
   }
 
   function setClassLevel(charData: CharData, className: string, level: number) {

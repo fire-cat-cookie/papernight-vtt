@@ -2,7 +2,7 @@ import { CharDataAction } from "../operations/CharDataReducer";
 import "./CharacterBuilder.scss";
 import { CharData } from "../types/CharData";
 import { getLineageData, getLineageNames } from "../operations/GetStaticData";
-import { Util } from "../operations/Util";
+import { GameUtil } from "../operations/GameUtil";
 
 type Props = {
   charData: CharData;
@@ -20,29 +20,6 @@ export default function CharacterBuilderLineage(props: Props) {
         (sublineage: any) => sublineage.name == sublineageName
       );
     }
-  }
-
-  function getFeatureDescription(feature: any) {
-    let result = "";
-    if (feature.description) {
-      return feature.description;
-    }
-    if (feature.name == "Ability Scores") {
-      for (let i = 0; i < feature.bonuses.length; i++) {
-        if (i > 0) result += ", ";
-        result +=
-          "+" + feature.bonuses[i].flat + " " + Util.TargetAbilityScore(feature.bonuses[i].target);
-      }
-    } else if (feature.name == "Languages") {
-      for (let i = 0; i < feature.languages.length; i++) {
-        if (i > 0) result += ", ";
-        result += feature.languages[i];
-      }
-    } else if (feature.name == "Darkvision") {
-      result =
-        "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t discern color in darkness, only shades of gray.";
-    }
-    return result;
   }
 
   function renderLineageSelect() {
@@ -99,7 +76,7 @@ export default function CharacterBuilderLineage(props: Props) {
       <section className="builder-section">
         <div className="builder-group">
           <label>{label}</label>
-          <p>{description}</p>
+          <p className="builder-feature-text">{description}</p>
         </div>
       </section>
     );
@@ -116,7 +93,7 @@ export default function CharacterBuilderLineage(props: Props) {
             <section key={feature.name} className="builder-section">
               <div className="builder-group">
                 <label>{feature.name}</label>
-                <p>{getFeatureDescription(feature)}</p>
+                <p className="builder-feature-text">{GameUtil.GetFeatureDescription(feature)}</p>
               </div>
             </section>
           );

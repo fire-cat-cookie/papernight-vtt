@@ -5,7 +5,7 @@ import { CharComposed } from "../types/CharComposed";
 import { CharData } from "../types/CharData";
 import "./CharacterBuilder.scss";
 import "./CharacterBuilderAbilities.scss";
-import { Util } from "../operations/Util";
+import { GameUtil } from "../operations/GameUtil";
 
 type Props = {
   charData: CharData;
@@ -144,7 +144,7 @@ export default function CharacterBuilderAbilities(props: Props) {
     for (let i = 0; i < 6; i++) {
       let score = [];
       for (let j = 0; j < 4; j++) {
-        score.push(Util.Roll(1, 6));
+        score.push(GameUtil.Roll(1, 6));
       }
       score.sort((a, b) => b - a);
       score.pop();

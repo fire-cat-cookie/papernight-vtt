@@ -53,11 +53,16 @@
   .builder-section {
     display: flex;
     gap: 10px;
+  }
 
-    p {
-      color: rgba(variables.$text-color, 0.4);
-      margin: 0;
-    }
+  .builder-feature-text {
+    color: rgba(variables.$text-color, 0.4);
+    margin: 0;
+  }
+
+  .builder-heading-section {
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 
   .builder-avatar {
@@ -68,6 +73,8 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    margin-bottom: 1em;
+    align-items: baseline;
   }
 
   .builder-row {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DiceRoller from "./DiceRoller";
 import "./CharacterSheet.scss";
 import { CharDataAction } from "../operations/CharDataReducer";

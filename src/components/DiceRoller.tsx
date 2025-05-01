@@ -3,7 +3,7 @@ import "./DiceRoller.scss";
 import { EffectTag } from "../types/EffectTag";
 import { ConditionalEffect } from "../types/ConditionalEffect";
 import { CharComposed } from "../types/CharComposed";
-import { Util } from "../operations/Util";
+import { GameUtil } from "../operations/GameUtil";
 
 type Props = {
   initialDice: string;
@@ -43,7 +43,7 @@ export default function DiceRoller(props: Props) {
   ): number {
     let results = [];
     for (let i = 0; i <= Math.abs(advantageState); i++) {
-      results.push(Util.Roll(numberOfDice, sides));
+      results.push(GameUtil.Roll(numberOfDice, sides));
     }
     return (advantageState < 0 ? Math.min(...results) : Math.max(...results)) + bonus;
   }

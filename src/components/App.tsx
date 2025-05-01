@@ -36,7 +36,13 @@ export default function App() {
         ></Route>
         <Route
           path="/builder"
-          element={<CharacterBuilder charData={charData} updateCharData={updateCharData} />}
+          element={
+            <CharacterBuilder
+              charData={charData}
+              updateCharData={updateCharData}
+              charComposed={charComposed}
+            />
+          }
         >
           <Route
             path="lineage"
@@ -46,7 +52,13 @@ export default function App() {
           ></Route>
           <Route
             path="class"
-            element={<CharacterBuilderClass charData={charData} updateCharData={updateCharData} />}
+            element={
+              <CharacterBuilderClass
+                charData={charData}
+                updateCharData={updateCharData}
+                charComposed={charComposed}
+              />
+            }
           ></Route>
           <Route
             path="abilities"

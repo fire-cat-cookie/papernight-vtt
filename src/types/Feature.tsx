@@ -20,4 +20,6 @@ export interface Feature {
   }[];
   languages: string[];
   senses: Sense[];
+  abilityScoreImprovement: boolean;
+  subclassFeature: boolean;
 }

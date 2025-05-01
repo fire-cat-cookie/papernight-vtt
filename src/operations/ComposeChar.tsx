@@ -7,7 +7,7 @@ import { CreatureSize } from "../types/CreatureSize";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
 import { Skill } from "../types/Skill";
-import { Util } from "./Util";
+import { GameUtil } from "./GameUtil";
 
 export function ComposeChar(charData: CharData): CharComposed {
   return {
@@ -164,7 +164,7 @@ function maxHP(charData: CharData) {
   for (let class_ of charData.classes) {
     let start = class_ == firstClass_ ? 1 : 0;
     for (let i = start; i < class_.level; i++) {
-      result += Math.round(Util.AverageRoll({ amount: 1, sides: class_.hitDie }));
+      result += Math.round(GameUtil.AverageRoll({ amount: 1, sides: class_.hitDie }));
     }
   }
   result += abilityMod(charData, Ability.con) * level(charData);

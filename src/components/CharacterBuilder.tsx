@@ -2,9 +2,11 @@ import { NavLink, Outlet } from "react-router-dom";
 import "./CharacterBuilder.scss";
 import { CharData } from "../types/CharData";
 import { CharDataAction } from "../operations/CharDataReducer";
+import { CharComposed } from "../types/CharComposed";
 
 type Props = {
   charData: CharData;
+  charComposed: CharComposed;
   updateCharData: React.Dispatch<CharDataAction>;
 };
 
