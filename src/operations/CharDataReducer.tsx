@@ -80,6 +80,10 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       features: classData.features,
       savingThrowProf: classData.savingThrows,
       progression: classData.progression,
+      armorProf: classData.armorProf,
+      weaponProf: classData.weaponProf,
+      toolProf: classData.toolProf,
+      skills: classData.skills,
     });
     if (charData.classes.length == 1) {
       charData.firstClass = className;

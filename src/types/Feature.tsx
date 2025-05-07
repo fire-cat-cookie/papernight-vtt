@@ -16,8 +16,11 @@ export interface Feature {
   bonuses: Bonus[];
   skillProf: {
     skill: Skill;
-    proficiencyMultiplier: number; // 0 = not proficient, 1 = proficient, 2 = expertise
+    expertise: boolean;
   }[];
+  weaponProf: string[];
+  armorProf: string[];
+  toolProf: string[];
   languages: string[];
   senses: Sense[];
   abilityScoreImprovement: boolean;

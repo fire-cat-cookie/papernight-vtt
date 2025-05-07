@@ -10,6 +10,7 @@ import React from "react";
 import { GameUtil } from "../operations/GameUtil";
 import CharacterBuilderClassASI from "./CharacterBuilderClassASI";
 import { CharComposed } from "../types/CharComposed";
+import { Util } from "../operations/Util";
 
 type Props = {
   charData: CharData;
@@ -227,6 +228,51 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
+  function renderClassHitDiceProficiencies() {
+    if (!selectedClass) {
+      return null;
+    }
+
+    return (
+      <div className="builder-class-info">
+        <div className="builder-group">
+          <label>Hit dice</label>
+          <p className="builder-feature-text">{"d" + selectedClass.hitDie}</p>
+        </div>
+        <div className="builder-group">
+          <label>Saving Throws</label>
+          <p className="builder-feature-text">{selectedClass.savingThrowProf.join(", ")}</p>
+        </div>
+        {selectedClass.armorProf && (
+          <div className="builder-group">
+            <label>Armor</label>
+            <p className="builder-feature-text">{selectedClass.armorProf.firstLevel.join(", ")}</p>
+          </div>
+        )}
+        {selectedClass.weaponProf && (
+          <div className="builder-group">
+            <label>Weapons</label>
+            <p className="builder-feature-text">{selectedClass.weaponProf.firstLevel.join(", ")}</p>
+          </div>
+        )}
+        {selectedClass.toolProf && (
+          <div className="builder-group">
+            <label>Tools</label>
+            <p className="builder-feature-text">{selectedClass.toolProf.firstLevel.join(", ")}</p>
+          </div>
+        )}
+        {selectedClass.skills && (
+          <div className="builder-group">
+            <label>Skills</label>
+            <p className="builder-feature-text">
+              {"Choose " + Util.NumberToWord(selectedClass.skills.firstLevel.number) + ":"}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   function renderClassTable() {
     if (!selectedClass) {
       return null;
@@ -253,7 +299,11 @@ export default function CharacterBuilderClass(props: Props) {
           </div>
         ))}
         {levels.map((level) => {
-          return <>{renderClassTableRow(progressionsShown, level)}</>;
+          return (
+            <React.Fragment key={selectedClass + " " + level}>
+              {renderClassTableRow(progressionsShown, level)}
+            </React.Fragment>
+          );
         })}
       </div>
     );
@@ -265,7 +315,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     return (
-      <React.Fragment key={selectedClass + " " + level}>
+      <>
         <div className="builder-class-table-col">{level}</div>
         <div className="builder-class-table-col">
           {GameUtil.GroupFeaturesByLevel(selectedClass.features)
@@ -277,7 +327,7 @@ export default function CharacterBuilderClass(props: Props) {
             {selectedClass.progression.find((p) => p.name == prog)?.entries[level - 1]}
           </div>
         ))}
-      </React.Fragment>
+      </>
     );
   }
 
@@ -292,10 +342,14 @@ export default function CharacterBuilderClass(props: Props) {
         {renderAddMulticlass()}
         {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
-      <h3 className="builder-heading-section">Class overview</h3>
-      {renderClassTable()}
-      <h3 className="builder-heading-section">Class features</h3>
-      {renderClassFeatureTabRow()}
+      <div className="builder-sections">
+        {renderClassFeatureTabRow()}
+        {selectedClass && <h3 className="builder-heading-section">Progression</h3>}
+        {renderClassTable()}
+        {selectedClass && <h3 className="builder-heading-section">Hit Dice & Proficiencies</h3>}
+        {renderClassHitDiceProficiencies()}
+      </div>
+      {selectedClass && <h3 className="builder-heading-section">Features</h3>}
       {renderClassFeatureList()}
     </div>
   );

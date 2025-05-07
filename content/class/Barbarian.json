@@ -3,6 +3,27 @@
   "description": "",
   "hitdie": 12,
   "savingThrows": ["Strength", "Constitution"],
+  "armorProf": {
+    "firstLevel": ["Light armor", "Medium armor", "Shields"],
+    "multiclass": ["Shields"]
+  },
+  "weaponProf": {
+    "firstLevel": ["Simple Weapons", "Martial weapons"],
+    "multiclass": ["Simple Weapons", "Martial weapons"]
+  },
+  "skills": {
+    "firstLevel": {
+      "number": 2,
+      "choices": [
+        "Animal Handling",
+        "Athletics",
+        "Intimidation",
+        "Nature",
+        "Perception",
+        "Survival"
+      ]
+    }
+  },
   "subclassFeatures": [3, 6, 10, 14],
   "abilityScoreImprovement": [4, 8, 12, 16, 19],
   "progression": [
