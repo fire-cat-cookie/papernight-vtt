@@ -11,6 +11,7 @@ import { GameUtil } from "../operations/GameUtil";
 import CharacterBuilderClassASI from "./CharacterBuilderClassASI";
 import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
+import { Skill } from "../types/Skill";
 
 type Props = {
   charData: CharData;
@@ -233,8 +234,29 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
+    let multiclass = currentClasses.length > 1 && currentClasses[0].name != selectedClass.name;
+    let armorProf = "";
+    let weaponProf = "";
+    let toolProf = "";
+    let skillNumber = 0;
+    let skillChoices: Skill[] = [];
+    if (multiclass) {
+      armorProf = selectedClass.armorProf?.multiclass?.join(", ") ?? "";
+      weaponProf = selectedClass.weaponProf?.multiclass?.join(", ") ?? "";
+      toolProf = selectedClass.toolProf?.multiclass?.join(", ") ?? "";
+      skillNumber = selectedClass.skills?.multiclass?.number ?? 0;
+      skillChoices = selectedClass.skills?.multiclass?.choices ?? [];
+    } else {
+      armorProf = selectedClass.armorProf?.firstLevel?.join(", ") ?? "";
+      weaponProf = selectedClass.weaponProf?.firstLevel?.join(", ") ?? "";
+      toolProf = selectedClass.toolProf?.firstLevel?.join(", ") ?? "";
+      skillNumber = selectedClass.skills?.firstLevel?.number ?? 0;
+      skillChoices = selectedClass.skills?.firstLevel?.choices ?? [];
+    }
+
     return (
-      <div className="builder-class-info">
+      <div className="builder-class-hitdice-proficiencies">
+        {<h3>{"Hit Dice & Proficiencies" + (multiclass ? " (Multiclass)" : "")} </h3>}
         <div className="builder-group">
           <label>Hit dice</label>
           <p className="builder-feature-text">{"d" + selectedClass.hitDie}</p>
@@ -243,29 +265,29 @@ export default function CharacterBuilderClass(props: Props) {
           <label>Saving Throws</label>
           <p className="builder-feature-text">{selectedClass.savingThrowProf.join(", ")}</p>
         </div>
-        {selectedClass.armorProf && (
+        {armorProf && (
           <div className="builder-group">
             <label>Armor</label>
-            <p className="builder-feature-text">{selectedClass.armorProf.firstLevel.join(", ")}</p>
+            <p className="builder-feature-text">{armorProf}</p>
           </div>
         )}
-        {selectedClass.weaponProf && (
+        {weaponProf && (
           <div className="builder-group">
             <label>Weapons</label>
-            <p className="builder-feature-text">{selectedClass.weaponProf.firstLevel.join(", ")}</p>
+            <p className="builder-feature-text">{weaponProf}</p>
           </div>
         )}
-        {selectedClass.toolProf && (
+        {toolProf && (
           <div className="builder-group">
             <label>Tools</label>
-            <p className="builder-feature-text">{selectedClass.toolProf.firstLevel.join(", ")}</p>
+            <p className="builder-feature-text">{toolProf}</p>
           </div>
         )}
-        {selectedClass.skills && (
+        {skillNumber && (
           <div className="builder-group">
             <label>Skills</label>
             <p className="builder-feature-text">
-              {"Choose " + Util.NumberToWord(selectedClass.skills.firstLevel.number) + ":"}
+              {"Choose " + Util.NumberToWord(skillNumber) + ":"}
             </p>
           </div>
         )}
@@ -346,7 +368,6 @@ export default function CharacterBuilderClass(props: Props) {
         {renderClassFeatureTabRow()}
         {selectedClass && <h3 className="builder-heading-section">Progression</h3>}
         {renderClassTable()}
-        {selectedClass && <h3 className="builder-heading-section">Hit Dice & Proficiencies</h3>}
         {renderClassHitDiceProficiencies()}
       </div>
       {selectedClass && <h3 className="builder-heading-section">Features</h3>}
