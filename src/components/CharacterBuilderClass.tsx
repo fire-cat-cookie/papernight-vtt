@@ -23,6 +23,7 @@ export default function CharacterBuilderClass(props: Props) {
   let loadedClasses = getClasses();
   const [additionalClassEntryVisible, setAdditionalClassEntryVisible] = useState(false);
   const [selectedClassTab, setSelectedClassTab] = useState("");
+  let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
 
   useEffect(() => {
     if (currentClasses.length == 1) setSelectedClassTab(currentClasses[0]?.name);
@@ -158,7 +159,6 @@ export default function CharacterBuilderClass(props: Props) {
   }
 
   function renderClassFeatureList() {
-    let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
     if (!selectedClass) {
       return null;
     }
@@ -172,11 +172,7 @@ export default function CharacterBuilderClass(props: Props) {
             <h3 className="builder-heading-section">{"Level " + entry[0]}</h3>
             <br></br>
             {entry[1].map((feature: Feature) =>
-              renderClassFeature(
-                feature,
-                selectedClass,
-                selectedClass.name + entry[0] + " " + feature.name
-              )
+              renderClassFeature(feature, selectedClass.name + entry[0] + " " + feature.name)
             )}
           </div>
         ))}
@@ -184,10 +180,10 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderASIFeature(feature: Feature, selectedClass: Class) {
+  function renderASIFeature(feature: Feature) {
     return (
       <>
-        {feature.abilityScoreImprovement && (
+        {feature.abilityScoreImprovement && selectedClass && (
           <CharacterBuilderClassASI
             feature={feature}
             selectedClass={selectedClass}
@@ -199,14 +195,14 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassFeature(feature: Feature, selectedClass: Class, renderKey: string) {
+  function renderClassFeature(feature: Feature, renderKey: string) {
     return (
       <React.Fragment key={renderKey}>
         <div className="builder-group">
           <label>{feature.name}</label>
           {GameUtil.DisplayFeatureDescription(feature)}
         </div>
-        {renderASIFeature(feature, selectedClass)}
+        {renderASIFeature(feature)}
       </React.Fragment>
     );
   }
@@ -231,6 +227,60 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
+  function renderClassTable() {
+    if (!selectedClass) {
+      return null;
+    }
+
+    let columnWidths: string[] = ["60px", "auto"];
+    let progressionsShown: string[] = ["Level", "Features"];
+    if (selectedClass.progression) {
+      for (let prog of selectedClass.progression) {
+        columnWidths.push("80px");
+        progressionsShown.push(prog.name);
+      }
+    }
+
+    let gridStyle = {
+      gridTemplateColumns: columnWidths.join(" "),
+    };
+
+    return (
+      <div className="builder-class-table" style={gridStyle}>
+        {progressionsShown.map((prog) => (
+          <div className="builder-class-table-col" key={selectedClass.name + " " + prog}>
+            {prog}
+          </div>
+        ))}
+        {levels.map((level) => {
+          return <>{renderClassTableRow(progressionsShown, level)}</>;
+        })}
+      </div>
+    );
+  }
+
+  function renderClassTableRow(progressions: string[], level: number) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    return (
+      <React.Fragment key={selectedClass + " " + level}>
+        <div className="builder-class-table-col">{level}</div>
+        <div className="builder-class-table-col">
+          {GameUtil.GroupFeaturesByLevel(selectedClass.features)
+            [level - 1][1].map((f) => f.name)
+            .join(", ")}
+        </div>
+        {progressions.slice(2).map((prog) => (
+          <div className="builder-class-table-col" key={selectedClass + " " + level + " " + prog}>
+            {selectedClass.progression.find((p) => p.name == prog)?.entries[level - 1]}
+          </div>
+        ))}
+      </React.Fragment>
+    );
+  }
+
   return (
     <div className="builder-tab-content builder-sections" id="builder-class">
       <div className="builder-sections">
@@ -242,6 +292,8 @@ export default function CharacterBuilderClass(props: Props) {
         {renderAddMulticlass()}
         {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
+      <h3 className="builder-heading-section">Class overview</h3>
+      {renderClassTable()}
       <h3 className="builder-heading-section">Class features</h3>
       {renderClassFeatureTabRow()}
       {renderClassFeatureList()}

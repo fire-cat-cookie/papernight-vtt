@@ -9,4 +9,5 @@ export interface Class {
   subclass: Subclass | undefined;
   features: Feature[];
   savingThrowProf: Ability[];
+  progression: { name: string; entries: string[] | number[] }[];
 }

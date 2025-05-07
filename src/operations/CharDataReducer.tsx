@@ -79,6 +79,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       subclass: undefined,
       features: classData.features,
       savingThrowProf: classData.savingThrows,
+      progression: classData.progression,
     });
     if (charData.classes.length == 1) {
       charData.firstClass = className;
