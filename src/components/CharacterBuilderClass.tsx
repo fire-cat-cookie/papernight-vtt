@@ -265,25 +265,25 @@ export default function CharacterBuilderClass(props: Props) {
           <label>Saving Throws</label>
           <p className="builder-feature-text">{selectedClass.savingThrowProf.join(", ")}</p>
         </div>
-        {armorProf && (
+        {armorProf != "" && (
           <div className="builder-group">
             <label>Armor</label>
             <p className="builder-feature-text">{armorProf}</p>
           </div>
         )}
-        {weaponProf && (
+        {weaponProf != "" && (
           <div className="builder-group">
             <label>Weapons</label>
             <p className="builder-feature-text">{weaponProf}</p>
           </div>
         )}
-        {toolProf && (
+        {toolProf != "" && (
           <div className="builder-group">
             <label>Tools</label>
             <p className="builder-feature-text">{toolProf}</p>
           </div>
         )}
-        {skillNumber && (
+        {skillNumber > 0 && (
           <div className="builder-group">
             <label>Skills</label>
             <p className="builder-feature-text">
@@ -341,7 +341,7 @@ export default function CharacterBuilderClass(props: Props) {
         <div className="builder-class-table-col">{level}</div>
         <div className="builder-class-table-col">
           {GameUtil.GroupFeaturesByLevel(selectedClass.features)
-            [level - 1][1].map((f) => f.name)
+            [level - 1]?.[1]?.map((f) => f.name)
             .join(", ")}
         </div>
         {progressions.slice(2).map((prog) => (
