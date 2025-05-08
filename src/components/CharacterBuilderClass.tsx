@@ -235,28 +235,39 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     let multiclass = currentClasses.length > 1 && currentClasses[0].name != selectedClass.name;
+    let loadedClass: any = loadedClasses.find((c) => c.name == selectedClass.name);
     let armorProf = "";
     let weaponProf = "";
     let toolProf = "";
     let skillNumber = 0;
     let skillChoices: Skill[] = [];
+    let skillsSelected: Skill[] = [];
     if (multiclass) {
-      armorProf = selectedClass.armorProf?.multiclass?.join(", ") ?? "";
-      weaponProf = selectedClass.weaponProf?.multiclass?.join(", ") ?? "";
-      toolProf = selectedClass.toolProf?.multiclass?.join(", ") ?? "";
-      skillNumber = selectedClass.skills?.multiclass?.number ?? 0;
-      skillChoices = selectedClass.skills?.multiclass?.choices ?? [];
+      armorProf = loadedClass.armorProf?.multiclass?.join(", ") ?? "";
+      weaponProf = loadedClass.weaponProf?.multiclass?.join(", ") ?? "";
+      toolProf = loadedClass.toolProf?.multiclass?.join(", ") ?? "";
+      skillNumber = loadedClass.skills?.multiclass?.number ?? 0;
+      skillChoices = loadedClass.skills?.multiclass?.choices ?? [];
+      skillsSelected = selectedClass.skills.multiclass ?? [];
     } else {
-      armorProf = selectedClass.armorProf?.firstLevel?.join(", ") ?? "";
-      weaponProf = selectedClass.weaponProf?.firstLevel?.join(", ") ?? "";
-      toolProf = selectedClass.toolProf?.firstLevel?.join(", ") ?? "";
-      skillNumber = selectedClass.skills?.firstLevel?.number ?? 0;
-      skillChoices = selectedClass.skills?.firstLevel?.choices ?? [];
+      armorProf = loadedClass.armorProf?.firstLevel?.join(", ") ?? "";
+      weaponProf = loadedClass.weaponProf?.firstLevel?.join(", ") ?? "";
+      toolProf = loadedClass.toolProf?.firstLevel?.join(", ") ?? "";
+      skillNumber = loadedClass.skills?.firstLevel?.number ?? 0;
+      skillChoices = loadedClass.skills?.firstLevel?.choices ?? [];
+      skillsSelected = selectedClass.skills.firstLevel ?? [];
     }
 
     return (
       <div className="builder-class-hitdice-proficiencies">
-        {<h3>{"Hit Dice & Proficiencies" + (multiclass ? " (Multiclass)" : "")} </h3>}
+        {<h3>{"Hit Dice & Proficiencies"} </h3>}
+        {multiclass && (
+          <div className="builder-group">
+            <label>Multiclass</label>
+            {<p className="builder-feature-text">{"Proficiencies are shown for multiclass"} </p>}
+            {<p className="builder-feature-text">{"Multiclass requirement: "} </p>}
+          </div>
+        )}
         <div className="builder-group">
           <label>Hit dice</label>
           <p className="builder-feature-text">{"d" + selectedClass.hitDie}</p>
@@ -289,9 +300,58 @@ export default function CharacterBuilderClass(props: Props) {
             <p className="builder-feature-text">
               {"Choose " + Util.NumberToWord(skillNumber) + ":"}
             </p>
+            {renderclassSkillSelects(skillNumber, skillChoices, skillsSelected, multiclass)}
           </div>
         )}
       </div>
+    );
+  }
+
+  function renderclassSkillSelects(
+    skillNumber: number,
+    skillChoices: Skill[],
+    skillsSelected: Skill[],
+    multiclass: boolean
+  ) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    return (
+      <>
+        {Array(skillNumber)
+          .fill(1)
+          .map((e, index) => (
+            <select
+              value={skillsSelected[index] ?? ""}
+              key={
+                selectedClass?.name +
+                " Skill proficiencies " +
+                index +
+                (multiclass ? " multiclass" : "")
+              }
+              onChange={(e) => {
+                let skill = Object.values(Skill).find((value) => value == e.target.value);
+                if (skill) {
+                  skillsSelected[index] = skill;
+                }
+                props.updateCharData({
+                  type: "set-class-skills",
+                  className: selectedClass.name,
+                  skills: skillsSelected,
+                });
+              }}
+            >
+              <option value=""></option>
+              {skillChoices
+                .slice()
+                .filter((s) => skillsSelected.indexOf(s) == -1 || s == skillsSelected[index])
+                .map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+            </select>
+          ))}
+      </>
     );
   }
 

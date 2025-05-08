@@ -14,10 +14,8 @@ export interface Class {
   armorProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
   weaponProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
   toolProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
-  skills:
-    | {
-        firstLevel: { number: number; choices: Skill[] };
-        multiclass?: { number: number; choices: Skill[] };
-      }
-    | undefined;
+  skills: {
+    firstLevel: Skill[];
+    multiclass?: Skill[];
+  };
 }

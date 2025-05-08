@@ -3,6 +3,7 @@
   "description": "",
   "hitdie": 12,
   "savingThrows": ["Strength", "Constitution"],
+  "multiclassRequirements": [{ "ability": "Strength", "minimum": 13 }],
   "armorProf": {
     "firstLevel": ["Light armor", "Medium armor", "Shields"],
     "multiclass": ["Shields"]

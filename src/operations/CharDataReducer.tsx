@@ -1,6 +1,7 @@
 import { Ability } from "../types/Ability.tsx";
 import { CharData } from "../types/CharData.tsx";
 import { Feature } from "../types/Feature.tsx";
+import { Skill } from "../types/Skill.tsx";
 import { GameUtil } from "./GameUtil.tsx";
 import { getClass, getLineageData } from "./GetStaticData.tsx";
 
@@ -11,6 +12,7 @@ export type CharDataAction =
   | { type: "set-ability-score"; ability: Ability; value: number }
   | { type: "set-class-level"; className: string; level: number }
   | { type: "update-class-feature"; className: string; feature: Feature }
+  | { type: "set-class-skills"; className: string; skills: Skill[] }
   | { type: "remove-class"; className: string };
 
 export function charDataReducer(charData: CharData, action: CharDataAction) {
@@ -33,6 +35,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     case "update-class-feature":
       updateClassFeature(charData, action.className, action.feature);
       return { ...charData };
+    case "set-class-skills":
+      setClassSkills(charData, action.className, action.skills);
+      return { ...charData };
     case "remove-class":
       charData.classes = charData.classes.filter((c) => c.name != action.className);
       if (charData.classes.length == 0) {
@@ -44,7 +49,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
   }
 
   function updateClassFeature(charData: CharData, className: string, feature: Feature) {
-    let newClasses = charData.classes.slice();
+    let newClasses = charData.classes.slice().filter((c) => c.name != className);
     let newClass = charData.classes.find((c) => c.name == className);
     let newFeatures = newClass?.features?.filter(
       (f) => !(f.level == feature.level && f.name == feature.name)
@@ -52,7 +57,6 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     newFeatures?.push(feature);
     if (newClass && newFeatures) {
       newClass.features = newFeatures;
-      newClasses = newClasses.filter((c) => c.name != className);
       newClasses.push(newClass);
     }
     charData.classes = newClasses;
@@ -83,11 +87,27 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       armorProf: classData.armorProf,
       weaponProf: classData.weaponProf,
       toolProf: classData.toolProf,
-      skills: classData.skills,
+      skills: { firstLevel: [], multiclass: [] },
     });
     if (charData.classes.length == 1) {
       charData.firstClass = className;
     }
+  }
+
+  function setClassSkills(charData: CharData, className: string, skills: Skill[]) {
+    let newClasses = charData.classes.slice().filter((c) => c.name != className);
+    let newClass = charData.classes.find((c) => c.name == className);
+
+    let multiclass = charData.classes.length > 1 && charData.classes[0].name != className;
+    if (newClass) {
+      if (multiclass) {
+        newClass.skills.multiclass = skills;
+      } else {
+        newClass.skills.firstLevel = skills;
+      }
+      newClasses.push(newClass);
+    }
+    charData.classes = newClasses;
   }
 
   function setLineage(charData: CharData, lineage: string) {

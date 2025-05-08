@@ -349,8 +349,9 @@ function skillProf(charData: CharData, skill: Skill): number {
   );
   for (let f of relevantFeatures) {
     for (let skillProf of f.skillProf) {
-      if (skillProf.proficiencyMultiplier > proficiencyMultiplier) {
-        proficiencyMultiplier = skillProf.proficiencyMultiplier;
+      proficiencyMultiplier = 1;
+      if (skillProf.expertise) {
+        return 2;
       }
     }
   }

@@ -3,6 +3,27 @@
   "description": "",
   "hitdie": 8,
   "savingThrows": ["Wisdom", "Charisma"],
+  "armorProf": {
+    "firstLevel": ["Light armor", "Medium armor", "Shields"],
+    "multiclass": ["Shields"]
+  },
+  "weaponProf": {
+    "firstLevel": ["Simple Weapons", "Martial weapons"],
+    "multiclass": ["Simple Weapons", "Martial weapons"]
+  },
+  "skills": {
+    "firstLevel": {
+      "number": 2,
+      "choices": [
+        "Animal Handling",
+        "Athletics",
+        "Intimidation",
+        "Nature",
+        "Perception",
+        "Survival"
+      ]
+    }
+  },
   "cantripsKnown": [2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
   "spellsKnown": [
     2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15
