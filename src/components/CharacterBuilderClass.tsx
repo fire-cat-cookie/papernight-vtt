@@ -274,11 +274,11 @@ export default function CharacterBuilderClass(props: Props) {
             <br></br>
             {entry[1].map((feature: Feature) => {
               return (
-                <>
+                <React.Fragment key={selectedClass.name + entry[0] + " " + feature.name}>
                   {renderClassFeature(feature, entry[0])}
                   {entry[0] == firstSubclassLevel && renderSubclassSelect()}
                   {feature.subclassFeature && renderSubclassFeatures(entry[0])}
-                </>
+                </React.Fragment>
               );
             })}
           </div>

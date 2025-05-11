@@ -7,6 +7,7 @@ import { CreatureSize } from "../types/CreatureSize";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
 import { Skill } from "../types/Skill";
+import { SkillProf } from "../types/SkillProf";
 import { GameUtil } from "./GameUtil";
 
 export function ComposeChar(charData: CharData): CharComposed {
@@ -344,15 +345,31 @@ function skillMod(charData: CharData, skill: Skill) {
 
 function skillProf(charData: CharData, skill: Skill): number {
   let proficiencyMultiplier = 0;
-  let relevantFeatures = allFeatures(charData).filter(
-    (f) => f.skillProf && f.skillProf.filter((prof) => prof.skill == skill)
-  );
-  for (let f of relevantFeatures) {
-    for (let skillProf of f.skillProf) {
-      proficiencyMultiplier = 1;
-      if (skillProf.expertise) {
-        return 2;
-      }
+  let skillProficiencies: SkillProf[] = [];
+  for (let c of charData.classes) {
+    if (charData.firstClass == c.name) {
+      skillProficiencies.push(
+        ...c.skills.firstLevel.map((s) => {
+          return { skill: s, expertise: false };
+        })
+      );
+    } else if (c.skills.multiclass) {
+      skillProficiencies.push(
+        ...c.skills.multiclass.map((s) => {
+          return { skill: s, expertise: false };
+        })
+      );
+    }
+  }
+  for (let f of allFeatures(charData)) {
+    if (f.skillProf) {
+      skillProficiencies.push(...f.skillProf);
+    }
+  }
+  for (let s of skillProficiencies.filter((s) => s.skill == skill)) {
+    proficiencyMultiplier = 1;
+    if (s.expertise) {
+      return 2;
     }
   }
   return proficiencyMultiplier;
