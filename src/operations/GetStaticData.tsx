@@ -1,4 +1,4 @@
-import { lineagesJson, spellsJson, classesJson } from "../index";
+import { lineagesJson, spellsJson, classesJson, subclassesBarbarianJson } from "../index";
 
 export function getLineageData(lineageName: string): any {
   return lineagesJson.find((lineage) => lineage.name == lineageName) ?? {};
@@ -18,4 +18,16 @@ export function getClasses() {
 
 export function getClass(className: string): any {
   return classesJson.find((class_: any) => class_.name == className) ?? {};
+}
+
+export function getSubclasses(className: string): any {
+  switch (className) {
+    case "Barbarian":
+      return subclassesBarbarianJson;
+  }
+  return [];
+}
+
+export function getSubclass(className: string, subclassName: string): any {
+  return getSubclasses(className).find((sub: any) => sub.name == subclassName);
 }

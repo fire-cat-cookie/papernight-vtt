@@ -2,8 +2,9 @@ import { Ability } from "../types/Ability.tsx";
 import { CharData } from "../types/CharData.tsx";
 import { Feature } from "../types/Feature.tsx";
 import { Skill } from "../types/Skill.tsx";
+import { Subclass } from "../types/Subclass.tsx";
 import { GameUtil } from "./GameUtil.tsx";
-import { getClass, getLineageData } from "./GetStaticData.tsx";
+import { getClass, getLineageData, getSubclass } from "./GetStaticData.tsx";
 
 export type CharDataAction =
   | { type: "set-lineage"; lineage: string }
@@ -13,6 +14,7 @@ export type CharDataAction =
   | { type: "set-class-level"; className: string; level: number }
   | { type: "update-class-feature"; className: string; feature: Feature }
   | { type: "set-class-skills"; className: string; skills: Skill[] }
+  | { type: "set-subclass"; className: string; subclass: string }
   | { type: "remove-class"; className: string };
 
 export function charDataReducer(charData: CharData, action: CharDataAction) {
@@ -38,6 +40,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     case "set-class-skills":
       setClassSkills(charData, action.className, action.skills);
       return { ...charData };
+    case "set-subclass":
+      setSubclass(charData, action.className, action.subclass);
+      return { ...charData };
     case "remove-class":
       charData.classes = charData.classes.filter((c) => c.name != action.className);
       if (charData.classes.length == 0) {
@@ -46,6 +51,21 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       return { ...charData };
     default:
       return { ...charData };
+  }
+
+  function setSubclass(charData: CharData, className: string, subclassName: string) {
+    let newClasses = charData.classes.slice().filter((c) => c.name != className);
+    let newClass = charData.classes.find((c) => c.name == className);
+    let loadedSubclass: any = getSubclass(className, subclassName);
+    let subclass: Subclass = {
+      name: loadedSubclass.name,
+      features: loadedSubclass.features,
+    };
+    if (newClass) {
+      newClass.subclass = subclass;
+      newClasses.push(newClass);
+      charData.classes = newClasses;
+    }
   }
 
   function updateClassFeature(charData: CharData, className: string, feature: Feature) {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CharDataAction } from "../operations/CharDataReducer";
-import { getClasses } from "../operations/GetStaticData";
+import { getClasses, getSubclass, getSubclasses } from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { Class } from "../types/Class";
 import "./CharacterBuilder.scss";
@@ -160,75 +160,6 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassFeatureList() {
-    if (!selectedClass) {
-      return null;
-    }
-
-    let featuresByLevel = GameUtil.GroupFeaturesByLevel(selectedClass.features);
-
-    return (
-      <div className="builder-sections">
-        {featuresByLevel.map((entry: any) => (
-          <div key={selectedClass.name + entry[0]}>
-            <h3 className="builder-heading-section">{"Level " + entry[0]}</h3>
-            <br></br>
-            {entry[1].map((feature: Feature) =>
-              renderClassFeature(feature, selectedClass.name + entry[0] + " " + feature.name)
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function renderASIFeature(feature: Feature) {
-    return (
-      <>
-        {feature.abilityScoreImprovement && selectedClass && (
-          <CharacterBuilderClassASI
-            feature={feature}
-            selectedClass={selectedClass}
-            charComposed={props.charComposed}
-            updateCharData={props.updateCharData}
-          />
-        )}
-      </>
-    );
-  }
-
-  function renderClassFeature(feature: Feature, renderKey: string) {
-    return (
-      <React.Fragment key={renderKey}>
-        <div className="builder-group">
-          <label>{feature.name}</label>
-          {GameUtil.DisplayFeatureDescription(feature)}
-        </div>
-        {renderASIFeature(feature)}
-      </React.Fragment>
-    );
-  }
-
-  function renderClassFeatureTabRow() {
-    return (
-      <div className="builder-tab-row">
-        {currentClasses.map((charClass: Class) => (
-          <button
-            key={charClass.name}
-            className={
-              selectedClassTab == charClass.name ? "builder-tab builder-tab-active" : "builder-tab"
-            }
-            onClick={() => {
-              setSelectedClassTab(charClass.name);
-            }}
-          >
-            {charClass.name}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
   function renderClassHitDiceProficiencies() {
     if (!selectedClass) {
       return null;
@@ -303,6 +234,130 @@ export default function CharacterBuilderClass(props: Props) {
             {renderclassSkillSelects(skillNumber, skillChoices, skillsSelected, multiclass)}
           </div>
         )}
+      </div>
+    );
+  }
+
+  function renderClassFeatureTabRow() {
+    return (
+      <div className="builder-tab-row">
+        {currentClasses.map((charClass: Class) => (
+          <button
+            key={charClass.name}
+            className={
+              selectedClassTab == charClass.name ? "builder-tab builder-tab-active" : "builder-tab"
+            }
+            onClick={() => {
+              setSelectedClassTab(charClass.name);
+            }}
+          >
+            {charClass.name}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  function renderClassFeatureList() {
+    if (!selectedClass) {
+      return null;
+    }
+
+    let featuresByLevel = GameUtil.GroupFeaturesByLevel(selectedClass.features);
+    let firstSubclassLevel = featuresByLevel.find((e) => e[1].find((f) => f.subclassFeature))?.[0];
+
+    return (
+      <div className="builder-sections">
+        {featuresByLevel.map((entry: any) => (
+          <div key={selectedClass.name + entry[0]}>
+            <h3 className="builder-heading-section">{"Level " + entry[0]}</h3>
+            <br></br>
+            {entry[1].map((feature: Feature) => {
+              return (
+                <>
+                  {renderClassFeature(feature, entry[0])}
+                  {entry[0] == firstSubclassLevel && renderSubclassSelect()}
+                  {feature.subclassFeature && renderSubclassFeatures(entry[0])}
+                </>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  function renderClassFeature(feature: Feature, level: number, featureName?: string) {
+    if (!selectedClass || feature.subclassFeature) {
+      return null;
+    }
+    return (
+      <React.Fragment key={selectedClass.name + level + " " + feature.name}>
+        <div className="builder-group">
+          <label>{featureName ? featureName : feature.name}</label>
+          {GameUtil.DisplayFeatureDescription(feature)}
+        </div>
+        {feature.abilityScoreImprovement && renderASIFeature(feature)}
+      </React.Fragment>
+    );
+  }
+
+  function renderASIFeature(feature: Feature) {
+    return (
+      <>
+        {selectedClass && (
+          <CharacterBuilderClassASI
+            feature={feature}
+            selectedClass={selectedClass}
+            charComposed={props.charComposed}
+            updateCharData={props.updateCharData}
+          />
+        )}
+      </>
+    );
+  }
+
+  function renderSubclassFeatures(level: number) {
+    if (!selectedClass?.subclass) {
+      return null;
+    }
+    let subclassFeatureTag = selectedClass.features.find((f) => f.subclassFeature)?.name;
+    return (
+      <>
+        {selectedClass.subclass.features
+          .filter((f) => f.level == level)
+          .map((f) => renderClassFeature(f, level, "" + subclassFeatureTag + ": " + f.name))}
+      </>
+    );
+  }
+
+  function renderSubclassSelect() {
+    if (!selectedClass) {
+      return null;
+    }
+
+    let subclasses = getSubclasses(selectedClass.name);
+
+    return (
+      <div className="builder-group">
+        <select
+          key={selectedClass.name + " subclass select"}
+          value={selectedClass.subclass?.name ?? ""}
+          onChange={(e) =>
+            props.updateCharData({
+              type: "set-subclass",
+              className: selectedClass.name,
+              subclass: e.target.value,
+            })
+          }
+        >
+          <option value=""></option>
+          {subclasses.map((s: any) => (
+            <option value={s.name} key={selectedClass.name + " " + s.name}>
+              {s.name}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }
