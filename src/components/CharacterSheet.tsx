@@ -5,6 +5,7 @@ import { CharDataAction } from "../operations/CharDataReducer";
 import { EffectTag } from "../types/EffectTag";
 import { CharComposed } from "../types/CharComposed";
 import { Dice } from "../types/Dice";
+import { Feature } from "../types/Feature";
 
 type Props = {
   char: CharComposed;
@@ -823,33 +824,59 @@ export default function CharacterSheet(props: Props) {
             </button>
             <button
               className={
-                selectedActionsTab === "features" ? "sheet-tab sheet-tab-active" : "sheet-tab"
+                selectedActionsTab === "other" ? "sheet-tab sheet-tab-active" : "sheet-tab"
               }
-              onClick={() => setSelectedActionsTab("features")}
+              onClick={() => setSelectedActionsTab("other")}
             >
-              Features
+              Other
             </button>
           </div>
-          {selectedActionsTab === "features" ? (
-            <div className="sheet-sections">
-              {char.features.map((feature) => (
-                <div className="sheet-column" key={feature.name}>
-                  <label className="label-heading">{feature.name}</label>
-                  <p>{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
           {selectedActionsTab === "actions" ? (
             <div className="sheet-sections">
-              {/*char.spells
-                .filter((spell) => spell.casting_time == CastingTime.Action)
-                .map((spell) => (
-                  <div className="sheet-column" key={spell.name}>
-                    <label className="label-heading">{spell.name}</label>
-                    <p>{spell.description}</p>
+              {char.features
+                .filter((f: Feature) => f.actionType == "action")
+                .map((feature) => (
+                  <div className="sheet-column" key={feature.name}>
+                    <label className="label-heading">{feature.name}</label>
+                    <p>{feature.description}</p>
                   </div>
-                ))*/}
+                ))}
+            </div>
+          ) : null}
+          {selectedActionsTab === "bonus actions" ? (
+            <div className="sheet-sections">
+              {char.features
+                .filter((f: Feature) => f.actionType == "bonus action")
+                .map((feature) => (
+                  <div className="sheet-column" key={feature.name}>
+                    <label className="label-heading">{feature.name}</label>
+                    <p>{feature.description}</p>
+                  </div>
+                ))}
+            </div>
+          ) : null}
+          {selectedActionsTab === "reactions" ? (
+            <div className="sheet-sections">
+              {char.features
+                .filter((f: Feature) => f.actionType == "reaction")
+                .map((feature) => (
+                  <div className="sheet-column" key={feature.name}>
+                    <label className="label-heading">{feature.name}</label>
+                    <p>{feature.description}</p>
+                  </div>
+                ))}
+            </div>
+          ) : null}
+          {selectedActionsTab === "other" ? (
+            <div className="sheet-sections">
+              {char.features
+                .filter((f: Feature) => f.actionType == undefined)
+                .map((feature) => (
+                  <div className="sheet-column" key={feature.name}>
+                    <label className="label-heading">{feature.name}</label>
+                    <p>{feature.description}</p>
+                  </div>
+                ))}
             </div>
           ) : null}
         </div>

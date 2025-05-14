@@ -2,6 +2,7 @@ import { Bonus } from "./Bonus";
 import { ConditionalEffect } from "./ConditionalEffect";
 import { DamageType } from "./DamageType";
 import { GainSpells } from "./GainSpells";
+import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
 import { Skill } from "./Skill";
 
@@ -25,4 +26,6 @@ export interface Feature {
   senses: Sense[];
   abilityScoreImprovement: boolean;
   subclassFeature: boolean;
+  limitedUse: LimitedUse;
+  actionType: "action" | "bonus action" | "reaction" | undefined;
 }

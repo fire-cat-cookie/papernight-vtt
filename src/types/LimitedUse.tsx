@@ -1,4 +1,4 @@
 export interface LimitedUse {
   uses: number;
-  per: string;
+  recharge: string;
 }
