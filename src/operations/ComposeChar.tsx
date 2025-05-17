@@ -202,11 +202,17 @@ function allBonuses(charData: CharData) {
 function allFeatures(charData: CharData) {
   let result: { feature: Feature; source: string }[] = [];
   if (charData.lineage) {
-    for (let f of charData.lineage.features) {
+    let lineageFeatures = charData.lineage.features.filter(
+      (f) => f.level == undefined || f.level <= level(charData)
+    );
+    for (let f of lineageFeatures) {
       result.push({ feature: f, source: "Lineage: " + charData.lineage.name });
     }
     if (charData.lineage.sublineage) {
-      for (let f of charData.lineage.sublineage.features) {
+      let sublineageFeatures = charData.lineage.sublineage.features.filter(
+        (f) => f.level == undefined || f.level <= level(charData)
+      );
+      for (let f of sublineageFeatures) {
         result.push({
           feature: f,
           source:
@@ -217,13 +223,18 @@ function allFeatures(charData: CharData) {
   }
   if (charData.classes) {
     for (let class_ of charData.classes) {
-      if (class_.features) {
-        for (let f of class_.features) {
-          result.push({ feature: f, source: "Class: " + class_.name });
-        }
+      let classFeatures = class_.features.filter(
+        (f) => f.level == undefined || f.level <= class_.level
+      );
+      for (let f of classFeatures) {
+        result.push({ feature: f, source: "Class: " + class_.name });
       }
-      if (class_.subclass && class_.subclass.features) {
-        for (let f of class_.subclass.features) {
+      console.log(classFeatures);
+      if (class_.subclass) {
+        let subclassFeatures = class_.subclass.features.filter(
+          (f) => f.level == undefined || f.level <= class_.level
+        );
+        for (let f of subclassFeatures) {
           result.push({
             feature: f,
             source: "Class: " + class_.name + " (" + class_.subclass.name + ")",
@@ -233,12 +244,16 @@ function allFeatures(charData: CharData) {
     }
   }
   if (charData.background) {
-    for (let f of charData.background.features) {
+    for (let f of charData.background.features.filter(
+      (f) => f.level == undefined || f.level <= level(charData)
+    )) {
       result.push({ feature: f, source: "Background: " + charData.background.name });
     }
   }
   if (charData.custom_features) {
-    for (let f of charData.custom_features) {
+    for (let f of charData.custom_features.filter(
+      (f) => f.level == undefined || f.level <= level(charData)
+    )) {
       result.push({ feature: f, source: "Custom" });
     }
   }
