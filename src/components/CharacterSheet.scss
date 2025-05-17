@@ -39,7 +39,6 @@
 
   .sheet-column {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
   }
 
@@ -164,10 +163,16 @@
   }
 
   #sheet-con-group-traits {
-    width: 340px;
+    min-width: 0px;
+    max-width: 340px;
+    height: 855px;
     > textarea {
       flex-grow: 1;
     }
+  }
+
+  .sheet-feature-list {
+    overflow: scroll;
   }
 
   .sheet-tab-row {

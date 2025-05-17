@@ -877,7 +877,7 @@ export default function CharacterSheet(props: Props) {
             </div>
           ) : null}
           {selectedActionsTab === "other" ? (
-            <div className="sheet-sections">
+            <div className="sheet-sections sheet-feature-list">
               {char.features
                 .filter((f) => f.feature.actionType == undefined)
                 .map((f) => (
