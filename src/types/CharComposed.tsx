@@ -87,6 +87,6 @@ export interface CharComposed {
   creatureType: string;
   size: CreatureSize;
   proficiency_bonus: number;
-  features: Feature[];
+  features: { feature: Feature; source: string }[];
   status: CharStatus;
 }

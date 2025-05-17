@@ -192,38 +192,55 @@ function classLevel(charData: CharData) {
 function allBonuses(charData: CharData) {
   let result: Bonus[] = [];
   for (let feature of allFeatures(charData)) {
-    if (feature.bonuses) {
-      result.push(...feature.bonuses);
+    if (feature.feature.bonuses) {
+      result.push(...feature.feature.bonuses);
     }
   }
   return result;
 }
 
 function allFeatures(charData: CharData) {
-  let result: Feature[] = [];
+  let result: { feature: Feature; source: string }[] = [];
   if (charData.lineage) {
-    if (charData.lineage.features) {
-      result.push(...charData.lineage.features);
+    for (let f of charData.lineage.features) {
+      result.push({ feature: f, source: "Lineage: " + charData.lineage.name });
     }
-    if (charData.lineage.sublineage && charData.lineage.sublineage.features) {
-      result.push(...charData.lineage.sublineage.features);
+    if (charData.lineage.sublineage) {
+      for (let f of charData.lineage.sublineage.features) {
+        result.push({
+          feature: f,
+          source:
+            "Lineage: " + charData.lineage.name + " (" + charData.lineage.sublineage.name + ")",
+        });
+      }
     }
   }
   if (charData.classes) {
     for (let class_ of charData.classes) {
       if (class_.features) {
-        result.push(...class_.features);
+        for (let f of class_.features) {
+          result.push({ feature: f, source: "Class: " + class_.name });
+        }
       }
       if (class_.subclass && class_.subclass.features) {
-        result.push(...class_.subclass.features);
+        for (let f of class_.subclass.features) {
+          result.push({
+            feature: f,
+            source: "Class: " + class_.name + " (" + class_.subclass.name + ")",
+          });
+        }
       }
     }
   }
-  if (charData.background && charData.background.features) {
-    result.push(...charData.background.features);
+  if (charData.background) {
+    for (let f of charData.background.features) {
+      result.push({ feature: f, source: "Background: " + charData.background.name });
+    }
   }
   if (charData.custom_features) {
-    result.push(...charData.custom_features);
+    for (let f of charData.custom_features) {
+      result.push({ feature: f, source: "Custom" });
+    }
   }
   return result;
 }
@@ -362,8 +379,8 @@ function skillProf(charData: CharData, skill: Skill): number {
     }
   }
   for (let f of allFeatures(charData)) {
-    if (f.skillProf) {
-      skillProficiencies.push(...f.skillProf);
+    if (f.feature.skillProf) {
+      skillProficiencies.push(...f.feature.skillProf);
     }
   }
   for (let s of skillProficiencies.filter((s) => s.skill == skill)) {

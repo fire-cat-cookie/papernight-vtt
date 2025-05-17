@@ -834,11 +834,14 @@ export default function CharacterSheet(props: Props) {
           {selectedActionsTab === "actions" ? (
             <div className="sheet-sections">
               {char.features
-                .filter((f: Feature) => f.actionType == "action")
-                .map((feature) => (
-                  <div className="sheet-column" key={feature.name}>
-                    <label className="label-heading">{feature.name}</label>
-                    <p>{feature.description}</p>
+                .filter((f) => f.feature.actionType == "action")
+                .map((f) => (
+                  <div
+                    className="sheet-column"
+                    key={f.source + " " + f.feature.level + " " + f.feature.name}
+                  >
+                    <label className="label-heading">{f.feature.name}</label>
+                    <p>{f.feature.description}</p>
                   </div>
                 ))}
             </div>
@@ -846,11 +849,14 @@ export default function CharacterSheet(props: Props) {
           {selectedActionsTab === "bonus actions" ? (
             <div className="sheet-sections">
               {char.features
-                .filter((f: Feature) => f.actionType == "bonus action")
-                .map((feature) => (
-                  <div className="sheet-column" key={feature.name}>
-                    <label className="label-heading">{feature.name}</label>
-                    <p>{feature.description}</p>
+                .filter((f) => f.feature.actionType == "bonus action")
+                .map((f) => (
+                  <div
+                    className="sheet-column"
+                    key={f.source + " " + f.feature.level + " " + f.feature.name}
+                  >
+                    <label className="label-heading">{f.feature.name}</label>
+                    <p>{f.feature.description}</p>
                   </div>
                 ))}
             </div>
@@ -858,11 +864,14 @@ export default function CharacterSheet(props: Props) {
           {selectedActionsTab === "reactions" ? (
             <div className="sheet-sections">
               {char.features
-                .filter((f: Feature) => f.actionType == "reaction")
-                .map((feature) => (
-                  <div className="sheet-column" key={feature.name}>
-                    <label className="label-heading">{feature.name}</label>
-                    <p>{feature.description}</p>
+                .filter((f) => f.feature.actionType == "reaction")
+                .map((f) => (
+                  <div
+                    className="sheet-column"
+                    key={f.source + " " + f.feature.level + " " + f.feature.name}
+                  >
+                    <label className="label-heading">{f.feature.name}</label>
+                    <p>{f.feature.description}</p>
                   </div>
                 ))}
             </div>
@@ -870,11 +879,14 @@ export default function CharacterSheet(props: Props) {
           {selectedActionsTab === "other" ? (
             <div className="sheet-sections">
               {char.features
-                .filter((f: Feature) => f.actionType == undefined)
-                .map((feature) => (
-                  <div className="sheet-column" key={feature.name}>
-                    <label className="label-heading">{feature.name}</label>
-                    <p>{feature.description}</p>
+                .filter((f) => f.feature.actionType == undefined)
+                .map((f) => (
+                  <div
+                    className="sheet-column"
+                    key={f.source + " " + f.feature.level + " " + f.feature.name}
+                  >
+                    <label className="label-heading">{f.feature.name}</label>
+                    <p>{f.feature.description}</p>
                   </div>
                 ))}
             </div>
