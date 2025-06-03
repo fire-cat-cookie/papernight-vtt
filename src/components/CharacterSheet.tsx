@@ -5,7 +5,9 @@ import { CharDataAction } from "../operations/CharDataReducer";
 import { EffectTag } from "../types/EffectTag";
 import { CharComposed } from "../types/CharComposed";
 import { Dice } from "../types/Dice";
-import { Feature } from "../types/Feature";
+import { Ability } from "../types/Ability";
+import React from "react";
+import { Skill } from "../types/Skill";
 
 type Props = {
   char: CharComposed;
@@ -66,8 +68,8 @@ export default function CharacterSheet(props: Props) {
 
   function displaySenses() {
     let senses = char.features
-      .filter((f) => f.senses)
-      .map((f) => f.senses)
+      .filter((f) => f.feature.senses)
+      .map((f) => f.feature.senses)
       .flat(1);
     if (senses) {
       return senses.map((sense: any) => sense.name + " " + sense.range + "ft.").join(", ");
@@ -75,9 +77,8 @@ export default function CharacterSheet(props: Props) {
     return "";
   }
 
-  return (
-    <div id="sheet">
-      {/* 1st row */}
+  function renderFirstRow() {
+    return (
       <div className="sheet-grouping sheet-row">
         <div id="sheet-con-charname">
           <label id="sheet-data-charname">{char.name}</label>
@@ -91,8 +92,11 @@ export default function CharacterSheet(props: Props) {
           <br />
         </div>
       </div>
+    );
+  }
 
-      {/* 2nd row */}
+  function renderSecondRow() {
+    return (
       <div className="sheet-grouping sheet-row">
         <div className="sheet-grouping sheet-row" id="sheet-con-group-initiative">
           <div id="sheet-con-initiative">
@@ -162,8 +166,11 @@ export default function CharacterSheet(props: Props) {
           </div>
         </div>
       </div>
+    );
+  }
 
-      {/* 3rd row */}
+  function renderThirdRow() {
+    return (
       <div className="sheet-grouping sheet-row">
         <div className="sheet-row" id="sheet-con-group-anatomy">
           <div id="sheet-con-speed">
@@ -188,714 +195,198 @@ export default function CharacterSheet(props: Props) {
           </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="sheet-row" id="sheet-con-group-main">
-        <div className="sheet-column">
-          <div className="sheet-row">
-            {/* abilities */}
-            <div className="sheet-grouping sheet-column" id="sheet-con-group-abilities">
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-str">
-                <div className="sheet-row">
-                  <label>{"Strength:"}</label>
-                  <input disabled value={char.str_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.str_mod);
-                    }}
-                  >
-                    {displayBonus(char.str_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.str_save);
-                    }}
-                  >
-                    {displayBonus(char.str_save)}
-                  </button>
-                </div>
-              </div>
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-dex">
-                <div className="sheet-row">
-                  <label>{"Dexterity:"}</label>
-                  <input disabled value={char.dex_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.dex_mod);
-                    }}
-                  >
-                    {displayBonus(char.dex_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.dex_save);
-                    }}
-                  >
-                    {displayBonus(char.dex_save)}
-                  </button>
-                </div>
-              </div>
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-con">
-                <div className="sheet-row">
-                  <label>{"Consitution:"}</label>
-                  <input disabled value={char.con_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.con_mod);
-                    }}
-                  >
-                    {displayBonus(char.con_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.con_save);
-                    }}
-                  >
-                    {displayBonus(char.con_save)}
-                  </button>
-                </div>
-              </div>
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-int">
-                <div className="sheet-row">
-                  <label>{"Intelligence:"}</label>
-                  <input disabled value={char.int_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.int_mod);
-                    }}
-                  >
-                    {displayBonus(char.int_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.int_save);
-                    }}
-                  >
-                    {displayBonus(char.int_save)}
-                  </button>
-                </div>
-              </div>
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-wis">
-                <div className="sheet-row">
-                  <label>{"Wisdom:"}</label>
-                  <input disabled value={char.wis_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.wis_mod);
-                    }}
-                  >
-                    {displayBonus(char.wis_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.wis_save);
-                    }}
-                  >
-                    {displayBonus(char.wis_save)}
-                  </button>
-                </div>
-              </div>
-              <div className="sheet-grouping sheet-con-ability sheet-column" id="sheet-con-cha">
-                <div className="sheet-row">
-                  <label>{"Charisma:"}</label>
-                  <input disabled value={char.cha_score}></input>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Mod</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.cha_mod);
-                    }}
-                  >
-                    {displayBonus(char.cha_mod)}
-                  </button>
-                </div>
-                <div className="sheet-row">
-                  <label className="sheet-de-emphasized">Save</label>
-                  <button
-                    className="sheet-button-tiny"
-                    onClick={(e) => {
-                      openDiceRoller(e, "1d20", char.cha_save);
-                    }}
-                  >
-                    {displayBonus(char.cha_save)}
-                  </button>
-                </div>
-              </div>
-            </div>
+  function renderAbility(ability: Ability) {
+    let charAbility = char.abilities.find((a) => a.ability == ability);
 
-            {/* skills */}
-            <div className="sheet-grouping" id="sheet-con-group-skills">
-              <label>Proficiency Bonus:</label>
-              <input
-                disabled
-                id="sheet-label-proficiency-bonus"
-                value={displayBonus(char.proficiency_bonus)}
-              ></input>
-              <div></div>
-              <div></div>
-              <div></div>
-              <label className="sheet-de-emphasized">Mod.</label>
-              <label className="sheet-de-emphasized">Prof.</label>
-              <label className="sheet-de-emphasized">Exp.</label>
-              <label>Acrobatics</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.acrobatics);
-                }}
-              >
-                {displayBonus(char.skillMods.acrobatics)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.acrobatics == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.acrobatics == 2}
-              ></input>
-              <label>Animal Handling</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.animal_handling);
-                }}
-              >
-                {displayBonus(char.skillMods.animal_handling)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.animal_handling == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.animal_handling == 2}
-              ></input>
-              <label>Arcana</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.arcana);
-                }}
-              >
-                {displayBonus(char.skillMods.arcana)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.arcana == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.arcana == 2}
-              ></input>
-              <label>Athletics</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.athletics);
-                }}
-              >
-                {displayBonus(char.skillMods.athletics)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.athletics == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.athletics == 2}
-              ></input>
-              <label>Deception</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.deception);
-                }}
-              >
-                {displayBonus(char.skillMods.deception)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.deception == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.deception == 2}
-              ></input>
-              <label>History</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.history);
-                }}
-              >
-                {displayBonus(char.skillMods.history)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.history == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.history == 2}
-              ></input>
-              <label>Insight</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.insight);
-                }}
-              >
-                {displayBonus(char.skillMods.insight)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.insight == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.insight == 2}
-              ></input>
-              <label>Intimidation</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.intimidation);
-                }}
-              >
-                {displayBonus(char.skillMods.intimidation)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.intimidation == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.intimidation == 2}
-              ></input>
-              <label>Investigation</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.investigation);
-                }}
-              >
-                {displayBonus(char.skillMods.investigation)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.investigation == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.investigation == 2}
-              ></input>
-              <label>Medicine</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.medicine);
-                }}
-              >
-                {displayBonus(char.skillMods.medicine)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.medicine == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.medicine == 2}
-              ></input>
-              <label>Nature</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.nature);
-                }}
-              >
-                {displayBonus(char.skillMods.nature)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.nature == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.nature == 2}
-              ></input>
-              <label>Perception</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.perception);
-                }}
-              >
-                {displayBonus(char.skillMods.perception)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.perception == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.perception == 2}
-              ></input>
-              <label>Performance</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.performance);
-                }}
-              >
-                {displayBonus(char.skillMods.performance)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.performance == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.performance == 2}
-              ></input>
-              <label>Persuasion</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.persuasion);
-                }}
-              >
-                {displayBonus(char.skillMods.persuasion)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.persuasion == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.persuasion == 2}
-              ></input>
-              <label>Religion</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.religion);
-                }}
-              >
-                {displayBonus(char.skillMods.religion)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.religion == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.religion == 2}
-              ></input>
-              <label>Sleight of Hand</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.sleight_of_hand);
-                }}
-              >
-                {displayBonus(char.skillMods.sleight_of_hand)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.sleight_of_hand == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.sleight_of_hand == 2}
-              ></input>
-              <label>Stealth</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.stealth);
-                }}
-              >
-                {displayBonus(char.skillMods.stealth)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.stealth == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.stealth == 2}
-              ></input>
-              <label>Survival</label>
-              <button
-                className="sheet-button-tiny"
-                onClick={(e) => {
-                  openDiceRoller(e, "1d20", char.skillMods.survival);
-                }}
-              >
-                {displayBonus(char.skillMods.survival)}
-              </button>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.survival == 1}
-              ></input>
-              <input
-                disabled
-                className="sheet-skill-prof"
-                type="checkbox"
-                checked={char.skillProf.survival == 2}
-              ></input>
-            </div>
-          </div>
-          <div className="sheet-row">
-            {/* misc. proficiencies*/}
-            <div className="sheet-grouping sheet-row" id="sheet-con-group-proficiencies">
-              <div>
-                <label className="label-heading">Languages</label>
-                <br />
-                <textarea
-                  disabled
-                  value={
-                    "" /*Util.ListDistinct(
+    return (
+      <div className="sheet-grouping sheet-con-ability sheet-column">
+        <div className="sheet-row">
+          <label>{ability.toString() + ":"}</label>
+          <input disabled value={charAbility?.score}></input>
+        </div>
+        <div className="sheet-row">
+          <label className="sheet-de-emphasized">Mod</label>
+          <button
+            className="sheet-button-tiny"
+            onClick={(e) => {
+              openDiceRoller(e, "1d20", charAbility?.mod ?? 0);
+            }}
+          >
+            {displayBonus(charAbility?.mod ?? 0)}
+          </button>
+        </div>
+        <div className="sheet-row">
+          <label className="sheet-de-emphasized">Save</label>
+          <button
+            className="sheet-button-tiny"
+            onClick={(e) => {
+              openDiceRoller(e, "1d20", charAbility?.save ?? 0);
+            }}
+          >
+            {displayBonus(charAbility?.save ?? 0)}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function renderAbilities() {
+    return (
+      <div className="sheet-grouping sheet-column" id="sheet-con-group-abilities">
+        {renderAbility(Ability.str)}
+        {renderAbility(Ability.dex)}
+        {renderAbility(Ability.con)}
+        {renderAbility(Ability.int)}
+        {renderAbility(Ability.wis)}
+        {renderAbility(Ability.cha)}
+      </div>
+    );
+  }
+
+  function renderSkill(skill: Skill) {
+    let charSkill = char.skills.find((s) => s.skill == skill);
+
+    return (
+      <React.Fragment key={skill.toString()}>
+        <label>{skill.toString()}</label>
+        <button
+          className="sheet-button-tiny"
+          onClick={(e) => {
+            openDiceRoller(e, "1d20", charSkill?.mod ?? 0);
+          }}
+        >
+          {displayBonus(charSkill?.mod ?? 0)}
+        </button>
+        <input
+          disabled
+          className="sheet-skill-prof"
+          type="checkbox"
+          checked={charSkill?.prof == 1}
+        ></input>
+        <input
+          disabled
+          className="sheet-skill-prof"
+          type="checkbox"
+          checked={charSkill?.prof == 2}
+        ></input>
+      </React.Fragment>
+    );
+  }
+
+  function renderSkills() {
+    return (
+      <div className="sheet-grouping" id="sheet-con-group-skills">
+        <label>Proficiency Bonus:</label>
+        <input
+          disabled
+          id="sheet-label-proficiency-bonus"
+          value={displayBonus(char.proficiency_bonus)}
+        ></input>
+        <div></div>
+        <div></div>
+        <div></div>
+        <label className="sheet-de-emphasized">Mod.</label>
+        <label className="sheet-de-emphasized">Prof.</label>
+        <label className="sheet-de-emphasized">Exp.</label>
+        {char.skills.map((s) => renderSkill(s.skill))}
+      </div>
+    );
+  }
+
+  function renderMiscProficiencies() {
+    return (
+      <div className="sheet-grouping sheet-row" id="sheet-con-group-proficiencies">
+        <div>
+          <label className="label-heading">Languages</label>
+          <br />
+          <textarea
+            disabled
+            value={
+              "" /*Util.ListDistinct(
                     char.languages.map((lang) => lang.language),
                     ", "
                   )*/
-                  }
-                ></textarea>
-              </div>
-              <div>
-                <label className="label-heading">Tool Proficiencies</label>
-                <br />
-                <textarea disabled value={""}></textarea>
-              </div>
-              <div>
-                <label className="label-heading">Armor & Weapon Proficiencies</label>
-                <br />
-                <textarea disabled value={""}></textarea>
-              </div>
-            </div>
-
-            {/* inventory*/}
-            <div className="sheet-grouping sheet-column" id="sheet-con-group-inventory">
-              <label>Inventory</label>
-              <br />
-              <textarea disabled value={""}></textarea>
-            </div>
-          </div>
+            }
+          ></textarea>
         </div>
-
-        {/* actions & features */}
-        <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
-          <div className="sheet-tab-row" id="sheet-tab-row-actions">
-            <button
-              className={
-                selectedActionsTab === "actions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
-              }
-              onClick={() => setSelectedActionsTab("actions")}
-            >
-              Actions
-            </button>
-            <button
-              className={
-                selectedActionsTab === "bonus actions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
-              }
-              onClick={() => setSelectedActionsTab("bonus actions")}
-            >
-              Bonus actions
-            </button>
-            <button
-              className={
-                selectedActionsTab === "reactions" ? "sheet-tab sheet-tab-active" : "sheet-tab"
-              }
-              onClick={() => setSelectedActionsTab("reactions")}
-            >
-              Reactions
-            </button>
-            <button
-              className={
-                selectedActionsTab === "other" ? "sheet-tab sheet-tab-active" : "sheet-tab"
-              }
-              onClick={() => setSelectedActionsTab("other")}
-            >
-              Other
-            </button>
-          </div>
-          {selectedActionsTab === "actions" ? (
-            <div className="sheet-sections">
-              {char.features
-                .filter((f) => f.feature.actionType == "action")
-                .map((f) => (
-                  <div
-                    className="sheet-column"
-                    key={f.source + " " + f.feature.level + " " + f.feature.name}
-                  >
-                    <label className="label-heading">{f.feature.name}</label>
-                    <p>{f.feature.description}</p>
-                  </div>
-                ))}
-            </div>
-          ) : null}
-          {selectedActionsTab === "bonus actions" ? (
-            <div className="sheet-sections">
-              {char.features
-                .filter((f) => f.feature.actionType == "bonus action")
-                .map((f) => (
-                  <div
-                    className="sheet-column"
-                    key={f.source + " " + f.feature.level + " " + f.feature.name}
-                  >
-                    <label className="label-heading">{f.feature.name}</label>
-                    <p>{f.feature.description}</p>
-                  </div>
-                ))}
-            </div>
-          ) : null}
-          {selectedActionsTab === "reactions" ? (
-            <div className="sheet-sections">
-              {char.features
-                .filter((f) => f.feature.actionType == "reaction")
-                .map((f) => (
-                  <div
-                    className="sheet-column"
-                    key={f.source + " " + f.feature.level + " " + f.feature.name}
-                  >
-                    <label className="label-heading">{f.feature.name}</label>
-                    <p>{f.feature.description}</p>
-                  </div>
-                ))}
-            </div>
-          ) : null}
-          {selectedActionsTab === "other" ? (
-            <div className="sheet-sections sheet-feature-list">
-              {char.features
-                .filter((f) => f.feature.actionType == undefined)
-                .map((f) => (
-                  <div
-                    className="sheet-column"
-                    key={f.source + " " + f.feature.level + " " + f.feature.name}
-                  >
-                    <label className="label-heading">{f.feature.name}</label>
-                    <p>{f.feature.description}</p>
-                  </div>
-                ))}
-            </div>
-          ) : null}
+        <div>
+          <label className="label-heading">Tool Proficiencies</label>
+          <br />
+          <textarea disabled value={""}></textarea>
+        </div>
+        <div>
+          <label className="label-heading">Armor & Weapon Proficiencies</label>
+          <br />
+          <textarea disabled value={""}></textarea>
         </div>
       </div>
+    );
+  }
 
-      {/* modal overlay */}
-      {diceRollerVisible ? (
+  function renderInventory() {
+    return (
+      <div className="sheet-grouping sheet-column" id="sheet-con-group-inventory">
+        <label>Inventory</label>
+        <br />
+        <textarea disabled value={""}></textarea>
+      </div>
+    );
+  }
+
+  function renderFeatureTab(tabName: string, label: string) {
+    return (
+      <button
+        className={selectedActionsTab === tabName ? "sheet-tab sheet-tab-active" : "sheet-tab"}
+        onClick={() => setSelectedActionsTab(tabName)}
+      >
+        {label}
+      </button>
+    );
+  }
+
+  function renderFeatureTabContent(tabName: string, actionType: string | undefined) {
+    return (
+      selectedActionsTab === tabName && (
+        <div className="sheet-sections sheet-feature-list">
+          {char.features
+            .filter((f) => f.feature.actionType == actionType)
+            .map((f) => (
+              <div
+                className="sheet-column"
+                key={f.source + " " + f.feature.level + " " + f.feature.name}
+              >
+                <label className="label-heading">{f.feature.name}</label>
+                <p>{f.feature.description}</p>
+              </div>
+            ))}
+        </div>
+      )
+    );
+  }
+
+  function renderActionsAndFeatures() {
+    return (
+      <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
+        <div className="sheet-tab-row" id="sheet-tab-row-actions">
+          {renderFeatureTab("actions", "Actions")}
+          {renderFeatureTab("bonus actions", "Bonus Actions")}
+          {renderFeatureTab("reactions", "Reactions")}
+          {renderFeatureTab("other", "Other")}
+        </div>
+        {renderFeatureTabContent("actions", "action")}
+        {renderFeatureTabContent("bonus actions", "bonus action")}
+        {renderFeatureTabContent("reactions", "reaction")}
+        {renderFeatureTabContent("other", undefined)}
+      </div>
+    );
+  }
+
+  function renderModalOverlay() {
+    return (
+      diceRollerVisible && (
         <div className="sheet-modal-overlay" onClick={closeModalDialogs}>
           <div className="sheet-modal-overlay-inner" onClick={(e) => e.stopPropagation()}>
             {/* dice roller dialog */}
@@ -914,7 +405,29 @@ export default function CharacterSheet(props: Props) {
             ) : null}
           </div>
         </div>
-      ) : null}
+      )
+    );
+  }
+
+  return (
+    <div id="sheet">
+      {renderFirstRow()}
+      {renderSecondRow()}
+      {renderThirdRow()}
+      <div className="sheet-row" id="sheet-con-group-main">
+        <div className="sheet-column">
+          <div className="sheet-row">
+            {renderAbilities()}
+            {renderSkills()}
+          </div>
+          <div className="sheet-row">
+            {renderMiscProficiencies()}
+            {renderInventory()}
+          </div>
+        </div>
+        {renderActionsAndFeatures()}
+      </div>
+      {renderModalOverlay()}
     </div>
   );
 }
