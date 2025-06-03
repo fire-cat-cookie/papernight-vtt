@@ -8,6 +8,7 @@ import { Dice } from "../types/Dice";
 import { Ability } from "../types/Ability";
 import React from "react";
 import { Skill } from "../types/Skill";
+import { Feature } from "../types/Feature";
 
 type Props = {
   char: CharComposed;
@@ -348,11 +349,19 @@ export default function CharacterSheet(props: Props) {
   }
 
   function renderFeatureTabContent(tabName: string, actionType: string | undefined) {
+    let hiddenFeatures = ["Languages", "Ability Scores", "Darkvision"];
+
     return (
       selectedActionsTab === tabName && (
         <div className="sheet-sections sheet-feature-list">
           {char.features
-            .filter((f) => f.feature.actionType == actionType)
+            .filter(
+              (f) =>
+                f.feature.actionType == actionType &&
+                !f.feature.abilityScoreImprovement &&
+                !f.feature.subclassFeature &&
+                hiddenFeatures.indexOf(f.feature.name) == -1
+            )
             .map((f) => (
               <div
                 className="sheet-column"
