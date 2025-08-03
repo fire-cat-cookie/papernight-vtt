@@ -21,7 +21,7 @@ export default function CharacterSheet(props: Props) {
   const [diceRollerVisible, setDiceRollerVisible] = useState(false);
   const [nextRoll, setNextRoll] = useState({ dice: "1d20", bonus: 0 });
   const [diceRollerPosition, setDiceRollerPosition] = useState({ x: 0, y: 0 });
-  const [selectedActionsTab, setSelectedActionsTab] = useState("actions");
+  const [selectedTab, setSelectedTab] = useState("Common");
 
   function closeModalDialogs() {
     setDiceRollerVisible(false);
@@ -337,42 +337,47 @@ export default function CharacterSheet(props: Props) {
     );
   }
 
-  function renderFeatureTab(tabName: string, label: string) {
+  function renderTab(tabName: string) {
     return (
       <button
-        className={selectedActionsTab === tabName ? "sheet-tab sheet-tab-active" : "sheet-tab"}
-        onClick={() => setSelectedActionsTab(tabName)}
+        className={selectedTab === tabName ? "sheet-tab sheet-tab-active" : "sheet-tab"}
+        onClick={() => setSelectedTab(tabName)}
       >
-        {label}
+        {tabName}
       </button>
     );
   }
 
-  function renderFeatureTabContent(tabName: string, actionType: string | undefined) {
+  function renderTabContent(tabName: string) {
+    if (selectedTab === tabName && tabName === "Features") {
+      return renderFeaturesTabContent();
+    } else {
+      return null;
+    }
+  }
+
+  function renderFeaturesTabContent() {
     let hiddenFeatures = ["Languages", "Ability Scores", "Darkvision"];
 
     return (
-      selectedActionsTab === tabName && (
-        <div className="sheet-sections sheet-feature-list">
-          {char.features
-            .filter(
-              (f) =>
-                f.feature.actionType == actionType &&
-                !f.feature.abilityScoreImprovement &&
-                !f.feature.subclassFeature &&
-                hiddenFeatures.indexOf(f.feature.name) == -1
-            )
-            .map((f) => (
-              <div
-                className="sheet-column"
-                key={f.source + " " + f.feature.level + " " + f.feature.name}
-              >
-                <label className="label-heading">{f.feature.name}</label>
-                <p>{f.feature.description}</p>
-              </div>
-            ))}
-        </div>
-      )
+      <div className="sheet-sections sheet-feature-list">
+        {char.features
+          .filter(
+            (f) =>
+              !f.feature.abilityScoreImprovement &&
+              !f.feature.subclassFeature &&
+              hiddenFeatures.indexOf(f.feature.name) == -1
+          )
+          .map((f) => (
+            <div
+              className="sheet-column"
+              key={f.source + " " + f.feature.level + " " + f.feature.name}
+            >
+              <label className="label-heading">{f.feature.name}</label>
+              <p>{f.feature.description}</p>
+            </div>
+          ))}
+      </div>
     );
   }
 
@@ -380,15 +385,15 @@ export default function CharacterSheet(props: Props) {
     return (
       <div className="sheet-grouping sheet-column" id="sheet-con-group-traits">
         <div className="sheet-tab-row" id="sheet-tab-row-actions">
-          {renderFeatureTab("actions", "Actions")}
-          {renderFeatureTab("bonus actions", "Bonus Actions")}
-          {renderFeatureTab("reactions", "Reactions")}
-          {renderFeatureTab("other", "Other")}
+          {renderTab("Common")}
+          {renderTab("Features")}
+          {renderTab("Spells")}
+          {renderTab("Equipment")}
         </div>
-        {renderFeatureTabContent("actions", "action")}
-        {renderFeatureTabContent("bonus actions", "bonus action")}
-        {renderFeatureTabContent("reactions", "reaction")}
-        {renderFeatureTabContent("other", undefined)}
+        {renderTabContent("Common")}
+        {renderTabContent("Features")}
+        {renderTabContent("Spells")}
+        {renderTabContent("Equipment")}
       </div>
     );
   }

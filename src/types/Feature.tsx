@@ -27,5 +27,4 @@ export interface Feature {
   abilityScoreImprovement: boolean;
   subclassFeature: boolean;
   limitedUse: LimitedUse;
-  actionType: "action" | "bonus action" | "reaction" | undefined;
 }
