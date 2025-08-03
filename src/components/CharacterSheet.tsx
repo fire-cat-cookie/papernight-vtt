@@ -8,7 +8,7 @@ import { Dice } from "../types/Dice";
 import { Ability } from "../types/Ability";
 import React from "react";
 import { Skill } from "../types/Skill";
-import { Feature } from "../types/Feature";
+import Collapsible from "./Collapsible";
 
 type Props = {
   char: CharComposed;
@@ -373,8 +373,11 @@ export default function CharacterSheet(props: Props) {
               className="sheet-column"
               key={f.source + " " + f.feature.level + " " + f.feature.name}
             >
-              <label className="label-heading">{f.feature.name}</label>
-              <p>{f.feature.description}</p>
+              <Collapsible
+                heading={f.feature.name}
+                className={"label-heading"}
+                content={<p>{f.feature.description}</p>}
+              ></Collapsible>
             </div>
           ))}
       </div>
