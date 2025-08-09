@@ -6,6 +6,7 @@ import { Class } from "../types/Class";
 import { CreatureSize } from "../types/CreatureSize";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
+import { Formula } from "../types/Formula";
 import { Skill } from "../types/Skill";
 import { SkillProf } from "../types/SkillProf";
 import { GameUtil } from "./GameUtil";
@@ -156,7 +157,7 @@ export function ComposeChar(charData: CharData): CharComposed {
     creatureType: charData.lineage ? charData.lineage.creatureType : "",
     size: charData.lineage ? charData.lineage.size : CreatureSize.None,
     proficiency_bonus: proficiencyBonus(charData),
-    features: allFeatures(charData),
+    features: evaluatedFeatures(charData),
     status: charData.status,
   };
 }
@@ -233,6 +234,49 @@ function allBonuses(charData: CharData) {
   return result;
 }
 
+function evaluatedFeatures(charData: CharData) {
+  let features = allFeatures(charData).map((f) => JSON.parse(JSON.stringify(f)));
+  for (let f of features) {
+    if (f.feature.limitedUse && typeof f.feature.limitedUse.variableUses) {
+      if (f.feature.limitedUse.uses == undefined) {
+        f.feature.limitedUse.uses = 0;
+      }
+      f.feature.limitedUse.uses += evaluateFormula(
+        charData,
+        f.source,
+        f.feature.limitedUse.variableUses
+      );
+    }
+  }
+  return features;
+}
+
+function evaluateFormula(charData: CharData, source: string, formula: Formula): number {
+  let result = 0;
+  let _class = charData.classes.find((c) => c.name == source);
+
+  //replace string variable operands with their respective values
+  for (let i = 0; i < formula.operands.length; i++) {
+    if (formula.operands[i].variable) {
+      formula.operands[i].value = 0;
+      switch (formula.operands[i].variable) {
+        case "Proficiency Bonus":
+          formula.operands[i].value = proficiencyBonus(charData);
+          break;
+        default: //if the operand is none of the above, it is assumed to come from the class progression table.
+          formula.operands[i].value =
+            _class?.progression?.find((prog) => prog.name == formula.operands[i].variable)?.entries[
+              _class.level - 1
+            ].value ?? 0;
+      }
+    }
+  }
+  if (formula.formula == "add") {
+    result = formula.operands.reduce((a, b) => a + b.value, 0);
+  }
+  return result;
+}
+
 function allFeatures(charData: CharData) {
   let result: { feature: Feature; source: string }[] = [];
   if (charData.lineage) {
@@ -240,7 +284,7 @@ function allFeatures(charData: CharData) {
       (f) => f.level == undefined || f.level <= level(charData)
     );
     for (let f of lineageFeatures) {
-      result.push({ feature: f, source: "Lineage: " + charData.lineage.name });
+      result.push({ feature: f, source: charData.lineage.name });
     }
     if (charData.lineage.sublineage) {
       let sublineageFeatures = charData.lineage.sublineage.features.filter(
@@ -249,8 +293,7 @@ function allFeatures(charData: CharData) {
       for (let f of sublineageFeatures) {
         result.push({
           feature: f,
-          source:
-            "Lineage: " + charData.lineage.name + " (" + charData.lineage.sublineage.name + ")",
+          source: charData.lineage.name + " (" + charData.lineage.sublineage.name + ")",
         });
       }
     }
@@ -261,9 +304,18 @@ function allFeatures(charData: CharData) {
         (f) => f.level == undefined || f.level <= class_.level
       );
       for (let f of classFeatures) {
-        result.push({ feature: f, source: "Class: " + class_.name });
+        for (let upgrade of f.upgrades ?? []) {
+          if (upgrade.upgradeLevel <= class_.level) {
+            upgrade.name = f.name;
+            upgrade.level = f.level;
+            if (upgrade.inheritDescription) {
+              upgrade.description = f.description;
+            }
+            f = upgrade;
+          }
+        }
+        result.push({ feature: f, source: class_.name });
       }
-      console.log(classFeatures);
       if (class_.subclass) {
         let subclassFeatures = class_.subclass.features.filter(
           (f) => f.level == undefined || f.level <= class_.level
@@ -271,7 +323,7 @@ function allFeatures(charData: CharData) {
         for (let f of subclassFeatures) {
           result.push({
             feature: f,
-            source: "Class: " + class_.name + " (" + class_.subclass.name + ")",
+            source: class_.name + " (" + class_.subclass.name + ")",
           });
         }
       }
@@ -281,7 +333,7 @@ function allFeatures(charData: CharData) {
     for (let f of charData.background.features.filter(
       (f) => f.level == undefined || f.level <= level(charData)
     )) {
-      result.push({ feature: f, source: "Background: " + charData.background.name });
+      result.push({ feature: f, source: charData.background.name });
     }
   }
   if (charData.custom_features) {

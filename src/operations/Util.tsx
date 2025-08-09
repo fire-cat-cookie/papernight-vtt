@@ -13,4 +13,10 @@ export const Util = {
       return value;
     } else return words[value - 1];
   },
+
+  Sequence: function (first: number, last: number) {
+    return Array(first + last - 1)
+      .fill(first)
+      .map((e, i) => i + 1);
+  },
 };

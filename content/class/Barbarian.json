@@ -31,51 +31,51 @@
     {
       "name": "Rages",
       "entries": [
-        2,
-        2,
-        3,
-        3,
-        3,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        5,
-        5,
-        5,
-        5,
-        5,
-        6,
-        6,
-        6,
-        "Unlimited"
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 6, "display": "6" },
+        { "value": 6, "display": "6" },
+        { "value": 6, "display": "6" },
+        { "display": "Unlimited" }
       ]
     },
     {
       "name": "Rage Damage",
       "entries": [
-        "+2",
-        "+2",
-        "+2",
-        "+2",
-        "+2",
-        "+2",
-        "+2",
-        "+2",
-        "+3",
-        "+3",
-        "+3",
-        "+3",
-        "+3",
-        "+3",
-        "+3",
-        "+4",
-        "+4",
-        "+4",
-        "+4",
-        "+4"
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+2" },
+        { "value": 2, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 3, "display": "+3" },
+        { "value": 4, "display": "+4" },
+        { "value": 4, "display": "+4" },
+        { "value": 4, "display": "+4" },
+        { "value": 4, "display": "+4" },
+        { "value": 4, "display": "+4" }
       ]
     }
   ],
@@ -92,6 +92,19 @@
         "If you are able to cast spells, you can't cast them or concentrate on them while raging.",
         "Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action.",
         "Once you have raged the maximum number of times for your barbarian level, you must finish a long rest before you can rage again. You may rage 2 times at 1st level, 3 at 3rd, 4 at 6th, 5 at 12th, and 6 at 17th."
+      ],
+      "limitedUse": {
+        "variableUses": {
+          "formula": "add",
+          "operands": [{ "variable": "Rages" }]
+        },
+        "recharge": "Long Rest"
+      },
+      "upgrades": [
+        {
+          "upgradeLevel": 20,
+          "inheritDescription": true
+        }
       ]
     },
     {
@@ -162,10 +175,27 @@
     },
     {
       "level": 9,
-      "name": "Brutal Critical (1 die)",
+      "name": "Brutal Critical",
       "description": [
         "You can roll one additional weapon damage die when determining the extra damage for a critical hit with a melee attack.",
         "This increases to two additional dice at 13th level and three additional dice at 17th level."
+      ],
+      "upgrades": [
+        {
+          "upgradeLevel": 13,
+          "upgradeName": "Brutal Critical (2 dice)",
+          "description": [
+            "You can roll two additional weapon damage dice when determining the extra damage for a critical hit with a melee attack.",
+            "This increases to three additional dice at 17th level."
+          ]
+        },
+        {
+          "upgradeLevel": 17,
+          "upgradeName": "Brutal Critical (3 dice)",
+          "description": [
+            "You can roll three additional weapon damage dice when determining the extra damage for a critical hit with a melee attack."
+          ]
+        }
       ]
     },
     {
@@ -187,14 +217,6 @@
       "abilityScoreImprovement": true
     },
     {
-      "level": 13,
-      "name": "Brutal Critical (2 dice)",
-      "description": [
-        "You can roll two additional weapon damage dice when determining the extra damage for a critical hit with a melee attack.",
-        "This increases to three additional dice at 17th level."
-      ]
-    },
-    {
       "level": 14,
       "name": "Path Feature",
       "subclassFeature": true
@@ -210,13 +232,6 @@
       "level": 16,
       "name": "Ability Score Improvement",
       "abilityScoreImprovement": true
-    },
-    {
-      "level": 17,
-      "name": "Brutal Critical (3 dice)",
-      "description": [
-        "You can roll three additional weapon damage dice when determining the extra damage for a critical hit with a melee attack."
-      ]
     },
     {
       "level": 18,

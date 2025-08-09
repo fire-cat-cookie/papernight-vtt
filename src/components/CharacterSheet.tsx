@@ -374,9 +374,20 @@ export default function CharacterSheet(props: Props) {
               key={f.source + " " + f.feature.level + " " + f.feature.name}
             >
               <Collapsible
-                heading={f.feature.name}
+                heading={
+                  f.feature.name +
+                  (f.feature.limitedUse
+                    ? " [ " +
+                      f.feature.limitedUse.uses +
+                      " / " +
+                      f.feature.limitedUse.recharge +
+                      " ]"
+                    : "")
+                }
                 className={"label-heading"}
-                content={<p>{f.feature.description}</p>}
+                content={f.feature.description.map((text) => (
+                  <p>{text}</p>
+                ))}
               ></Collapsible>
             </div>
           ))}

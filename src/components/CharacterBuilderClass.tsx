@@ -264,25 +264,27 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     let featuresByLevel = GameUtil.GroupFeaturesByLevel(selectedClass.features);
-    let firstSubclassLevel = featuresByLevel.find((e) => e[1].find((f) => f.subclassFeature))?.[0];
+    let firstSubclassLevel = selectedClass.features.find((f) => f.subclassFeature)?.level ?? -1;
 
     return (
       <div className="builder-sections">
-        {featuresByLevel.map((entry: any) => (
-          <div key={selectedClass.name + entry[0]}>
-            <h3 className="builder-heading-section">{"Level " + entry[0]}</h3>
-            <br></br>
-            {entry[1].map((feature: Feature) => {
-              return (
-                <React.Fragment key={selectedClass.name + entry[0] + " " + feature.name}>
-                  {renderClassFeature(feature, entry[0])}
-                  {entry[0] == firstSubclassLevel && renderSubclassSelect()}
-                  {feature.subclassFeature && renderSubclassFeatures(entry[0])}
-                </React.Fragment>
-              );
-            })}
-          </div>
-        ))}
+        {featuresByLevel
+          .filter((features) => features.length > 0)
+          .map((features: Feature[], index: number) => (
+            <div key={selectedClass.name + index + 1}>
+              <h3 className="builder-heading-section">{"Level " + index + 1}</h3>
+              <br></br>
+              {features.map((feature: Feature) => {
+                return (
+                  <React.Fragment key={selectedClass.name + index + 1 + " " + feature.name}>
+                    {renderClassFeature(feature, index + 1)}
+                    {index + 1 == firstSubclassLevel && renderSubclassSelect()}
+                    {feature.subclassFeature && renderSubclassFeatures(index + 1)}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          ))}
       </div>
     );
   }
@@ -451,17 +453,35 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
+    let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
+    let namedUpgradesAtLevel = selectedClass.features
+      .filter((f) => f.upgrades)
+      .map((f) => f.upgrades)
+      .flat()
+      .filter((up) => up.upgradeLevel == level && up.upgradeName);
+    let display = "";
+
+    if (featuresAtLevel.length > 0) {
+      display += featuresAtLevel?.map((f) => f.name).join(", ");
+    }
+
+    if (namedUpgradesAtLevel.length > 0) {
+      if (featuresAtLevel.length > 0) {
+        display += ", ";
+      }
+      display += namedUpgradesAtLevel?.map((up) => up.upgradeName).join(", ");
+    }
+    if (display == "") {
+      display = "-";
+    }
+
     return (
       <>
         <div className="builder-class-table-col">{level}</div>
-        <div className="builder-class-table-col">
-          {GameUtil.GroupFeaturesByLevel(selectedClass.features)
-            [level - 1]?.[1]?.map((f) => f.name)
-            .join(", ")}
-        </div>
+        <div className="builder-class-table-col">{display}</div>
         {progressions.slice(2).map((prog) => (
           <div className="builder-class-table-col" key={selectedClass + " " + level + " " + prog}>
-            {selectedClass.progression.find((p) => p.name == prog)?.entries[level - 1]}
+            {selectedClass.progression.find((p) => p.name == prog)?.entries[level - 1].display}
           </div>
         ))}
       </>

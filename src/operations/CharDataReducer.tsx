@@ -109,6 +109,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       toolProf: classData.toolProf,
       skills: { firstLevel: [], multiclass: [] },
     });
+    console.log(classData);
     if (charData.classes.length == 1) {
       charData.firstClass = className;
     }

@@ -1,6 +1,7 @@
 import { Bonus } from "./Bonus";
 import { ConditionalEffect } from "./ConditionalEffect";
 import { DamageType } from "./DamageType";
+import { FeatureUpgrade } from "./FeatureUpgrade";
 import { GainSpells } from "./GainSpells";
 import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
@@ -9,7 +10,6 @@ import { Skill } from "./Skill";
 export interface Feature {
   level: number;
   name: string;
-  source: string;
   description: string[];
   conditional_effects: ConditionalEffect[];
   resistances: DamageType[];
@@ -27,4 +27,5 @@ export interface Feature {
   abilityScoreImprovement: boolean;
   subclassFeature: boolean;
   limitedUse: LimitedUse;
+  upgrades: FeatureUpgrade[];
 }

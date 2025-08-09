@@ -4,6 +4,7 @@ import { Target } from "../types/Bonus";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
 import { CharComposed } from "../types/CharComposed";
+import { Util } from "./Util";
 
 export const GameUtil = {
   FeatureText_ASI:
@@ -118,15 +119,11 @@ export const GameUtil = {
     return result;
   },
 
-  GroupFeaturesByLevel: function (features: Feature[]): [number, Feature[]][] {
-    let featuresByLevel: Map<number, Feature[]> = new Map();
-    for (let feature of features) {
-      if (feature.level) {
-        let featuresAtThisLevel = featuresByLevel.get(feature.level) ?? [];
-        featuresAtThisLevel.push(feature);
-        featuresByLevel.set(feature.level, featuresAtThisLevel);
-      }
+  GroupFeaturesByLevel: function (features: Feature[]): Feature[][] {
+    let featuresByLevel: Feature[][] = [];
+    for (let i = 0; i < 20; i++) {
+      featuresByLevel.push(features.filter((f) => f.level == i + 1));
     }
-    return Array.from(featuresByLevel).sort((f1, f2) => f1[0] - f2[0]);
+    return featuresByLevel;
   },
 };

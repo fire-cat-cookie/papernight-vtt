@@ -10,7 +10,7 @@ export interface Class {
   subclass: Subclass | undefined;
   features: Feature[];
   savingThrowProf: Ability[];
-  progression: { name: string; entries: string[] | number[] }[];
+  progression: { name: string; entries: { value: number; display: string }[] }[];
   armorProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
   weaponProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
   toolProf: { firstLevel: string[]; multiclass?: string[] } | undefined;
