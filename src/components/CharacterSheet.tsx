@@ -9,6 +9,7 @@ import { Ability } from "../types/Ability";
 import React from "react";
 import { Skill } from "../types/Skill";
 import Collapsible from "./Collapsible";
+import { GameUtil } from "../operations/GameUtil";
 
 type Props = {
   char: CharComposed;
@@ -385,9 +386,7 @@ export default function CharacterSheet(props: Props) {
                     : "")
                 }
                 className={"label-heading"}
-                content={f.feature.description.map((text) => (
-                  <p>{text}</p>
-                ))}
+                content={GameUtil.DisplayFeatureDescription(f.feature)}
               ></Collapsible>
             </div>
           ))}

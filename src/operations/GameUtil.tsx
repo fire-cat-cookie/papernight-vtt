@@ -118,12 +118,4 @@ export const GameUtil = {
     }
     return result;
   },
-
-  GroupFeaturesByLevel: function (features: Feature[]): Feature[][] {
-    let featuresByLevel: Feature[][] = [];
-    for (let i = 0; i < 20; i++) {
-      featuresByLevel.push(features.filter((f) => f.level == i + 1));
-    }
-    return featuresByLevel;
-  },
 };

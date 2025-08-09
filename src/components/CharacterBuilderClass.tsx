@@ -12,6 +12,7 @@ import CharacterBuilderClassASI from "./CharacterBuilderClassASI";
 import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
+import { FeatureUpgrade } from "../types/FeatureUpgrade";
 
 type Props = {
   charData: CharData;
@@ -263,38 +264,65 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
-    let featuresByLevel = GameUtil.GroupFeaturesByLevel(selectedClass.features);
-    let firstSubclassLevel = selectedClass.features.find((f) => f.subclassFeature)?.level ?? -1;
-
     return (
       <div className="builder-sections">
-        {featuresByLevel
-          .filter((features) => features.length > 0)
-          .map((features: Feature[], index: number) => (
-            <div key={selectedClass.name + index + 1}>
-              <h3 className="builder-heading-section">{"Level " + index + 1}</h3>
-              <br></br>
-              {features.map((feature: Feature) => {
-                return (
-                  <React.Fragment key={selectedClass.name + index + 1 + " " + feature.name}>
-                    {renderClassFeature(feature, index + 1)}
-                    {index + 1 == firstSubclassLevel && renderSubclassSelect()}
-                    {feature.subclassFeature && renderSubclassFeatures(index + 1)}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          ))}
+        {Util.Sequence(1, 20).map((level) => renderClassFeatureLevelEntry(level))}
       </div>
     );
   }
 
-  function renderClassFeature(feature: Feature, level: number, featureName?: string) {
-    if (!selectedClass || feature.subclassFeature) {
+  function renderClassFeatureLevelEntry(level: number) {
+    if (!selectedClass) {
       return null;
     }
+
+    let features = selectedClass.features.filter((f) => f.level == level) ?? [];
+    let firstSubclassLevel = selectedClass.features.filter((f) => f.subclassFeature)[0].level;
+    if (!selectedClass.subclass) {
+      features = features.filter((f) => !f.subclassFeature || f.level == firstSubclassLevel);
+    }
+    let namedUpgrades = namedUpgradesAtLevel(level);
+
+    if (features.length == 0 && namedUpgrades.length == 0) {
+      return null;
+    }
+
     return (
-      <React.Fragment key={selectedClass.name + level + " " + feature.name}>
+      <div key={selectedClass.name + level}>
+        <h3 className="builder-heading-section">{"Level " + level}</h3>
+        <br></br>
+        {features.map((feature: Feature) => {
+          return (
+            <React.Fragment key={selectedClass.name + feature.level + " " + feature.name}>
+              {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
+                renderClassFeature(feature)}
+              {feature.level == firstSubclassLevel && renderSubclassSelect()}
+              {feature.subclassFeature && renderSubclassFeatures(feature.level)}
+            </React.Fragment>
+          );
+        })}
+        {namedUpgrades.map((upgrade: FeatureUpgrade) => {
+          return (
+            <React.Fragment
+              key={selectedClass.name + upgrade.upgradeLevel + " " + upgrade.upgradeName}
+            >
+              {renderClassFeature(upgrade, upgrade.upgradeName)}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function renderClassFeature(feature: Feature, featureName?: string) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    console.log(feature, featureName);
+
+    return (
+      <React.Fragment>
         <div className="builder-group">
           <label>{featureName ? featureName : feature.name}</label>
           {GameUtil.DisplayFeatureDescription(feature)}
@@ -328,7 +356,7 @@ export default function CharacterBuilderClass(props: Props) {
       <>
         {selectedClass.subclass.features
           .filter((f) => f.level == level)
-          .map((f) => renderClassFeature(f, level, "" + subclassFeatureTag + ": " + f.name))}
+          .map((f) => renderClassFeature(f, "" + subclassFeatureTag + ": " + f.name))}
       </>
     );
   }
@@ -353,7 +381,7 @@ export default function CharacterBuilderClass(props: Props) {
             })
           }
         >
-          <option value=""></option>
+          <option hidden value=""></option>
           {subclasses.map((s: any) => (
             <option value={s.name} key={selectedClass.name + " " + s.name}>
               {s.name}
@@ -448,28 +476,34 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
+  function namedUpgradesAtLevel(level: number) {
+    return (
+      selectedClass?.features
+        .filter((f) => f.upgrades)
+        .map((f) => f.upgrades)
+        .flat()
+        .filter((up) => up.upgradeLevel == level && up.upgradeName) ?? []
+    );
+  }
+
   function renderClassTableRow(progressions: string[], level: number) {
     if (!selectedClass) {
       return null;
     }
 
     let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
-    let namedUpgradesAtLevel = selectedClass.features
-      .filter((f) => f.upgrades)
-      .map((f) => f.upgrades)
-      .flat()
-      .filter((up) => up.upgradeLevel == level && up.upgradeName);
+    let namedUpgrades = namedUpgradesAtLevel(level);
     let display = "";
 
     if (featuresAtLevel.length > 0) {
       display += featuresAtLevel?.map((f) => f.name).join(", ");
     }
 
-    if (namedUpgradesAtLevel.length > 0) {
+    if (namedUpgrades.length > 0) {
       if (featuresAtLevel.length > 0) {
         display += ", ";
       }
-      display += namedUpgradesAtLevel?.map((up) => up.upgradeName).join(", ");
+      display += namedUpgrades?.map((up) => up.upgradeName).join(", ");
     }
     if (display == "") {
       display = "-";
