@@ -320,12 +320,14 @@ export default function CharacterBuilderClass(props: Props) {
         {feature.level == firstSubclassLevel && feature.subclassFeature && renderSubclassSelect()}
         {feature.subclassFeature && renderSubclassFeatures(feature.level)}
         {feature.choices &&
-          feature.choices.selected?.map((f) => (
-            <div className="builder-group">
-              <label>{f.name}</label>
-              {GameUtil.DisplayFeatureDescription(f, false)}
-            </div>
-          ))}
+          feature.choices.selected
+            ?.filter((f) => f != undefined)
+            .map((f) => (
+              <div className="builder-group">
+                <label>{f.name}</label>
+                {GameUtil.DisplayFeatureDescription(f, false)}
+              </div>
+            ))}
       </React.Fragment>
     );
   }

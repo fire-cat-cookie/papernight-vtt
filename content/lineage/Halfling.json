@@ -21,15 +21,21 @@
     },
     {
       "name": "Lucky",
-      "description": "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll."
+      "description": [
+        "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll."
+      ]
     },
     {
       "name": "Halfling Nimbleness",
-      "description": "You can move through the space of any creature that is of a size larger than yours."
+      "description": [
+        "You can move through the space of any creature that is of a size larger than yours."
+      ]
     },
     {
       "name": "Brave",
-      "description": "You have advantage on saving throws against being frightened.",
+      "description": [
+        "You have advantage on saving throws against being frightened."
+      ],
       "conditional_effects": [
         {
           "tag": "SavingThrows",
@@ -53,7 +59,9 @@
         },
         {
           "name": "Stout Resilience",
-          "description": "You have advantage on saving throws against poison, and you have resistance against poison damage.",
+          "description": [
+            "You have advantage on saving throws against poison, and you have resistance against poison damage."
+          ],
           "resistance": "poison",
           "conditional_effects": [
             {
@@ -78,7 +86,9 @@
         },
         {
           "name": "Naturally Stealthy",
-          "description": "You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+          "description": [
+            "You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you."
+          ]
         }
       ]
     }
