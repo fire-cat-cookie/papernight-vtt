@@ -18,4 +18,6 @@ export interface Class {
     firstLevel: Skill[];
     multiclass?: Skill[];
   };
+  cantripsKnown: number[];
+  spellsKnown: number[];
 }

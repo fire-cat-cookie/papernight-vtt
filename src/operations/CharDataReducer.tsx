@@ -108,8 +108,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       weaponProf: classData.weaponProf,
       toolProf: classData.toolProf,
       skills: { firstLevel: [], multiclass: [] },
+      cantripsKnown: classData.cantripsKnown,
+      spellsKnown: classData.spellsKnown,
     });
-    console.log(classData);
     if (charData.classes.length == 1) {
       charData.firstClass = className;
     }

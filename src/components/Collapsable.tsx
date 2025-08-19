@@ -6,7 +6,7 @@ type Props = {
   content: ReactNode;
 };
 
-export default function Collapsible(props: Props) {
+export default function Collapsable(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

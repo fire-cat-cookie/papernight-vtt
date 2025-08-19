@@ -3,24 +3,26 @@
   "description": "",
   "hitdie": 8,
   "savingThrows": ["Wisdom", "Charisma"],
+  "multiclassRequirements": [{ "ability": "Charisma", "minimum": 13 }],
   "armorProf": {
-    "firstLevel": ["Light armor", "Medium armor", "Shields"],
-    "multiclass": ["Shields"]
+    "firstLevel": ["Light armor"],
+    "multiclass": ["Light armor"]
   },
   "weaponProf": {
-    "firstLevel": ["Simple Weapons", "Martial weapons"],
-    "multiclass": ["Simple Weapons", "Martial weapons"]
+    "firstLevel": ["Simple Weapons"],
+    "multiclass": ["Simple Weapons"]
   },
   "skills": {
     "firstLevel": {
       "number": 2,
       "choices": [
-        "Animal Handling",
-        "Athletics",
+        "Arcana",
+        "Deception",
+        "History",
         "Intimidation",
+        "Investigation",
         "Nature",
-        "Perception",
-        "Survival"
+        "Religion"
       ]
     }
   },
@@ -28,27 +30,239 @@
   "spellsKnown": [
     2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15
   ],
+  "progression": [
+    {
+      "name": "Spell Slots",
+      "entries": [
+        { "value": 1, "display": "1" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" }
+      ]
+    },
+    {
+      "name": "Slot Level",
+      "entries": [
+        { "value": 1, "display": "1st" },
+        { "value": 1, "display": "1st" },
+        { "value": 2, "display": "2nd" },
+        { "value": 2, "display": "2nd" },
+        { "value": 3, "display": "3rd" },
+        { "value": 3, "display": "3rd" },
+        { "value": 4, "display": "4th" },
+        { "value": 4, "display": "4th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" },
+        { "value": 5, "display": "5th" }
+      ]
+    },
+    {
+      "name": "Invocations Known",
+      "entries": [
+        { "value": 0, "display": "-" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 2, "display": "2" },
+        { "value": 3, "display": "3" },
+        { "value": 3, "display": "3" },
+        { "value": 4, "display": "4" },
+        { "value": 4, "display": "4" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 5, "display": "5" },
+        { "value": 6, "display": "6" },
+        { "value": 6, "display": "6" },
+        { "value": 6, "display": "6" },
+        { "value": 7, "display": "7" },
+        { "value": 7, "display": "7" },
+        { "value": 7, "display": "7" },
+        { "value": 8, "display": "8" },
+        { "value": 8, "display": "8" },
+        { "value": 8, "display": "8" }
+      ]
+    }
+  ],
   "features": [
     {
       "level": 1,
-      "name": "Rage",
+      "name": "Pact Magic",
       "description": [
-        "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action.",
-        "While raging, you gain the following benefits if you aren't wearing heavy armor:",
-        "- You have advantage on Strength checks and Strength saving throws.",
-        "- When you make a melee weapon attack using Strength, you gain a +2 bonus to the damage roll. This bonus increases as you level.",
-        "- You have resistance to bludgeoning, piercing, and slashing damage.",
-        "If you are able to cast spells, you can't cast them or concentrate on them while raging.",
-        "Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action.",
-        "Once you have raged the maximum number of times for your barbarian level, you must finish a long rest before you can rage again. You may rage 2 times at 1st level, 3 at 3rd, 4 at 6th, 5 at 12th, and 6 at 17th."
+        "Your arcane research and the magic bestowed on you by your patron have given you facility with spells.",
+        "# Cantrips",
+        "You know two cantrips of your choice from the warlock spell list. You learn additional warlock cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Warlock table.",
+        "# Spell Slots",
+        "The Warlock table shows how many spell slots you have to cast your warlock spells of 1st through 5th level. The table also shows what the level of those slots is; all of your spell slots are the same level. To cast one of your warlock spells of 1st level or higher, you must expend a spell slot. You regain all expended Pact Magic spell slots when you finish a short or long rest.",
+        "# Spells Known of 1st Level and Higher",
+        "At 1st level, you know two 1st-level spells of your choice from the warlock spell list.",
+        "The Spells Known column of the Warlock table shows when you learn more warlock spells of your choice of 1st level and higher. A spell you choose must be of a level no higher than what’s shown in the table’s Slot Level column for your level. When you reach 6th level, for example, you learn a new warlock spell, which can be 1st, 2nd, or 3rd level.",
+        "Additionally, when you gain a level in this class, you can choose one of the warlock spells you know and replace it with another spell from the warlock spell list, which also must be of a level for which you have spell slots.",
+        "# Spellcasting Ability",
+        "Charisma is your spellcasting ability for your warlock spells, so you use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a warlock spell you cast and when making an attack roll with one.",
+        "- Spell save DC = 8 + your proficiency bonus + your Charisma modifier",
+        "- Spell attack modifier = your proficiency bonus + your Charisma modifier",
+        "# Spellcasting Focus",
+        "You can use an arcane focus as a spellcasting focus for your warlock spells."
       ]
     },
     {
       "level": 1,
-      "name": "Unarmored Defense",
+      "name": "Otherworldy Patron",
       "description": [
-        "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit."
+        "At 1st level, you have struck a bargain with an otherworldly being of your choice. Your choice grants you features at 1st level and again at 6th, 10th, and 14th level."
+      ],
+      "subclassFeature": true
+    },
+    {
+      "level": 2,
+      "name": "Eldritch Invocations",
+      "description": [
+        "In your study of occult lore, you have unearthed eldritch invocations, fragments of forbidden knowledge that imbue you with an abiding magical ability.",
+        "You gain two eldritch invocations of your choice. Your invocation options are detailed at the end of the class description. When you gain certain warlock levels, you gain additional invocations of your choice, as shown in the Invocations Known column of the Warlock table.",
+        "Additionally, when you gain a level in this class, you can choose one of the invocations you know and replace it with another invocation that you could learn at that level."
       ]
+    },
+    {
+      "level": 3,
+      "name": "Pact Boon",
+      "description": [
+        "Your otherworldly patron bestows a gift upon you for your loyal service. You gain one of the following features of your choice."
+      ],
+      "choices": {
+        "number": 1,
+        "options": [
+          {
+            "name": "Pact of the Chain",
+            "description": [
+              "You learn the find familiar spell and can cast it as a ritual. The spell doesn’t count against your number of spells known.",
+              "When you cast the spell, you can choose one of the normal forms for your familiar or one of the following special forms: imp, pseudodragon, quasit, or sprite.",
+              "Additionally, when you take the Attack action, you can forgo one of your own attacks to allow your familiar to make one attack of its own with its reaction."
+            ]
+          },
+          {
+            "name": "Pact of the Blade",
+            "description": [
+              "You can use your action to create a pact weapon in your empty hand. You can choose the form that this melee weapon takes each time you create it. You are proficient with it while you wield it. This weapon counts as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage.",
+              "Your pact weapon disappears if it is more than 5 feet away from you for 1 minute or more. It also disappears if you use this feature again, if you dismiss the weapon (no action required), or if you die.",
+              "You can transform one magic weapon into your pact weapon by performing a special ritual while you hold the weapon. You perform the ritual over the course of 1 hour, which can be done during a short rest. You can then dismiss the weapon, shunting it into an extradimensional space, and it appears whenever you create your pact weapon thereafter. You can’t affect an artifact or a sentient weapon in this way. The weapon ceases being your pact weapon if you die, if you perform the 1-hour ritual on a different weapon, or if you use a 1-hour ritual to break your bond to it. The weapon appears at your feet if it is in the extradimensional space when the bond breaks."
+            ]
+          },
+          {
+            "name": "Pact of the Tome",
+            "description": [
+              "Your patron gives you a grimoire called a Book of Shadows. When you gain this feature, choose three cantrips from any class’s spell list (the three needn’t be from the same list). While the book is on your person, you can cast those cantrips at will. They don’t count against your number of cantrips known. If they don’t appear on the warlock spell list, they are nonetheless warlock spells for you.",
+              "If you lose your Book of Shadows, you can perform a 1-hour ceremony to receive a replacement from your patron. This ceremony can be performed during a short or long rest, and it destroys the previous book. The book turns to ash when you die."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "level": 4,
+      "name": "Ability Score Improvement",
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 6,
+      "name": "Otherworldly Patron Feature",
+      "subclassFeature": true
+    },
+    {
+      "level": 8,
+      "name": "Ability Score Improvement",
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 10,
+      "name": "Otherworldly Patron Feature",
+      "subclassFeature": true
+    },
+    {
+      "level": 11,
+      "name": "Mystic Arcanum (6th level)",
+      "description": [
+        "Your patron bestows upon you a magical secret called an arcanum. Choose one 6th-level spell from the warlock spell list as this arcanum.",
+        "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
+      ]
+    },
+    {
+      "level": 12,
+      "name": "Ability Score Improvement",
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 13,
+      "name": "Mystic Arcanum (7th level)",
+      "description": [
+        "Your patron bestows upon you a magical secret called an arcanum. Choose one 7th-level spell from the warlock spell list as this arcanum.",
+        "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
+      ]
+    },
+    {
+      "level": 14,
+      "name": "Otherworldly Patron Feature",
+      "subclassFeature": true
+    },
+    {
+      "level": 15,
+      "name": "Mystic Arcanum (8th level)",
+      "description": [
+        "Your patron bestows upon you a magical secret called an arcanum. Choose one 8th-level spell from the warlock spell list as this arcanum.",
+        "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
+      ]
+    },
+    {
+      "level": 16,
+      "name": "Ability Score Improvement",
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 17,
+      "name": "Mystic Arcanum (9th level)",
+      "description": [
+        "Your patron bestows upon you a magical secret called an arcanum. Choose one 9th-level spell from the warlock spell list as this arcanum.",
+        "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
+      ]
+    },
+    {
+      "level": 19,
+      "name": "Ability Score Improvement",
+      "abilityScoreImprovement": true
+    },
+    {
+      "level": 20,
+      "name": "Eldritch Master",
+      "description": [
+        "You can draw on your inner reserve of mystical power while entreating your patron to regain expended spell slots. You can spend 1 minute entreating your patron for aid to regain all your expended spell slots from your Pact Magic feature. Once you regain spell slots with this feature, you must finish a long rest before you can do so again."
+      ],
+      "limitedUse": {
+        "uses": 1,
+        "recharge": "Long Rest"
+      }
     }
   ]
 }

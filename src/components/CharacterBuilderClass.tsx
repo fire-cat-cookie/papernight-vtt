@@ -294,10 +294,7 @@ export default function CharacterBuilderClass(props: Props) {
         {features.map((feature: Feature) => {
           return (
             <React.Fragment key={selectedClass.name + feature.level + " " + feature.name}>
-              {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
-                renderClassFeature(feature)}
-              {feature.level == firstSubclassLevel && renderSubclassSelect()}
-              {feature.subclassFeature && renderSubclassFeatures(feature.level)}
+              {renderClassBaseFeature(feature, firstSubclassLevel)}
             </React.Fragment>
           );
         })}
@@ -314,21 +311,92 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
+  function renderClassBaseFeature(feature: Feature, firstSubclassLevel: number) {
+    return (
+      <React.Fragment>
+        {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
+          renderClassFeature(feature)}
+        {feature.choices && renderChoiceSelects(feature)}
+        {feature.level == firstSubclassLevel && feature.subclassFeature && renderSubclassSelect()}
+        {feature.subclassFeature && renderSubclassFeatures(feature.level)}
+        {feature.choices &&
+          feature.choices.selected?.map((f) => (
+            <div className="builder-group">
+              <label>{f.name}</label>
+              {GameUtil.DisplayFeatureDescription(f, false)}
+            </div>
+          ))}
+      </React.Fragment>
+    );
+  }
+
   function renderClassFeature(feature: Feature, featureName?: string) {
     if (!selectedClass) {
       return null;
     }
 
-    console.log(feature, featureName);
-
     return (
       <React.Fragment>
         <div className="builder-group">
           <label>{featureName ? featureName : feature.name}</label>
-          {GameUtil.DisplayFeatureDescription(feature)}
+          {GameUtil.DisplayFeatureDescription(feature, false)}
         </div>
         {feature.abilityScoreImprovement && renderASIFeature(feature)}
       </React.Fragment>
+    );
+  }
+
+  function renderChoiceSelects(feature: Feature) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    return (
+      <div className="builder-group">
+        {Array(feature.choices.number)
+          .fill(1)
+          .map((_, index) => renderChoiceSelect(feature, index))}
+      </div>
+    );
+  }
+
+  function renderChoiceSelect(feature: Feature, index: number) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    if (feature.choices.selected == undefined) {
+      feature.choices.selected = Array(feature.choices.number).fill(undefined);
+    }
+
+    return (
+      <select
+        key={selectedClass.name + " " + feature.level + feature.name + " choice select" + index}
+        value={feature.choices.selected[index]?.name ?? ""}
+        onChange={(e) => {
+          let selectedFeature = feature.choices.options.find((f) => f.name == e.target.value);
+          if (selectedFeature) {
+            feature.choices.selected[index] = selectedFeature;
+          }
+          props.updateCharData({
+            type: "update-class-feature",
+            className: selectedClass.name,
+            feature: feature,
+          });
+        }}
+      >
+        <option hidden value=""></option>
+        {feature.choices.options
+          .slice()
+          .filter(
+            (option) =>
+              feature.choices.selected.find((selected) => selected?.name == option.name) ==
+                undefined || option.name == feature.choices.selected[index]?.name
+          )
+          .map((option) => (
+            <option key={option.name}>{option.name}</option>
+          ))}
+      </select>
     );
   }
 
@@ -406,7 +474,7 @@ export default function CharacterBuilderClass(props: Props) {
       <>
         {Array(skillNumber)
           .fill(1)
-          .map((e, index) => (
+          .map((_, index) => (
             <select
               value={skillsSelected[index] ?? ""}
               key={
@@ -446,11 +514,20 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     let columnWidths: string[] = ["60px", "auto"];
-    let progressionsShown: string[] = ["Level", "Features"];
+    let headers: string[] = ["Level", "Features"];
+
+    if (selectedClass.cantripsKnown?.length > 0) {
+      columnWidths.push("80px");
+      headers.push("Cantrips Known");
+    }
+    if (selectedClass.spellsKnown?.length > 0) {
+      columnWidths.push("80px");
+      headers.push("Spells Known");
+    }
     if (selectedClass.progression) {
       for (let prog of selectedClass.progression) {
         columnWidths.push("80px");
-        progressionsShown.push(prog.name);
+        headers.push(prog.name);
       }
     }
 
@@ -460,7 +537,7 @@ export default function CharacterBuilderClass(props: Props) {
 
     return (
       <div className="builder-class-table" style={gridStyle}>
-        {progressionsShown.map((prog) => (
+        {headers.map((prog) => (
           <div className="builder-class-table-col" key={selectedClass.name + " " + prog}>
             {prog}
           </div>
@@ -468,7 +545,7 @@ export default function CharacterBuilderClass(props: Props) {
         {levels.map((level) => {
           return (
             <React.Fragment key={selectedClass + " " + level}>
-              {renderClassTableRow(progressionsShown, level)}
+              {renderClassTableRow(level)}
             </React.Fragment>
           );
         })}
@@ -486,36 +563,55 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassTableRow(progressions: string[], level: number) {
+  function renderClassTableRow(level: number) {
     if (!selectedClass) {
       return null;
     }
 
     let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
     let namedUpgrades = namedUpgradesAtLevel(level);
-    let display = "";
+    let featuresDisplay = "";
 
     if (featuresAtLevel.length > 0) {
-      display += featuresAtLevel?.map((f) => f.name).join(", ");
+      featuresDisplay += featuresAtLevel?.map((f) => f.name).join(", ");
     }
 
     if (namedUpgrades.length > 0) {
       if (featuresAtLevel.length > 0) {
-        display += ", ";
+        featuresDisplay += ", ";
       }
-      display += namedUpgrades?.map((up) => up.upgradeName).join(", ");
+      featuresDisplay += namedUpgrades?.map((up) => up.upgradeName).join(", ");
     }
-    if (display == "") {
-      display = "-";
+    if (featuresDisplay == "") {
+      featuresDisplay = "-";
     }
 
     return (
       <>
         <div className="builder-class-table-col">{level}</div>
-        <div className="builder-class-table-col">{display}</div>
-        {progressions.slice(2).map((prog) => (
-          <div className="builder-class-table-col" key={selectedClass + " " + level + " " + prog}>
-            {selectedClass.progression.find((p) => p.name == prog)?.entries[level - 1].display}
+        <div className="builder-class-table-col">{featuresDisplay}</div>
+        {selectedClass.cantripsKnown?.length > 0 && (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " cantrips known"}
+          >
+            {selectedClass.cantripsKnown[level - 1]}
+          </div>
+        )}
+        {selectedClass.spellsKnown?.length > 0 && (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " spells known"}
+          >
+            {selectedClass.spellsKnown[level - 1]}
+          </div>
+        )}
+        {selectedClass.progression.map((prog) => (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " " + prog.name}
+          >
+            {prog.entries[level - 1].display}
           </div>
         ))}
       </>

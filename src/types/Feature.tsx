@@ -28,4 +28,5 @@ export interface Feature {
   subclassFeature: boolean;
   limitedUse: LimitedUse;
   upgrades: FeatureUpgrade[];
+  choices: { number: number; options: Feature[]; selected: Feature[] };
 }

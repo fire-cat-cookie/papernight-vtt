@@ -75,20 +75,33 @@ export const GameUtil = {
     }
   },
 
-  DisplayFeatureDescription: function (feature: Feature) {
+  DisplayFeatureDescription: function (feature: Feature, includeSubFeatures: boolean) {
     let description = this.GetFeatureDescription(feature);
     if (description == undefined) {
       return null;
     }
     return (
-      <p className="builder-feature-text">
-        {description.map((line: string, index: number) => (
-          <React.Fragment key={index}>
-            {line}
-            <br></br>
-          </React.Fragment>
-        ))}
-      </p>
+      <React.Fragment>
+        <p className="builder-feature-text">
+          {description.map((line: string, index: number) => (
+            <React.Fragment key={index}>
+              {line}
+              <br></br>
+            </React.Fragment>
+          ))}
+        </p>
+        {includeSubFeatures &&
+          feature.choices &&
+          feature.choices.selected
+            ?.filter((f) => f != undefined)
+            .map((f) => (
+              <React.Fragment key={f.name}>
+                <br></br>
+                <p>{f.name}</p>
+                {feature && this.DisplayFeatureDescription(f, false)}
+              </React.Fragment>
+            ))}
+      </React.Fragment>
     );
   },
 
