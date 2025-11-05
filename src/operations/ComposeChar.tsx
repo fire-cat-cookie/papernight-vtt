@@ -241,11 +241,13 @@ function evaluatedFeatures(charData: CharData) {
       if (f.feature.limitedUse.uses == undefined) {
         f.feature.limitedUse.uses = 0;
       }
-      f.feature.limitedUse.uses += evaluateFormula(
-        charData,
-        f.source,
-        f.feature.limitedUse.variableUses
-      );
+      if (f.feature.limitedUse.variableUses != undefined) {
+        f.feature.limitedUse.uses += evaluateFormula(
+          charData,
+          f.source,
+          f.feature.limitedUse.variableUses
+        );
+      }
     }
   }
   return features;
