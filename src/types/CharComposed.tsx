@@ -5,6 +5,9 @@ import { Dice } from "./Dice";
 import { Feature } from "./Feature";
 import { Skill } from "./Skill";
 
+/**
+ * A complete representation of a character to be fed into a character sheet, designed to be read but not modified.
+ */
 export interface CharComposed {
   name: string;
   level: number;

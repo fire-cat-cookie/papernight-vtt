@@ -1,4 +1,4 @@
-import { lineagesJson, spellsJson, classesJson, subclassesJson } from "../index";
+import { lineagesJson, spellsJson, classesJson, subclassesJson, featureTablesJson } from "../index";
 
 export function getLineageData(lineageName: string): any {
   return lineagesJson.find((lineage) => lineage.name == lineageName) ?? {};
@@ -26,4 +26,12 @@ export function getSubclasses(className: string): any {
 
 export function getSubclass(className: string, subclassName: string): any {
   return getSubclasses(className).find((sub: any) => sub.name == subclassName);
+}
+
+export function getFeatureOptions(tableName: string): any {
+  return featureTablesJson.find((ft) => ft.name == tableName)?.options;
+}
+
+export function getFeatureOption(tableName: string, featureName: string): any {
+  return getFeatureOptions(tableName).find((f: any) => f.name == featureName);
 }

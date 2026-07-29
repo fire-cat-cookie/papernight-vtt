@@ -2,6 +2,7 @@ import { Bonus } from "./Bonus";
 import { ConditionalEffect } from "./ConditionalEffect";
 import { DamageType } from "./DamageType";
 import { FeatureUpgrade } from "./FeatureUpgrade";
+import { Formula } from "./Formula";
 import { GainSpells } from "./GainSpells";
 import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
@@ -28,5 +29,11 @@ export interface Feature {
   subclassFeature: boolean;
   limitedUse: LimitedUse;
   upgrades: FeatureUpgrade[];
-  choices: { number: number; options: Feature[]; selected: Feature[] };
+  choices: {
+    number: number;
+    variableNumber: Formula;
+    optionsSource: string;
+    options: Feature[];
+    selected: Feature[];
+  };
 }

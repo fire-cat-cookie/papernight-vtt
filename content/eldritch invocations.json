@@ -1,0 +1,17 @@
+{
+  "name": "Eldritch Invocations",
+  "options": [
+    {
+      "name": "Agonizing Blast",
+      "description": [
+        "When you cast eldritch blast, add your Charisma modifier to the damage it deals on a hit."
+      ]
+    },
+    {
+      "name": "Armor of Shadows",
+      "description": [
+        "You can cast mage armor on yourself at will, without expending a spell slot or material components."
+      ]
+    }
+  ]
+}

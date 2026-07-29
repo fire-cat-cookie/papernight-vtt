@@ -11,8 +11,11 @@ import berserker from "../content/subclass/Barbarian/Berserker.json";
 import fiend from "../content/subclass/Warlock/Fiend.json";
 //spells
 import spells from "../content/spells.json";
+//options
+import eldritch_invocations from "../content/eldritch invocations.json";
 
 export const lineagesJson = [halfling, tiefling];
 export const classesJson = [barbarian, warlock];
 export const subclassesJson = [berserker, fiend];
 export const spellsJson = spells;
+export const featureTablesJson = [eldritch_invocations];

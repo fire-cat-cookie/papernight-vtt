@@ -237,7 +237,7 @@ function allBonuses(charData: CharData) {
 function evaluatedFeatures(charData: CharData) {
   let features = allFeatures(charData).map((f) => JSON.parse(JSON.stringify(f)));
   for (let f of features) {
-    if (f.feature.limitedUse && typeof f.feature.limitedUse.variableUses) {
+    if (f.feature.limitedUse && f.feature.limitedUse.variableUses != undefined) {
       if (f.feature.limitedUse.uses == undefined) {
         f.feature.limitedUse.uses = 0;
       }
@@ -245,9 +245,16 @@ function evaluatedFeatures(charData: CharData) {
         f.feature.limitedUse.uses += evaluateFormula(
           charData,
           f.source,
-          f.feature.limitedUse.variableUses
+          f.feature.limitedUse.variableUses,
         );
       }
+    }
+    if (f.feature.choices && f.feature.choices.variableNumber != undefined) {
+      f.feature.choices.number = evaluateFormula(
+        charData,
+        f.source,
+        f.feature.choices.variableNumber,
+      );
     }
   }
   return features;
@@ -283,14 +290,14 @@ function allFeatures(charData: CharData) {
   let result: { feature: Feature; source: string }[] = [];
   if (charData.lineage) {
     let lineageFeatures = charData.lineage.features.filter(
-      (f) => f.level == undefined || f.level <= level(charData)
+      (f) => f.level == undefined || f.level <= level(charData),
     );
     for (let f of lineageFeatures) {
       result.push({ feature: f, source: charData.lineage.name });
     }
     if (charData.lineage.sublineage) {
       let sublineageFeatures = charData.lineage.sublineage.features.filter(
-        (f) => f.level == undefined || f.level <= level(charData)
+        (f) => f.level == undefined || f.level <= level(charData),
       );
       for (let f of sublineageFeatures) {
         result.push({
@@ -303,7 +310,7 @@ function allFeatures(charData: CharData) {
   if (charData.classes) {
     for (let class_ of charData.classes) {
       let classFeatures = class_.features.filter(
-        (f) => f.level == undefined || f.level <= class_.level
+        (f) => f.level == undefined || f.level <= class_.level,
       );
       for (let f of classFeatures) {
         for (let upgrade of f.upgrades ?? []) {
@@ -320,7 +327,7 @@ function allFeatures(charData: CharData) {
       }
       if (class_.subclass) {
         let subclassFeatures = class_.subclass.features.filter(
-          (f) => f.level == undefined || f.level <= class_.level
+          (f) => f.level == undefined || f.level <= class_.level,
         );
         for (let f of subclassFeatures) {
           result.push({
@@ -333,14 +340,14 @@ function allFeatures(charData: CharData) {
   }
   if (charData.background) {
     for (let f of charData.background.features.filter(
-      (f) => f.level == undefined || f.level <= level(charData)
+      (f) => f.level == undefined || f.level <= level(charData),
     )) {
       result.push({ feature: f, source: charData.background.name });
     }
   }
   if (charData.custom_features) {
     for (let f of charData.custom_features.filter(
-      (f) => f.level == undefined || f.level <= level(charData)
+      (f) => f.level == undefined || f.level <= level(charData),
     )) {
       result.push({ feature: f, source: "Custom" });
     }
@@ -471,13 +478,13 @@ function skillProf(charData: CharData, skill: Skill): number {
       skillProficiencies.push(
         ...c.skills.firstLevel.map((s) => {
           return { skill: s, expertise: false };
-        })
+        }),
       );
     } else if (c.skills.multiclass) {
       skillProficiencies.push(
         ...c.skills.multiclass.map((s) => {
           return { skill: s, expertise: false };
-        })
+        }),
       );
     }
   }

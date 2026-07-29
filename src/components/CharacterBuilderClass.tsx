@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CharDataAction } from "../operations/CharDataReducer";
-import { getClasses, getSubclass, getSubclasses } from "../operations/GetStaticData";
+import { getClasses, getSubclasses, getFeatureOptions } from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { Class } from "../types/Class";
 import "./CharacterBuilder.scss";
@@ -27,6 +27,7 @@ export default function CharacterBuilderClass(props: Props) {
   const [additionalClassEntryVisible, setAdditionalClassEntryVisible] = useState(false);
   const [selectedClassTab, setSelectedClassTab] = useState("");
   let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
+  let charComposed = props.charComposed;
 
   useEffect(() => {
     if (currentClasses.length == 1) setSelectedClassTab(currentClasses[0]?.name);
@@ -319,17 +320,22 @@ export default function CharacterBuilderClass(props: Props) {
         {feature.choices && renderChoiceSelects(feature)}
         {feature.level == firstSubclassLevel && feature.subclassFeature && renderSubclassSelect()}
         {feature.subclassFeature && renderSubclassFeatures(feature.level)}
-        {feature.choices &&
-          feature.choices.selected
-            ?.filter((f) => f != undefined)
-            .map((f) => (
-              <div className="builder-group">
-                <label>{f.name}</label>
-                {GameUtil.DisplayFeatureDescription(f, false)}
-              </div>
-            ))}
+        {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
       </React.Fragment>
     );
+  }
+
+  function renderFeatureChoiceDescriptions(features: Feature[]) {
+    return features
+      ?.filter((f) => f != undefined)
+      .map((f) => (
+        <React.Fragment key={f.name}>
+          <div className="builder-group">
+            <label>{f.name}</label>
+            {GameUtil.DisplayFeatureDescription(f, false)}
+          </div>
+        </React.Fragment>
+      ));
   }
 
   function renderClassFeature(feature: Feature, featureName?: string) {
@@ -337,10 +343,14 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
+    if (!featureName) {
+      featureName = feature.name;
+    }
+
     return (
       <React.Fragment>
         <div className="builder-group">
-          <label>{featureName ? featureName : feature.name}</label>
+          <label>{featureName}</label>
           {GameUtil.DisplayFeatureDescription(feature, false)}
         </div>
         {feature.abilityScoreImprovement && renderASIFeature(feature)}
@@ -351,6 +361,12 @@ export default function CharacterBuilderClass(props: Props) {
   function renderChoiceSelects(feature: Feature) {
     if (!selectedClass) {
       return null;
+    }
+
+    if (feature.choices.variableNumber) {
+      feature.choices.number =
+        charComposed.features.find((f) => f.feature.name == feature.name)?.feature.choices.number ??
+        0;
     }
 
     return (
@@ -369,6 +385,10 @@ export default function CharacterBuilderClass(props: Props) {
 
     if (feature.choices.selected == undefined) {
       feature.choices.selected = Array(feature.choices.number).fill(undefined);
+    }
+
+    if (feature.choices.optionsSource) {
+      feature.choices.options = getFeatureOptions(feature.choices.optionsSource);
     }
 
     return (
@@ -393,7 +413,7 @@ export default function CharacterBuilderClass(props: Props) {
           .filter(
             (option) =>
               feature.choices.selected.find((selected) => selected?.name == option.name) ==
-                undefined || option.name == feature.choices.selected[index]?.name
+                undefined || option.name == feature.choices.selected[index]?.name,
           )
           .map((option) => (
             <option key={option.name}>{option.name}</option>
@@ -426,7 +446,11 @@ export default function CharacterBuilderClass(props: Props) {
       <>
         {selectedClass.subclass.features
           .filter((f) => f.level == level)
-          .map((f) => renderClassFeature(f, "" + subclassFeatureTag + ": " + f.name))}
+          .map((f) => (
+            <React.Fragment key={selectedClass.name + f.level + subclassFeatureTag + " " + f.name}>
+              {renderClassFeature(f, "" + subclassFeatureTag + ": " + f.name)}
+            </React.Fragment>
+          ))}
       </>
     );
   }
@@ -466,7 +490,7 @@ export default function CharacterBuilderClass(props: Props) {
     skillNumber: number,
     skillChoices: Skill[],
     skillsSelected: Skill[],
-    multiclass: boolean
+    multiclass: boolean,
   ) {
     if (!selectedClass) {
       return null;
@@ -626,7 +650,7 @@ export default function CharacterBuilderClass(props: Props) {
         <h3 className="builder-heading-section">Class selection</h3>
         {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
         {currentClasses.map((charClass: Class, index: number) =>
-          renderClassSelectEntry(charClass, index)
+          renderClassSelectEntry(charClass, index),
         )}
         {renderAddMulticlass()}
         {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}

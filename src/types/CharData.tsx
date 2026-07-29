@@ -5,6 +5,9 @@ import { Class } from "./Class";
 import { Feature } from "./Feature";
 import { Lineage } from "./Lineage";
 
+/**
+ * The selected character options and status (current hit points, conditions, etc.) that make up a character
+ */
 export interface CharData {
   name: string;
   base_ability_scores: [
@@ -31,7 +34,7 @@ export interface CharData {
     {
       ability: Ability.cha;
       score: number;
-    }
+    },
   ];
   lineage?: Lineage;
   classes: Class[];

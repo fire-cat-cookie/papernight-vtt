@@ -3,8 +3,6 @@ import { Ability } from "../types/Ability";
 import { Target } from "../types/Bonus";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
-import { CharComposed } from "../types/CharComposed";
-import { Util } from "./Util";
 
 export const GameUtil = {
   FeatureText_ASI:
