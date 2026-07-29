@@ -7,6 +7,7 @@ import { GainSpells } from "./GainSpells";
 import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
 import { Skill } from "./Skill";
+import { Requirement } from "./Requirement";
 
 export interface Feature {
   level: number;
@@ -36,4 +37,5 @@ export interface Feature {
     options: Feature[];
     selected: Feature[];
   };
+  requirements: Requirement[];
 }

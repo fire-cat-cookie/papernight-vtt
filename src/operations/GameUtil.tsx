@@ -3,6 +3,8 @@ import { Ability } from "../types/Ability";
 import { Target } from "../types/Bonus";
 import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
+import { CharComposed } from "../types/CharComposed";
+import { Requirement } from "../types/Requirement";
 
 export const GameUtil = {
   FeatureText_ASI:
@@ -142,5 +144,52 @@ export const GameUtil = {
       result.push({ amount: die[1], sides: die[0] });
     }
     return result;
+  },
+
+  CheckRequirements: function (char: CharComposed, feature: Feature): boolean {
+    let missingRequirements = feature.requirements?.filter(
+      (r) => !GameUtil.CheckRequirement(char, r),
+    );
+    return !feature.requirements || missingRequirements.length == 0;
+  },
+
+  CheckRequirement: function (char: CharComposed, r: Requirement): boolean {
+    switch (r.type) {
+      case "feature":
+        if (char.features.map((f) => f.feature.name).indexOf(r.value) == -1) {
+          return false;
+        }
+        break;
+      case "level":
+        if (char.level < r.value) {
+          return false;
+        }
+        break;
+      case "spell":
+        return false;
+      case "choice":
+        let choiceFeature = char.features.find((f) => f.feature.name == r.value.feature)?.feature;
+        let selectedChoices = choiceFeature?.choices?.selected;
+        if (
+          selectedChoices == undefined ||
+          !selectedChoices.find((choice: Feature) => choice?.name == r.value.choice)
+        ) {
+          return false;
+        }
+    }
+    return true;
+  },
+
+  DisplayRequirement: function (r: Requirement): string {
+    switch (r.type) {
+      case "feature":
+        return "Feature: " + r.value;
+      case "level":
+        return "Level: " + r.value;
+      case "spell":
+        return "Spell: " + r.value;
+      case "choice":
+        return r.value.feature + ": " + r.value.choice;
+    }
   },
 };

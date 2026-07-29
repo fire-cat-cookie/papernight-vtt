@@ -13,6 +13,7 @@ import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
+import { Requirement } from "../types/Requirement";
 
 type Props = {
   charData: CharData;
@@ -391,34 +392,59 @@ export default function CharacterBuilderClass(props: Props) {
       feature.choices.options = getFeatureOptions(feature.choices.optionsSource);
     }
 
+    let selectedChoice = feature.choices.selected[index];
+
     return (
-      <select
+      <React.Fragment
         key={selectedClass.name + " " + feature.level + feature.name + " choice select" + index}
-        value={feature.choices.selected[index]?.name ?? ""}
-        onChange={(e) => {
-          let selectedFeature = feature.choices.options.find((f) => f.name == e.target.value);
-          if (selectedFeature) {
-            feature.choices.selected[index] = selectedFeature;
-          }
-          props.updateCharData({
-            type: "update-class-feature",
-            className: selectedClass.name,
-            feature: feature,
-          });
-        }}
       >
-        <option hidden value=""></option>
-        {feature.choices.options
-          .slice()
-          .filter(
-            (option) =>
-              feature.choices.selected.find((selected) => selected?.name == option.name) ==
-                undefined || option.name == feature.choices.selected[index]?.name,
-          )
-          .map((option) => (
-            <option key={option.name}>{option.name}</option>
-          ))}
-      </select>
+        <select
+          value={selectedChoice?.name ?? ""}
+          onChange={(e) => {
+            let selectedFeature = feature.choices.options.find((f) => f.name == e.target.value);
+            if (selectedFeature) {
+              feature.choices.selected[index] = selectedFeature;
+            }
+            props.updateCharData({
+              type: "update-class-feature",
+              className: selectedClass.name,
+              feature: feature,
+            });
+          }}
+        >
+          <option hidden value=""></option>
+          {feature.choices.options
+            .slice()
+            .filter(
+              (option) =>
+                feature.choices.selected.find((selected) => selected?.name == option.name) ==
+                  undefined || option.name == feature.choices.selected[index]?.name,
+            )
+            .map((option) => (
+              <option key={option.name}>{option.name}</option>
+            ))}
+        </select>
+        {selectedChoice?.requirements && renderRequirements(selectedChoice)}
+      </React.Fragment>
+    );
+  }
+
+  function renderRequirements(feature: Feature) {
+    return (
+      <div className="builder-group">
+        <label>{"Requirements"}</label>
+        {feature?.requirements?.map((r) =>
+          GameUtil.CheckRequirement(charComposed, r) ? (
+            <label key={r.type + ": " + r.value}>
+              &#9745;{" " + GameUtil.DisplayRequirement(r)}
+            </label>
+          ) : (
+            <label key={r.type + ": " + r.value} className={"text-warning"}>
+              &#9744;{" " + GameUtil.DisplayRequirement(r)}
+            </label>
+          ),
+        )}
+      </div>
     );
   }
 
