@@ -34,6 +34,7 @@ export interface CharComposed {
   initiative: number;
   ac: number;
   hit_dice_total: Dice[];
+  hit_dice_remaining: Dice[];
   speed: number;
   creatureType: string;
   size: CreatureSize;

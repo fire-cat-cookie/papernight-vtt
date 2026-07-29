@@ -43,14 +43,9 @@ export default function CharacterSheet(props: Props) {
 
   function displayHitDice(dice: Dice[]) {
     let result = "";
-    let diceGrouped: Map<number, number> = new Map();
 
     for (let die of dice) {
-      diceGrouped.set(die.sides, (diceGrouped.get(die.sides) ?? 0) + die.amount);
-    }
-
-    for (let die of diceGrouped.entries()) {
-      result += die[1] + "d" + die[0] + "  ";
+      result += die.amount + "d" + die.sides + "  ";
     }
     return result;
   }
@@ -151,7 +146,7 @@ export default function CharacterSheet(props: Props) {
           <div className="sheet-field-annotated">
             <label className="sheet-de-emphasized">Remaining</label>
             <label id="sheet-data-hitdice-remaining">
-              {displayHitDice(char.status.hit_dice_remaining)}
+              {displayHitDice(char.hit_dice_remaining)}
             </label>
           </div>
           <span className="gap-vertical" />
@@ -367,7 +362,7 @@ export default function CharacterSheet(props: Props) {
             (f) =>
               !f.feature.abilityScoreImprovement &&
               !f.feature.subclassFeature &&
-              hiddenFeatures.indexOf(f.feature.name) == -1
+              hiddenFeatures.indexOf(f.feature.name) == -1,
           )
           .map((f) => (
             <div

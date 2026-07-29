@@ -129,4 +129,18 @@ export const GameUtil = {
     }
     return result;
   },
+
+  GroupDiceByType: function (dice: Dice[]): Dice[] {
+    let result: Dice[] = [];
+
+    let diceGrouped: Map<number, number> = new Map();
+
+    for (let die of dice) {
+      diceGrouped.set(die.sides, (diceGrouped.get(die.sides) ?? 0) + die.amount);
+    }
+    for (let die of diceGrouped.entries()) {
+      result.push({ amount: die[1], sides: die[0] });
+    }
+    return result;
+  },
 };

@@ -4,6 +4,6 @@ export interface CharStatus {
   hp_missing: number;
   hp_temp: number;
   hp_reduction: number;
-  hit_dice_remaining: Dice[];
+  hit_dice_missing: Dice[];
   inspiration: boolean;
 }

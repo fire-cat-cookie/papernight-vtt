@@ -38,7 +38,7 @@ export const initialCharData: CharData = {
     hp_temp: 0,
     inspiration: false,
     hp_reduction: 0,
-    hit_dice_remaining: [],
+    hit_dice_missing: [],
   },
   firstClass: "",
 };

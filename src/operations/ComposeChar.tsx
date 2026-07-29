@@ -153,6 +153,7 @@ export function ComposeChar(charData: CharData): CharComposed {
     initiative: initiative(charData),
     ac: AC(charData),
     hit_dice_total: hitDice(charData),
+    hit_dice_remaining: hitDiceRemaining(charData),
     speed: speed(charData),
     creatureType: charData.lineage ? charData.lineage.creatureType : "",
     size: charData.lineage ? charData.lineage.size : CreatureSize.None,
@@ -187,6 +188,17 @@ function hitDice(charData: CharData): Dice[] {
       amount: class_.level,
       sides: class_.hitDie,
     });
+  }
+  return GameUtil.GroupDiceByType(result);
+}
+
+function hitDiceRemaining(charData: CharData): Dice[] {
+  let totalDice: Dice[] = hitDice(charData);
+  let missingDice: Dice[] = GameUtil.GroupDiceByType(charData.status.hit_dice_missing);
+  let result: Dice[] = [];
+  for (let total of totalDice) {
+    let missing = missingDice.find((d) => (d.sides = total.sides))?.amount ?? 0;
+    result.push({ amount: Math.max(total.amount - missing, 0), sides: total.sides });
   }
   return result;
 }
