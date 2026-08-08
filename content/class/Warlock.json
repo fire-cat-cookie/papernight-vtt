@@ -107,7 +107,81 @@
       ]
     }
   ],
+  "spell_list": [
+    "Chill Touch",
+    "Eldritch Blast",
+    "Mage Hand",
+    "Minor Illusion",
+    "Poison Spray",
+    "Prestidigitation",
+    "True Strike",
+    "Charm Person",
+    "Comprehend Languages",
+    "Expeditious Retreat",
+    "Hellish Rebuke",
+    "Illusory Script",
+    "Protection from Evil and Good",
+    "Unseen Servant",
+    "Darkness",
+    "Enthrall",
+    "Hold Person",
+    "Invisibility",
+    "Mirror Image",
+    "Misty Step",
+    "Ray of Enfeeblement",
+    "Shatter",
+    "Spider Climb",
+    "Suggestion",
+    "Counterspell",
+    "Dispel Magic",
+    "Fear",
+    "Fly",
+    "Gaseous Form",
+    "Hypnotic Pattern",
+    "Magic Circle",
+    "Major Image",
+    "Remove Curse",
+    "Tongues",
+    "Vampiric Touch",
+    "Banishment",
+    "Blight",
+    "Dimension Door",
+    "Hallucinatory Terrain",
+    "Contact Other Plane",
+    "Dream",
+    "Hold Monster",
+    "Scrying",
+    "Circle of Death",
+    "Conjure Fey",
+    "Create Undead",
+    "Eyebite",
+    "Flesh to Stone",
+    "Mass Suggestion",
+    "True Seeing",
+    "Etherealness",
+    "Finger of Death",
+    "Forcecage",
+    "Plane Shift",
+    "Demiplane",
+    "Dominate Monster",
+    "Feeblemind",
+    "Glibness",
+    "Power Word Stun",
+    "Astral Projection",
+    "Foresight",
+    "Imprisonment",
+    "Power Word Kill",
+    "True Polymorph"
+  ],
   "features": [
+    {
+      "level": 1,
+      "name": "Otherworldy Patron",
+      "description": [
+        "You have struck a bargain with an otherworldly being of your choice. Your choice grants you features at 1st level and again at 6th, 10th, and 14th level."
+      ],
+      "subclassFeature": true
+    },
     {
       "level": 1,
       "name": "Pact Magic",
@@ -127,15 +201,8 @@
         "- Spell attack modifier = your proficiency bonus + your Charisma modifier",
         "# Spellcasting Focus",
         "You can use an arcane focus as a spellcasting focus for your warlock spells."
-      ]
-    },
-    {
-      "level": 1,
-      "name": "Otherworldy Patron",
-      "description": [
-        "At 1st level, you have struck a bargain with an otherworldly being of your choice. Your choice grants you features at 1st level and again at 6th, 10th, and 14th level."
       ],
-      "subclassFeature": true
+      "spellcastingFeature": true
     },
     {
       "level": 2,

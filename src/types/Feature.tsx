@@ -28,6 +28,7 @@ export interface Feature {
   senses: Sense[];
   abilityScoreImprovement: boolean;
   subclassFeature: boolean;
+  spellcastingFeature: boolean;
   limitedUse: LimitedUse;
   upgrades: FeatureUpgrade[];
   choices: {

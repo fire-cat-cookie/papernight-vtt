@@ -11,7 +11,7 @@
       "description": [
         "The Fiend lets you choose from an expanded list of spells when you learn a warlock spell. The following spells are added to the warlock spell list for you.",
         "| Spell Level | Spells |",
-        "| -- | -- |",
+        "| --",
         "| 1st | burning hands, command |",
         "| 2nd | blindness/deafness, scorching ray |",
         "| 3rd | fireball, stinking cloud |",

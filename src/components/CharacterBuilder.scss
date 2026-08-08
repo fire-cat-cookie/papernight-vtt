@@ -97,4 +97,49 @@
   .builder-tab-active {
     background-color: rgba(variables.$border-color, 0.3);
   }
+
+  .builder-multiselect {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    max-height: 400px;
+  }
+
+  .builder-multiselect-pane-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: scroll;
+    flex: 1;
+  }
+
+  .builder-multiselect-pane-list-item {
+    label {
+      color: rgba(variables.$text-color, 0.4);
+    }
+
+    label:hover {
+      background-color: rgba(variables.$border-color, 0.2);
+      cursor: pointer;
+    }
+
+    label:active {
+      background-color: rgba(variables.$border-color, 0.5);
+      color: rgba(variables.$text-color, 1);
+    }
+
+    label.active {
+      background-color: rgba(variables.$border-color, 0.5);
+      outline-color: rgba(variables.$border-color, 0.5);
+      color: rgba(variables.$text-color, 1);
+    }
+  }
+
+  .builder-multiselect-pane-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 3;
+    overflow-y: scroll;
+  }
 }

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { CharDataAction } from "../operations/CharDataReducer";
-import { getClasses, getSubclasses, getFeatureOptions } from "../operations/GetStaticData";
+import {
+  getClasses,
+  getSubclasses,
+  getFeatureOptions,
+  getSpells,
+} from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { Class } from "../types/Class";
 import "./CharacterBuilder.scss";
@@ -13,7 +18,7 @@ import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
-import { Requirement } from "../types/Requirement";
+import { Spell } from "../types/Spell";
 
 type Props = {
   charData: CharData;
@@ -322,6 +327,37 @@ export default function CharacterBuilderClass(props: Props) {
         {feature.level == firstSubclassLevel && feature.subclassFeature && renderSubclassSelect()}
         {feature.subclassFeature && renderSubclassFeatures(feature.level)}
         {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
+        {feature.spellcastingFeature && renderSpellSelect(feature)}
+      </React.Fragment>
+    );
+  }
+
+  function renderSpellSelect(feature: Feature) {
+    if (!selectedClass) {
+      return null;
+    }
+    let loadedClass: any = loadedClasses?.find((c) => c.name == selectedClass.name);
+    let spellOptions: string[] = loadedClass?.spell_list ?? [];
+    let selectedSpellName: string = "Prestidigitation";
+    let selectedSpellDetails: any = getSpells().find((s) => s.name == selectedSpellName);
+
+    return (
+      <React.Fragment>
+        <div className="builder-multiselect">
+          <div className="builder-multiselect-pane-list">
+            {spellOptions.map((s) => (
+              <React.Fragment key={s}>
+                <div className="builder-multiselect-pane-list-item">
+                  <label className={selectedSpellName == s ? "active" : ""}>{s}</label>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+          <div className="builder-multiselect-pane-details">
+            <label>{selectedSpellDetails?.name}</label>
+            <p className="builder-feature-text">{selectedSpellDetails?.description ?? ""}</p>
+          </div>
+        </div>
       </React.Fragment>
     );
   }
