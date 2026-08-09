@@ -320,7 +320,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassBaseFeature(feature: Feature, firstSubclassLevel: number) {
     return (
-      <React.Fragment>
+      <div className="builder-group">
         {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
           renderClassFeature(feature)}
         {feature.choices && renderChoiceSelects(feature)}
@@ -328,7 +328,7 @@ export default function CharacterBuilderClass(props: Props) {
         {feature.subclassFeature && renderSubclassFeatures(feature.level)}
         {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
         {feature.spellcastingFeature && renderSpellSelect(feature)}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -338,7 +338,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
     let loadedClass: any = loadedClasses?.find((c) => c.name == selectedClass.name);
     let spellOptions: string[] = loadedClass?.spell_list ?? [];
-    let selectedSpellName: string = "Prestidigitation";
+    let selectedSpellName: string = "Control Weather";
     let selectedSpellDetails: any = getSpells().find((s) => s.name == selectedSpellName);
 
     return (
@@ -348,14 +348,17 @@ export default function CharacterBuilderClass(props: Props) {
             {spellOptions.map((s) => (
               <React.Fragment key={s}>
                 <div className="builder-multiselect-pane-list-item">
-                  <label className={selectedSpellName == s ? "active" : ""}>{s}</label>
+                  <a className={selectedSpellName == s ? "active" : ""}>{s}</a>
                 </div>
               </React.Fragment>
             ))}
           </div>
+          <div className="builder-multiselect-pane-divider"></div>
           <div className="builder-multiselect-pane-details">
-            <label>{selectedSpellDetails?.name}</label>
-            <p className="builder-feature-text">{selectedSpellDetails?.description ?? ""}</p>
+            <h3>{selectedSpellDetails?.name}</h3>
+            <div className="builder-group">
+              {GameUtil.DisplayMarkdown(selectedSpellDetails?.description ?? [])}
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -386,10 +389,8 @@ export default function CharacterBuilderClass(props: Props) {
 
     return (
       <React.Fragment>
-        <div className="builder-group">
-          <label>{featureName}</label>
-          {GameUtil.DisplayFeatureDescription(feature, false)}
-        </div>
+        <h4>{featureName}</h4>
+        {GameUtil.DisplayFeatureDescription(feature, false)}
         {feature.abilityScoreImprovement && renderASIFeature(feature)}
       </React.Fragment>
     );

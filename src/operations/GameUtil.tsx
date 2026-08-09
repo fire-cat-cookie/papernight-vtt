@@ -82,14 +82,7 @@ export const GameUtil = {
     }
     return (
       <React.Fragment>
-        <p className="builder-feature-text">
-          {description.map((line: string, index: number) => (
-            <React.Fragment key={index}>
-              {line}
-              <br></br>
-            </React.Fragment>
-          ))}
-        </p>
+        {GameUtil.DisplayMarkdown(description)}
         {includeSubFeatures &&
           feature.choices &&
           feature.choices.selected
@@ -191,5 +184,87 @@ export const GameUtil = {
       case "choice":
         return r.value.feature + ": " + r.value.choice;
     }
+  },
+
+  DisplayMarkdown: function (lines: string[]) {
+    let content = [];
+    for (let i = 0; i < lines.length; i++) {
+      let line;
+      if (lines[i].startsWith("| ")) {
+        //table begins here; find the first line after this table
+        let tableEnd = lines.length - 1;
+        for (let seek = i; seek < lines.length; seek++) {
+          if (!lines[seek].startsWith("| ")) {
+            tableEnd = seek - 1;
+            break;
+          }
+        }
+        //generate the table
+        let tableHeaders: string[] = lines[i].split("|").filter((r) => r != "");
+        let tableRows: string[][] = [];
+        for (let rowIndex = i + 1; rowIndex < tableEnd; rowIndex++) {
+          if (lines[rowIndex].startsWith("| --")) {
+            continue;
+          } else {
+            tableRows.push(lines[rowIndex].split("|").filter((r) => r != ""));
+          }
+        }
+        content.push(
+          <table key={i}>
+            <thead>
+              <tr>
+                {tableHeaders.map((h) => (
+                  <th key={"header " + h}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tableRows.map((r) => (
+                <tr key={"row " + r}>
+                  {r.map((cell) => (
+                    <td key={"cell " + cell}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>,
+        );
+        //skip to end of table
+        i = tableEnd;
+      } else {
+        if (lines[i].startsWith("- ")) {
+          //list begins here; find the first line after this list
+          let listEnd = lines.length - 1;
+          for (let seek = i; seek < lines.length; seek++) {
+            if (!lines[seek].startsWith("- ")) {
+              listEnd = seek - 1;
+              break;
+            }
+          }
+          //generate list
+          let listItems = [];
+          for (let listIndex = i; listIndex < listEnd; listIndex++) {
+            listItems.push(lines[listIndex].slice(2));
+          }
+          line = (
+            <ul key={i}>
+              {listItems.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          );
+          //skip to end of list
+          i = listEnd;
+        } else if (lines[i].startsWith("# ")) {
+          //heading
+          line = <h5>{lines[i].slice(2)}</h5>;
+        } else {
+          //text body
+          line = <p>{lines[i]}</p>;
+        }
+      }
+      content.push(<React.Fragment key={i}>{line}</React.Fragment>);
+    }
+    return <React.Fragment>{content}</React.Fragment>;
   },
 };

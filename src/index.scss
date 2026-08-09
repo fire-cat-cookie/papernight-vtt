@@ -22,11 +22,48 @@
     resize: none;
   }
 
+  p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: rgba(variables.$text-color, 0.4);
+  }
+
+  ul.b {
+    list-style-position: inside;
+  }
+
+  ul {
+    margin-top: 0;
+    padding-left: 32px;
+    margin-bottom: 10px;
+  }
+
+  li {
+    color: rgba(variables.$text-color, 0.4);
+    list-style-type: disc;
+  }
+
   button:hover {
     cursor: pointer;
   }
 
   .text-warning {
     color: red;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  table {
+    color: rgba(variables.$text-color, 0.4);
+  }
+
+  th {
+    text-align: left;
+    color: rgba(variables.$text-color, 0.4);
   }
 }

@@ -56,7 +56,6 @@
   }
 
   .builder-feature-text {
-    color: rgba(variables.$text-color, 0.4);
     margin: 0;
   }
 
@@ -103,6 +102,9 @@
     flex-direction: row;
     gap: 20px;
     max-height: 400px;
+    border: 1px solid;
+    border-color: variables.$border-color;
+    padding: 10px;
   }
 
   .builder-multiselect-pane-list {
@@ -113,22 +115,30 @@
     flex: 1;
   }
 
+  .builder-multiselect-pane-divider {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-color: variables.$border-color;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
   .builder-multiselect-pane-list-item {
-    label {
+    a {
       color: rgba(variables.$text-color, 0.4);
     }
 
-    label:hover {
+    a:hover {
       background-color: rgba(variables.$border-color, 0.2);
       cursor: pointer;
     }
 
-    label:active {
+    a:active {
       background-color: rgba(variables.$border-color, 0.5);
       color: rgba(variables.$text-color, 1);
     }
 
-    label.active {
+    a.active {
       background-color: rgba(variables.$border-color, 0.5);
       outline-color: rgba(variables.$border-color, 0.5);
       color: rgba(variables.$text-color, 1);
