@@ -18,6 +18,7 @@ import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
+import Collapsible from "./Collapsible";
 
 type Props = {
   charData: CharData;
@@ -146,14 +147,16 @@ export default function CharacterBuilderClass(props: Props) {
   function renderRemoveClassButton(charClass: Class | undefined) {
     if (currentClasses.length > 1)
       return (
-        <button
-          className="builder-btn-remove-class"
-          onClick={() => {
-            props.updateCharData({ type: "remove-class", className: charClass?.name ?? "" });
-          }}
-        >
-          Remove class
-        </button>
+        <div className="builder-content-col">
+          <button
+            className="builder-btn-remove-class"
+            onClick={() => {
+              props.updateCharData({ type: "remove-class", className: charClass?.name ?? "" });
+            }}
+          >
+            Remove class
+          </button>
+        </div>
       );
   }
 
@@ -164,6 +167,116 @@ export default function CharacterBuilderClass(props: Props) {
         {renderClassLevel(charClass)}
         {renderRemoveClassButton(charClass)}
       </section>
+    );
+  }
+
+  function renderClassTable() {
+    if (!selectedClass) {
+      return null;
+    }
+
+    let columnWidths: string[] = ["60px", "auto"];
+    let headers: string[] = ["Level", "Features"];
+
+    if (selectedClass.cantripsKnown?.length > 0) {
+      columnWidths.push("80px");
+      headers.push("Cantrips Known");
+    }
+    if (selectedClass.spellsKnown?.length > 0) {
+      columnWidths.push("80px");
+      headers.push("Spells Known");
+    }
+    if (selectedClass.progression) {
+      for (let prog of selectedClass.progression) {
+        columnWidths.push("80px");
+        headers.push(prog.name);
+      }
+    }
+
+    let gridStyle = {
+      gridTemplateColumns: columnWidths.join(" "),
+    };
+
+    return (
+      <div className="builder-class-table" style={gridStyle}>
+        {headers.map((prog) => (
+          <div className="builder-class-table-col" key={selectedClass.name + " " + prog}>
+            {prog}
+          </div>
+        ))}
+        {levels.map((level) => {
+          return (
+            <React.Fragment key={selectedClass + " " + level}>
+              {renderClassTableRow(level)}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function namedUpgradesAtLevel(level: number) {
+    return (
+      selectedClass?.features
+        .filter((f) => f.upgrades)
+        .map((f) => f.upgrades)
+        .flat()
+        .filter((up) => up.upgradeLevel == level && up.upgradeName) ?? []
+    );
+  }
+
+  function renderClassTableRow(level: number) {
+    if (!selectedClass) {
+      return null;
+    }
+
+    let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
+    let namedUpgrades = namedUpgradesAtLevel(level);
+    let featuresDisplay = "";
+
+    if (featuresAtLevel.length > 0) {
+      featuresDisplay += featuresAtLevel?.map((f) => f.name).join(", ");
+    }
+
+    if (namedUpgrades.length > 0) {
+      if (featuresAtLevel.length > 0) {
+        featuresDisplay += ", ";
+      }
+      featuresDisplay += namedUpgrades?.map((up) => up.upgradeName).join(", ");
+    }
+    if (featuresDisplay == "") {
+      featuresDisplay = "-";
+    }
+
+    return (
+      <>
+        <div className="builder-class-table-col">{level}</div>
+        <div className="builder-class-table-col">{featuresDisplay}</div>
+        {selectedClass.cantripsKnown?.length > 0 && (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " cantrips known"}
+          >
+            {selectedClass.cantripsKnown[level - 1]}
+          </div>
+        )}
+        {selectedClass.spellsKnown?.length > 0 && (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " spells known"}
+          >
+            {selectedClass.spellsKnown[level - 1]}
+          </div>
+        )}
+        {selectedClass.progression.map((prog) => (
+          <div
+            className="builder-class-table-col"
+            key={selectedClass + " " + level + " " + prog.name}
+          >
+            {prog.entries[level - 1].display}
+          </div>
+        ))}
+      </>
     );
   }
 
@@ -195,10 +308,8 @@ export default function CharacterBuilderClass(props: Props) {
       skillChoices = loadedClass.skills?.firstLevel?.choices ?? [];
       skillsSelected = selectedClass.skills.firstLevel ?? [];
     }
-
-    return (
-      <div className="builder-class-hitdice-proficiencies">
-        {<h3>{"Hit Dice & Proficiencies"} </h3>}
+    let content = (
+      <div>
         {multiclass && (
           <div className="builder-content-col">
             <label>Multiclass</label>
@@ -240,9 +351,20 @@ export default function CharacterBuilderClass(props: Props) {
         )}
       </div>
     );
+    return (
+      <div className="builder-class-hitdice-proficiencies">
+        {
+          <Collapsible
+            heading={"Hit Dice & Proficiencies"}
+            className={"builder-header-collapsible"}
+            content={content}
+          ></Collapsible>
+        }
+      </div>
+    );
   }
 
-  function renderClassFeatureTabRow() {
+  function renderClassTabRow() {
     return (
       <div className="builder-tab-row">
         {currentClasses.map((charClass: Class) => (
@@ -291,13 +413,16 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     return (
-      <div key={selectedClass.name + level}>
+      <div
+        className="builder-content-col builder-content-section-1"
+        key={selectedClass.name + level}
+      >
         <h3>{"Level " + level}</h3>
-        <br></br>
+        {level == 1 && renderClassHitDiceProficiencies()}
         {features.map((feature: Feature) => {
           return (
             <React.Fragment key={selectedClass.name + feature.level + " " + feature.name}>
-              {renderClassBaseFeature(feature, firstSubclassLevel)}
+              {renderClassFeature(feature, firstSubclassLevel)}
             </React.Fragment>
           );
         })}
@@ -306,7 +431,11 @@ export default function CharacterBuilderClass(props: Props) {
             <React.Fragment
               key={selectedClass.name + upgrade.upgradeLevel + " " + upgrade.upgradeName}
             >
-              {renderClassFeature(upgrade, upgrade.upgradeName)}
+              <Collapsible
+                heading={upgrade.upgradeName}
+                className={"builder-header-collapsible"}
+                content={GameUtil.DisplayFeatureDescription(upgrade, false)}
+              ></Collapsible>
             </React.Fragment>
           );
         })}
@@ -314,16 +443,30 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassBaseFeature(feature: Feature, firstSubclassLevel: number) {
+  function renderClassFeature(feature: Feature, firstSubclassLevel: number) {
     return (
-      <div className="builder-content-col">
-        {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
-          renderClassFeature(feature)}
-        {feature.choices && renderChoiceSelects(feature)}
-        {feature.level == firstSubclassLevel && feature.subclassFeature && renderSubclassSelect()}
+      <div>
+        <Collapsible
+          heading={feature.name}
+          className={"builder-header-collapsible"}
+          content={
+            <React.Fragment>
+              {
+                //show description for base class features
+                (!feature.subclassFeature || feature.level == firstSubclassLevel) &&
+                  GameUtil.DisplayFeatureDescription(feature, false)
+              }
+              {feature.choices && renderChoiceSelects(feature)}
+              {feature.level == firstSubclassLevel &&
+                feature.subclassFeature &&
+                renderSubclassSelect()}
+              {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
+              {feature.spellcastingFeature && renderSpellSelect(feature)}
+              {feature.abilityScoreImprovement && renderASIFeature(feature)}
+            </React.Fragment>
+          }
+        ></Collapsible>
         {feature.subclassFeature && renderSubclassFeatures(feature.level)}
-        {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
-        {feature.spellcastingFeature && renderSpellSelect(feature)}
       </div>
     );
   }
@@ -372,24 +515,6 @@ export default function CharacterBuilderClass(props: Props) {
           </div>
         </React.Fragment>
       ));
-  }
-
-  function renderClassFeature(feature: Feature, featureName?: string) {
-    if (!selectedClass) {
-      return null;
-    }
-
-    if (!featureName) {
-      featureName = feature.name;
-    }
-
-    return (
-      <React.Fragment>
-        <h4>{featureName}</h4>
-        {GameUtil.DisplayFeatureDescription(feature, false)}
-        {feature.abilityScoreImprovement && renderASIFeature(feature)}
-      </React.Fragment>
-    );
   }
 
   function renderChoiceSelects(feature: Feature) {
@@ -507,7 +632,11 @@ export default function CharacterBuilderClass(props: Props) {
           .filter((f) => f.level == level)
           .map((f) => (
             <React.Fragment key={selectedClass.name + f.level + subclassFeatureTag + " " + f.name}>
-              {renderClassFeature(f, "" + subclassFeatureTag + ": " + f.name)}
+              <Collapsible
+                heading={"" + subclassFeatureTag + ": " + f.name}
+                className={"builder-header-collapsible"}
+                content={GameUtil.DisplayFeatureDescription(f, false)}
+              ></Collapsible>
             </React.Fragment>
           ))}
       </>
@@ -593,134 +722,30 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassTable() {
-    if (!selectedClass) {
-      return null;
-    }
-
-    let columnWidths: string[] = ["60px", "auto"];
-    let headers: string[] = ["Level", "Features"];
-
-    if (selectedClass.cantripsKnown?.length > 0) {
-      columnWidths.push("80px");
-      headers.push("Cantrips Known");
-    }
-    if (selectedClass.spellsKnown?.length > 0) {
-      columnWidths.push("80px");
-      headers.push("Spells Known");
-    }
-    if (selectedClass.progression) {
-      for (let prog of selectedClass.progression) {
-        columnWidths.push("80px");
-        headers.push(prog.name);
-      }
-    }
-
-    let gridStyle = {
-      gridTemplateColumns: columnWidths.join(" "),
-    };
-
-    return (
-      <div className="builder-class-table" style={gridStyle}>
-        {headers.map((prog) => (
-          <div className="builder-class-table-col" key={selectedClass.name + " " + prog}>
-            {prog}
-          </div>
-        ))}
-        {levels.map((level) => {
-          return (
-            <React.Fragment key={selectedClass + " " + level}>
-              {renderClassTableRow(level)}
-            </React.Fragment>
-          );
-        })}
-      </div>
-    );
-  }
-
-  function namedUpgradesAtLevel(level: number) {
-    return (
-      selectedClass?.features
-        .filter((f) => f.upgrades)
-        .map((f) => f.upgrades)
-        .flat()
-        .filter((up) => up.upgradeLevel == level && up.upgradeName) ?? []
-    );
-  }
-
-  function renderClassTableRow(level: number) {
-    if (!selectedClass) {
-      return null;
-    }
-
-    let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
-    let namedUpgrades = namedUpgradesAtLevel(level);
-    let featuresDisplay = "";
-
-    if (featuresAtLevel.length > 0) {
-      featuresDisplay += featuresAtLevel?.map((f) => f.name).join(", ");
-    }
-
-    if (namedUpgrades.length > 0) {
-      if (featuresAtLevel.length > 0) {
-        featuresDisplay += ", ";
-      }
-      featuresDisplay += namedUpgrades?.map((up) => up.upgradeName).join(", ");
-    }
-    if (featuresDisplay == "") {
-      featuresDisplay = "-";
-    }
-
-    return (
-      <>
-        <div className="builder-class-table-col">{level}</div>
-        <div className="builder-class-table-col">{featuresDisplay}</div>
-        {selectedClass.cantripsKnown?.length > 0 && (
-          <div
-            className="builder-class-table-col"
-            key={selectedClass + " " + level + " cantrips known"}
-          >
-            {selectedClass.cantripsKnown[level - 1]}
-          </div>
-        )}
-        {selectedClass.spellsKnown?.length > 0 && (
-          <div
-            className="builder-class-table-col"
-            key={selectedClass + " " + level + " spells known"}
-          >
-            {selectedClass.spellsKnown[level - 1]}
-          </div>
-        )}
-        {selectedClass.progression.map((prog) => (
-          <div
-            className="builder-class-table-col"
-            key={selectedClass + " " + level + " " + prog.name}
-          >
-            {prog.entries[level - 1].display}
-          </div>
-        ))}
-      </>
-    );
-  }
-
   return (
     <div className="builder-content-main" id="builder-class">
-      <div className="builder-content-col">
-        <h3>Class selection</h3>
-        {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
-        {currentClasses.map((charClass: Class, index: number) =>
-          renderClassSelectEntry(charClass, index),
+      <div className="builder-content-col builder-content-section-1">
+        <div className="builder-content-col">
+          <h3>Class selection</h3>
+          {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
+          {currentClasses.map((charClass: Class, index: number) =>
+            renderClassSelectEntry(charClass, index),
+          )}
+          {renderAddMulticlass()}
+          {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
+        </div>
+        {renderClassTabRow()}
+      </div>
+      <div className="builder-content-col builder-content-section-1">
+        <h3>Class Overview</h3>
+        {selectedClass && (
+          <Collapsible
+            heading={"Progression"}
+            className={"builder-header-collapsible"}
+            content={renderClassTable()}
+          ></Collapsible>
         )}
-        {renderAddMulticlass()}
-        {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
-      <div className="builder-content-col">
-        {renderClassFeatureTabRow()}
-        {selectedClass && <h3>Progression</h3>}
-        {renderClassTable()}
-        {renderClassHitDiceProficiencies()}
-      </div>
-      {selectedClass && <h3>Features</h3>}
       {renderClassFeatureList()}
     </div>
   );

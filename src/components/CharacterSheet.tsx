@@ -8,7 +8,7 @@ import { Dice } from "../types/Dice";
 import { Ability } from "../types/Ability";
 import React from "react";
 import { Skill } from "../types/Skill";
-import Collapsable from "./Collapsable";
+import Collapsible from "./Collapsible";
 import { GameUtil } from "../operations/GameUtil";
 
 type Props = {
@@ -369,7 +369,7 @@ export default function CharacterSheet(props: Props) {
               className="sheet-column"
               key={f.source + " " + f.feature.level + " " + f.feature.name}
             >
-              <Collapsable
+              <Collapsible
                 heading={
                   f.feature.name +
                   (f.feature.limitedUse
@@ -382,7 +382,7 @@ export default function CharacterSheet(props: Props) {
                 }
                 className={"label-heading"}
                 content={GameUtil.DisplayFeatureDescription(f.feature, true)}
-              ></Collapsable>
+              ></Collapsible>
             </div>
           ))}
       </div>
