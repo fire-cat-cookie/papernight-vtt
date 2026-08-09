@@ -17,15 +17,15 @@ export default function CharacterBuilderLineage(props: Props) {
     if (props.charData.lineage.sublineage) {
       let sublineageName = props.charData.lineage.sublineage.name;
       sublineageData = lineageData?.sublineages?.find(
-        (sublineage: any) => sublineage.name == sublineageName
+        (sublineage: any) => sublineage.name == sublineageName,
       );
     }
   }
 
   function renderLineageSelect() {
     return (
-      <section className="builder-section">
-        <div className="builder-group">
+      <section className="builder-content-row">
+        <div className="builder-content-col">
           <label htmlFor="lineage">Lineage:</label>
           <select
             name="lineage"
@@ -47,8 +47,8 @@ export default function CharacterBuilderLineage(props: Props) {
 
   function renderSublineageSelect() {
     return (
-      <section className="builder-section">
-        <div className="builder-group">
+      <section className="builder-content-row">
+        <div className="builder-content-col">
           <label htmlFor="sublineage">Sublineage:</label>
           <select
             name="sublineage"
@@ -73,10 +73,10 @@ export default function CharacterBuilderLineage(props: Props) {
       return null;
     }
     return (
-      <section className="builder-section">
-        <div className="builder-group">
+      <section className="builder-content-row">
+        <div className="builder-content-col">
           <label>{label}</label>
-          <p className="builder-feature-text">{description}</p>
+          <p>{description}</p>
         </div>
       </section>
     );
@@ -90,10 +90,10 @@ export default function CharacterBuilderLineage(props: Props) {
       <>
         {featureList.map((feature: any) => {
           return (
-            <section key={feature.name} className="builder-section">
-              <div className="builder-group">
+            <section key={feature.name} className="builder-content-row">
+              <div className="builder-content-col">
                 <label>{feature.name}</label>
-                <p className="builder-feature-text">{GameUtil.GetFeatureDescription(feature)}</p>
+                <p>{GameUtil.GetFeatureDescription(feature)}</p>
               </div>
             </section>
           );
@@ -104,13 +104,13 @@ export default function CharacterBuilderLineage(props: Props) {
 
   function renderSublineageSection() {
     return (
-      <div className="builder-sections">
+      <div className="builder-content-col">
         {renderSublineageSelect()}
         {renderLabelledSection(sublineageData?.age, "Age:", sublineageData?.age)}
         {renderLabelledSection(
           sublineageData?.description,
           "Description:",
-          sublineageData?.description
+          sublineageData?.description,
         )}
         {renderLabelledSection(sublineageData?.size, "Size:", sublineageData?.size)}
         {renderLabelledSection(sublineageData?.speed, "Speed:", sublineageData?.speed + "ft")}
@@ -120,8 +120,8 @@ export default function CharacterBuilderLineage(props: Props) {
   }
 
   return (
-    <div className="builder-tab-content" id="builder-lineage">
-      <div className="builder-sections">
+    <div className="builder-content-main " id="builder-lineage">
+      <div className="builder-content-col">
         {/*Lineage*/}
         {renderLineageSelect()}
         {renderLabelledSection(lineageData?.age, "Age:", lineageData?.age)}

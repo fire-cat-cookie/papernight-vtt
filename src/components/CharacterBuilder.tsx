@@ -14,14 +14,14 @@ export default function CharacterBuilder(props: Props) {
   return (
     <div id="builder">
       <h1>Character Builder</h1>
-      <section className="builder-section" id="builder-section-top">
+      <section className="builder-content-row">
         <img
           className="builder-avatar"
           src="../content/avatar-placeholder.jpg"
           width="80"
           height="80"
         ></img>
-        <div className="builder-group">
+        <div className="builder-content-col">
           <label>{"Character Name:"}</label>
           <input
             type="text"

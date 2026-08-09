@@ -45,7 +45,7 @@ export default function CharacterBuilderAbilities(props: Props) {
   function pointsRemaining() {
     return Math.min(
       27,
-      maxPoints - pointCost(charData.base_ability_scores.map((a) => a.score).flat(1))
+      maxPoints - pointCost(charData.base_ability_scores.map((a) => a.score).flat(1)),
     );
   }
 
@@ -165,9 +165,9 @@ export default function CharacterBuilderAbilities(props: Props) {
   }
 
   return (
-    <div className="builder-tab-content builder-sections" id="builder-abilities">
-      <section className="builder-section">
-        <div className="builder-group">
+    <div className="builder-content-main" id="builder-abilities">
+      <section className="builder-content-row">
+        <div className="builder-content-col">
           <label htmlFor="generation-method">Generation Method:</label>
           <select
             name="generation-method"
@@ -194,24 +194,24 @@ export default function CharacterBuilderAbilities(props: Props) {
         </div>
       </section>
       {generationMethod == "Point Buy" ? (
-        <section className="builder-section">
-          <div className="builder-con-group">
+        <section className="builder-content-row">
+          <div className="builder-content-col">
             <label>Remaining Points:</label>
             <p>{pointsRemaining()}</p>
           </div>
         </section>
       ) : null}
       {generationMethod == "Standard Array" ? (
-        <section className="builder-section">
-          <div className="builder-con-group">
+        <section className="builder-content-row">
+          <div className="builder-content-col">
             <label>Numbers available: </label>
             <p>{standardArray.join(", ")}</p>
           </div>
         </section>
       ) : null}
       {generationMethod == "Rolled" ? (
-        <section className="builder-section">
-          <div className="builder-con-group">
+        <section className="builder-content-row">
+          <div className="builder-content-col">
             <button
               className="builder-abilities-roll-button"
               onClick={() => {
@@ -222,13 +222,13 @@ export default function CharacterBuilderAbilities(props: Props) {
               Roll
             </button>
           </div>
-          <div className="builder-con-group">
+          <div className="builder-content-col">
             <label>Numbers rolled: </label>
             <p>{displayNumbersRolled()}</p>
           </div>
         </section>
       ) : null}
-      <section className="builder-section">
+      <section className="builder-content-row">
         <div className="builder-con-abilities">
           {/*Headings*/}
           <div className="builder-abilities-heading">Attribute</div>

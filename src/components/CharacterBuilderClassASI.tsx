@@ -90,7 +90,7 @@ export default function CharacterBuilderClassASI(props: Props) {
     }
 
     return (
-      <div className="builder-group builder-row">
+      <div className="builder-content-col builder-content-row">
         <select
           key={index}
           value={selectedAbility}
@@ -119,8 +119,8 @@ export default function CharacterBuilderClassASI(props: Props) {
   }
 
   return (
-    <div className="builder-group builder-group builder-class-ASI">
-      <div className="builder-group builder-row">
+    <div className="builder-content-col builder-content-col builder-class-ASI">
+      <div className="builder-content-col builder-content-row">
         <select
           value={modeSelection}
           onChange={(e: any) => {

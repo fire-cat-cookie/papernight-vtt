@@ -9,7 +9,7 @@ type Props = {
 
 export default function CharacterBuilderEquipment(props: Props) {
   return (
-    <div className="builder-tab-content" id="builder-equipment">
+    <div className="builder-content-main " id="builder-equipment">
       <p>Equipment settings</p>
     </div>
   );

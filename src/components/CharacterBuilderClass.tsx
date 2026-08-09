@@ -18,7 +18,6 @@ import { CharComposed } from "../types/CharComposed";
 import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
-import { Spell } from "../types/Spell";
 
 type Props = {
   charData: CharData;
@@ -41,7 +40,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassLevel(charClass: Class | undefined) {
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         <label>Level:</label>
         <select
           className="builder-class-level"
@@ -94,7 +93,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassSelect(charClass: Class | undefined, classIndex: number) {
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         <label htmlFor="class">Class:</label>
         <select
           className="builder-class-select"
@@ -130,7 +129,7 @@ export default function CharacterBuilderClass(props: Props) {
       !additionalClassEntryVisible
     ) {
       return (
-        <section className="builder-section">
+        <section className="builder-content-row">
           <button
             className="builder-btn-multiclass"
             onClick={() => setAdditionalClassEntryVisible(true)}
@@ -160,7 +159,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassSelectEntry(charClass: Class | undefined, classIndex: number) {
     return (
-      <section className="builder-row" key={classIndex}>
+      <section className="builder-content-row" key={classIndex}>
         {renderClassSelect(charClass, classIndex)}
         {renderClassLevel(charClass)}
         {renderRemoveClassButton(charClass)}
@@ -201,44 +200,41 @@ export default function CharacterBuilderClass(props: Props) {
       <div className="builder-class-hitdice-proficiencies">
         {<h3>{"Hit Dice & Proficiencies"} </h3>}
         {multiclass && (
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>Multiclass</label>
-            {<p className="builder-feature-text">{"Proficiencies are shown for multiclass"} </p>}
-            {<p className="builder-feature-text">{"Multiclass requirement: "} </p>}
+            {<p>{"Multiclass requirement: "} </p>}
           </div>
         )}
-        <div className="builder-group">
+        <div className="builder-content-col">
           <label>Hit dice</label>
-          <p className="builder-feature-text">{"d" + selectedClass.hitDie}</p>
+          <p>{"d" + selectedClass.hitDie}</p>
         </div>
-        <div className="builder-group">
+        <div className="builder-content-col">
           <label>Saving Throws</label>
-          <p className="builder-feature-text">{selectedClass.savingThrowProf.join(", ")}</p>
+          <p>{selectedClass.savingThrowProf.join(", ")}</p>
         </div>
         {armorProf != "" && (
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>Armor</label>
-            <p className="builder-feature-text">{armorProf}</p>
+            <p>{armorProf}</p>
           </div>
         )}
         {weaponProf != "" && (
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>Weapons</label>
-            <p className="builder-feature-text">{weaponProf}</p>
+            <p>{weaponProf}</p>
           </div>
         )}
         {toolProf != "" && (
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>Tools</label>
-            <p className="builder-feature-text">{toolProf}</p>
+            <p>{toolProf}</p>
           </div>
         )}
         {skillNumber > 0 && (
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>Skills</label>
-            <p className="builder-feature-text">
-              {"Choose " + Util.NumberToWord(skillNumber) + ":"}
-            </p>
+            <p>{"Choose " + Util.NumberToWord(skillNumber) + ":"}</p>
             {renderclassSkillSelects(skillNumber, skillChoices, skillsSelected, multiclass)}
           </div>
         )}
@@ -272,7 +268,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     return (
-      <div className="builder-sections">
+      <div className="builder-content-col">
         {Util.Sequence(1, 20).map((level) => renderClassFeatureLevelEntry(level))}
       </div>
     );
@@ -296,7 +292,7 @@ export default function CharacterBuilderClass(props: Props) {
 
     return (
       <div key={selectedClass.name + level}>
-        <h3 className="builder-heading-section">{"Level " + level}</h3>
+        <h3>{"Level " + level}</h3>
         <br></br>
         {features.map((feature: Feature) => {
           return (
@@ -320,7 +316,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassBaseFeature(feature: Feature, firstSubclassLevel: number) {
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         {(feature.level == firstSubclassLevel || !feature.subclassFeature) &&
           renderClassFeature(feature)}
         {feature.choices && renderChoiceSelects(feature)}
@@ -356,7 +352,7 @@ export default function CharacterBuilderClass(props: Props) {
           <div className="builder-multiselect-pane-divider"></div>
           <div className="builder-multiselect-pane-details">
             <h3>{selectedSpellDetails?.name}</h3>
-            <div className="builder-group">
+            <div className="builder-content-col">
               {GameUtil.DisplayMarkdown(selectedSpellDetails?.description ?? [])}
             </div>
           </div>
@@ -370,7 +366,7 @@ export default function CharacterBuilderClass(props: Props) {
       ?.filter((f) => f != undefined)
       .map((f) => (
         <React.Fragment key={f.name}>
-          <div className="builder-group">
+          <div className="builder-content-col">
             <label>{f.name}</label>
             {GameUtil.DisplayFeatureDescription(f, false)}
           </div>
@@ -408,7 +404,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         {Array(feature.choices.number)
           .fill(1)
           .map((_, index) => renderChoiceSelect(feature, index))}
@@ -468,7 +464,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderRequirements(feature: Feature) {
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         <label>{"Requirements"}</label>
         {feature?.requirements?.map((r) =>
           GameUtil.CheckRequirement(charComposed, r) ? (
@@ -526,7 +522,7 @@ export default function CharacterBuilderClass(props: Props) {
     let subclasses = getSubclasses(selectedClass.name);
 
     return (
-      <div className="builder-group">
+      <div className="builder-content-col">
         <select
           key={selectedClass.name + " subclass select"}
           value={selectedClass.subclass?.name ?? ""}
@@ -708,9 +704,9 @@ export default function CharacterBuilderClass(props: Props) {
   }
 
   return (
-    <div className="builder-tab-content builder-sections" id="builder-class">
-      <div className="builder-sections">
-        <h3 className="builder-heading-section">Class selection</h3>
+    <div className="builder-content-main" id="builder-class">
+      <div className="builder-content-col">
+        <h3>Class selection</h3>
         {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
         {currentClasses.map((charClass: Class, index: number) =>
           renderClassSelectEntry(charClass, index),
@@ -718,13 +714,13 @@ export default function CharacterBuilderClass(props: Props) {
         {renderAddMulticlass()}
         {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
-      <div className="builder-sections">
+      <div className="builder-content-col">
         {renderClassFeatureTabRow()}
-        {selectedClass && <h3 className="builder-heading-section">Progression</h3>}
+        {selectedClass && <h3>Progression</h3>}
         {renderClassTable()}
         {renderClassHitDiceProficiencies()}
       </div>
-      {selectedClass && <h3 className="builder-heading-section">Features</h3>}
+      {selectedClass && <h3>Features</h3>}
       {renderClassFeatureList()}
     </div>
   );
