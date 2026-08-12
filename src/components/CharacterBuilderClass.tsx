@@ -31,9 +31,10 @@ export default function CharacterBuilderClass(props: Props) {
   let currentClasses = props.charData.classes.slice();
   let loadedClasses = getClasses();
   const [additionalClassEntryVisible, setAdditionalClassEntryVisible] = useState(false);
-  const [selectedClassTab, setSelectedClassTab] = useState("");
+  const [selectedClassTab, setSelectedClassTab] = useState(currentClasses[0]?.name ?? "");
   let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
   let charComposed = props.charComposed;
+  let selectedClassSpellcastingFeature = selectedClass?.features.find((f) => f.spellcastingFeature);
 
   useEffect(() => {
     if (currentClasses.length == 1) setSelectedClassTab(currentClasses[0]?.name);
@@ -42,7 +43,7 @@ export default function CharacterBuilderClass(props: Props) {
   function renderClassLevel(charClass: Class | undefined) {
     return (
       <div className="builder-content-col">
-        <label>Level:</label>
+        <label>Level</label>
         <select
           className="builder-class-level"
           value={charClass?.level ?? 1}
@@ -79,10 +80,10 @@ export default function CharacterBuilderClass(props: Props) {
     }
   }
 
-  function getAvailableClasses(className: string) {
+  function getAvailableClasses(selectedClass: string) {
     let currentClassNames = currentClasses.map((c) => c.name);
     return loadedClasses.slice().filter((c) => {
-      if (c.name == className) {
+      if (c.name == selectedClass) {
         return true;
       }
       if (currentClassNames.indexOf(c.name) != -1) {
@@ -95,7 +96,7 @@ export default function CharacterBuilderClass(props: Props) {
   function renderClassSelect(charClass: Class | undefined, classIndex: number) {
     return (
       <div className="builder-content-col">
-        <label htmlFor="class">Class:</label>
+        <label htmlFor="class">{classIndex == 0 ? "Primary class" : "Multiclass"}</label>
         <select
           className="builder-class-select"
           value={charClass?.name ?? ""}
@@ -127,6 +128,7 @@ export default function CharacterBuilderClass(props: Props) {
     if (
       currentClasses.length > 0 &&
       getRemainingLevels(undefined).length > 0 &&
+      getAvailableClasses("").length > 0 &&
       !additionalClassEntryVisible
     ) {
       return (
@@ -145,19 +147,19 @@ export default function CharacterBuilderClass(props: Props) {
   }
 
   function renderRemoveClassButton(charClass: Class | undefined) {
-    if (currentClasses.length > 1)
-      return (
-        <div className="builder-content-col">
-          <button
-            className="builder-btn-remove-class"
-            onClick={() => {
-              props.updateCharData({ type: "remove-class", className: charClass?.name ?? "" });
-            }}
-          >
-            Remove class
-          </button>
-        </div>
-      );
+    return (
+      <div className="builder-content-col">
+        <button
+          className="builder-btn-remove-class"
+          disabled={currentClasses.length <= 1}
+          onClick={() => {
+            props.updateCharData({ type: "remove-class", className: charClass?.name ?? "" });
+          }}
+        >
+          Remove class
+        </button>
+      </div>
+    );
   }
 
   function renderClassSelectEntry(charClass: Class | undefined, classIndex: number) {
@@ -366,20 +368,25 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassTabRow() {
     return (
-      <div className="builder-tab-row">
-        {currentClasses.map((charClass: Class) => (
-          <button
-            key={charClass.name}
-            className={
-              selectedClassTab == charClass.name ? "builder-tab builder-tab-active" : "builder-tab"
-            }
-            onClick={() => {
-              setSelectedClassTab(charClass.name);
-            }}
-          >
-            {charClass.name}
-          </button>
-        ))}
+      <div>
+        <h3>Show class features</h3>
+        <div className="builder-tab-row">
+          {currentClasses.map((charClass: Class) => (
+            <a
+              key={charClass.name}
+              className={
+                selectedClassTab == charClass.name
+                  ? "builder-tab builder-tab-active"
+                  : "builder-tab"
+              }
+              onClick={() => {
+                setSelectedClassTab(charClass.name);
+              }}
+            >
+              {charClass.name}
+            </a>
+          ))}
+        </div>
       </div>
     );
   }
@@ -461,7 +468,6 @@ export default function CharacterBuilderClass(props: Props) {
                 feature.subclassFeature &&
                 renderSubclassSelect()}
               {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
-              {feature.spellcastingFeature && renderSpellSelect(feature)}
               {feature.abilityScoreImprovement && renderASIFeature(feature)}
             </React.Fragment>
           }
@@ -724,20 +730,17 @@ export default function CharacterBuilderClass(props: Props) {
 
   return (
     <div className="builder-content-main" id="builder-class">
-      <div className="builder-content-col builder-content-section-1">
-        <div className="builder-content-col">
-          <h3>Class selection</h3>
-          {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
-          {currentClasses.map((charClass: Class, index: number) =>
-            renderClassSelectEntry(charClass, index),
-          )}
-          {renderAddMulticlass()}
-          {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
-        </div>
-        {renderClassTabRow()}
+      <div className="builder-content-col">
+        {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
+        {currentClasses.map((charClass: Class, index: number) =>
+          renderClassSelectEntry(charClass, index),
+        )}
+        {renderAddMulticlass()}
+        {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
-      <div className="builder-content-col builder-content-section-1">
-        <h3>Class Overview</h3>
+      {currentClasses.length > 1 && renderClassTabRow()}
+      <div className="builder-content-section-1">
+        {selectedClass && <h3>Class Overview</h3>}
         {selectedClass && (
           <Collapsible
             heading={"Progression"}
@@ -746,6 +749,18 @@ export default function CharacterBuilderClass(props: Props) {
           ></Collapsible>
         )}
       </div>
+      {selectedClassSpellcastingFeature && (
+        <div className="builder-content-col builder-content-section-1">
+          <h3>Spells</h3>
+          {
+            <Collapsible
+              heading={selectedClassSpellcastingFeature.name}
+              className={"builder-header-collapsible"}
+              content={renderSpellSelect(selectedClassSpellcastingFeature)}
+            ></Collapsible>
+          }
+        </div>
+      )}
       {renderClassFeatureList()}
     </div>
   );

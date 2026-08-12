@@ -33,7 +33,7 @@ export default function CharacterBuilder(props: Props) {
           ></input>
         </div>
       </section>
-      <div id="builder-tabs">
+      <div className="builder-tab-row builder-navbar">
         <NavLink to="/builder/lineage">Lineage</NavLink>
         <NavLink to="/builder/class">Class</NavLink>
         <NavLink to="/builder/abilities">Abilities</NavLink>

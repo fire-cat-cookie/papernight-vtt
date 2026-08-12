@@ -4,6 +4,7 @@
   height: 100%;
   body {
     height: 100%;
+    margin: 0;
   }
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -47,6 +48,10 @@
     cursor: pointer;
   }
 
+  button:disabled {
+    cursor: auto;
+  }
+
   .text-warning {
     color: red;
   }
@@ -65,5 +70,9 @@
   th {
     text-align: left;
     color: rgba(variables.$text-color, 0.4);
+  }
+
+  select {
+    padding: 4px;
   }
 }

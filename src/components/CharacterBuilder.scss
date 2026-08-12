@@ -9,36 +9,7 @@
   margin: 0 auto 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-
-  #builder-tabs {
-    display: flex;
-    gap: 14px;
-
-    a {
-      vertical-align: center;
-      padding: 2px 6px 2px 6px;
-      outline: 1px solid variables.$border-color;
-      border-radius: 7px;
-      user-select: none;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    a:hover {
-      background-color: rgba(variables.$border-color, 0.2);
-      cursor: pointer;
-    }
-
-    a:active {
-      background-color: rgba(variables.$border-color, 0.5);
-    }
-
-    a.active {
-      background-color: rgba(variables.$border-color, 0.5);
-      outline-color: rgba(variables.$border-color, 0.5);
-    }
-  }
+  gap: 10px;
 
   .builder-content-main {
     margin-bottom: 30px;
@@ -49,7 +20,7 @@
       color: variables.$heading-color-1;
       display: flex;
       align-items: center;
-      gap: 1em;
+      gap: 10px;
       width: 100%;
     }
     h3::after,
@@ -73,8 +44,18 @@
     flex-direction: column;
     width: 100%;
     gap: 2px;
-    margin-bottom: 1em;
+    margin-bottom: 15px;
     align-items: baseline;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .builder-content-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
   .builder-avatar {
@@ -95,16 +76,39 @@
     }
   }
 
-  .builder-content-row {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
+  .builder-navbar {
+    background-color: variables.$container-color-1;
   }
 
   .builder-tab-row {
     display: flex;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 14px;
+    padding: 10px;
+    border-radius: 15px;
+    width: 100%;
+    a {
+      vertical-align: center;
+      padding: 2px 6px 2px 6px;
+      outline: 1px solid variables.$border-color;
+      border-radius: 7px;
+      user-select: none;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    a:hover {
+      background-color: rgba(variables.$border-color, 0.2);
+      cursor: pointer;
+    }
+
+    a:active {
+      background-color: rgba(variables.$border-color, 0.5);
+    }
+
+    a.active {
+      background-color: rgba(variables.$border-color, 0.5);
+      outline-color: rgba(variables.$border-color, 0.5);
+    }
   }
 
   .builder-tab {
