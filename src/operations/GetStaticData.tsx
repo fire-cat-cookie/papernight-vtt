@@ -12,6 +12,19 @@ export function getSpells() {
   return spellsJson;
 }
 
+export function getClassSpells(className: string) {
+  let spellNames: string[] = getClass(className)?.spell_list ?? [];
+  return getSpellList(spellNames);
+}
+
+export function getSpellList(spellNames: string[]) {
+  return spellsJson.filter((s) => spellNames.indexOf(s.name) != -1);
+}
+
+export function getSpell(name: string) {
+  return spellsJson.find((s) => s.name == name);
+}
+
 export function getClasses() {
   return classesJson;
 }

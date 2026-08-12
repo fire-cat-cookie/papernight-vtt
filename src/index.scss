@@ -1,5 +1,13 @@
 @use "variables";
 
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+#root {
+  overflow: scroll;
+}
+
 :root {
   height: 100%;
   body {

@@ -5,6 +5,7 @@ import {
   getSubclasses,
   getFeatureOptions,
   getSpells,
+  getClassSpells,
 } from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { Class } from "../types/Class";
@@ -19,6 +20,7 @@ import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
 import Collapsible from "./Collapsible";
+import { Spell } from "../types/Spell";
 
 type Props = {
   charData: CharData;
@@ -26,15 +28,31 @@ type Props = {
   updateCharData: React.Dispatch<CharDataAction>;
 };
 
+enum SectionTabs {
+  ClassOverview = "Class Overview",
+  ClassFeatures = "Class Features",
+  Spells = "Spells",
+}
+
 export default function CharacterBuilderClass(props: Props) {
   let levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   let currentClasses = props.charData.classes.slice();
   let loadedClasses = getClasses();
   const [additionalClassEntryVisible, setAdditionalClassEntryVisible] = useState(false);
   const [selectedClassTab, setSelectedClassTab] = useState(currentClasses[0]?.name ?? "");
+  const [selectedSectionTab, setSelectedSectionTab] = useState(SectionTabs.ClassOverview);
+  const [selectedSpellName, setSelectedSpellName] = useState("");
   let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
+  let spellOptions: any[] = getClassSpells(selectedClass?.name ?? "");
+  let selectedSpell: any = spellOptions?.find((s) => s.name == selectedSpellName);
   let charComposed = props.charComposed;
-  let selectedClassSpellcastingFeature = selectedClass?.features.find((f) => f.spellcastingFeature);
+  let spellcastingFeature = selectedClass?.features.find((f) => f.spellcastingFeature);
+  if (selectedSectionTab == SectionTabs.Spells && !spellcastingFeature) {
+    setSelectedSectionTab(SectionTabs.ClassOverview);
+  }
+  if (!spellOptions.indexOf(selectedSpellName)) {
+    setSelectedSpellName("");
+  }
 
   useEffect(() => {
     if (currentClasses.length == 1) setSelectedClassTab(currentClasses[0]?.name);
@@ -368,8 +386,7 @@ export default function CharacterBuilderClass(props: Props) {
 
   function renderClassTabRow() {
     return (
-      <div>
-        <h3>Show class features</h3>
+      <div className="builder-tab-row-nested">
         <div className="builder-tab-row">
           {currentClasses.map((charClass: Class) => (
             <a
@@ -386,6 +403,46 @@ export default function CharacterBuilderClass(props: Props) {
               {charClass.name}
             </a>
           ))}
+        </div>
+        <div className="builder-tab-row">
+          <a
+            className={
+              selectedSectionTab == SectionTabs.ClassOverview
+                ? "builder-tab builder-tab-active"
+                : "builder-tab"
+            }
+            onClick={() => {
+              setSelectedSectionTab(SectionTabs.ClassOverview);
+            }}
+          >
+            {SectionTabs.ClassOverview}
+          </a>
+          <a
+            className={
+              selectedSectionTab == SectionTabs.ClassFeatures
+                ? "builder-tab builder-tab-active"
+                : "builder-tab"
+            }
+            onClick={() => {
+              setSelectedSectionTab(SectionTabs.ClassFeatures);
+            }}
+          >
+            {SectionTabs.ClassFeatures}
+          </a>
+          {spellcastingFeature && (
+            <a
+              className={
+                selectedSectionTab == SectionTabs.Spells
+                  ? "builder-tab builder-tab-active"
+                  : "builder-tab"
+              }
+              onClick={() => {
+                setSelectedSectionTab(SectionTabs.Spells);
+              }}
+            >
+              {SectionTabs.Spells}
+            </a>
+          )}
         </div>
       </div>
     );
@@ -477,32 +534,46 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSpellSelect(feature: Feature) {
+  function renderSpellSelect() {
     if (!selectedClass) {
       return null;
     }
-    let loadedClass: any = loadedClasses?.find((c) => c.name == selectedClass.name);
-    let spellOptions: string[] = loadedClass?.spell_list ?? [];
-    let selectedSpellName: string = "Control Weather";
-    let selectedSpellDetails: any = getSpells().find((s) => s.name == selectedSpellName);
+
+    let totalSpells = selectedClass.spellsKnown[selectedClass.level - 1];
+    let totalCantrips = selectedClass.cantripsKnown[selectedClass.level - 1];
+    let availableSpells = totalSpells - (selectedClass.spells?.length ?? 0);
+    let availableCantrips = totalCantrips - (selectedClass.cantrips?.length ?? 0);
 
     return (
       <React.Fragment>
+        <div className="builder-content-col">
+          {totalCantrips > 0 && (
+            <label>{"Cantrips available: " + availableCantrips + "/" + totalCantrips}</label>
+          )}
+          {totalSpells > 0 && (
+            <label>{"Spells available: " + availableSpells + "/" + totalSpells}</label>
+          )}
+        </div>
         <div className="builder-multiselect">
           <div className="builder-multiselect-pane-list">
             {spellOptions.map((s) => (
-              <React.Fragment key={s}>
+              <React.Fragment key={s.name}>
                 <div className="builder-multiselect-pane-list-item">
-                  <a className={selectedSpellName == s ? "active" : ""}>{s}</a>
+                  <div
+                    className={selectedSpellName == s.name ? "active" : ""}
+                    onClick={() => setSelectedSpellName(s.name)}
+                  >
+                    {s.name}
+                  </div>
                 </div>
               </React.Fragment>
             ))}
           </div>
-          <div className="builder-multiselect-pane-divider"></div>
           <div className="builder-multiselect-pane-details">
-            <h3>{selectedSpellDetails?.name}</h3>
+            {selectedSpell && <h3>{selectedSpell.name}</h3>}
             <div className="builder-content-col">
-              {GameUtil.DisplayMarkdown(selectedSpellDetails?.description ?? [])}
+              {!selectedSpell && <p>Select a spell to view its details.</p>}
+              {GameUtil.DisplayMarkdown(selectedSpell?.description ?? [])}
             </div>
           </div>
         </div>
@@ -728,6 +799,10 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
+  function renderClassOverview() {
+    return <div className="builder-content-section-1">{renderClassTable()}</div>;
+  }
+
   return (
     <div className="builder-content-main" id="builder-class">
       <div className="builder-content-col">
@@ -738,30 +813,12 @@ export default function CharacterBuilderClass(props: Props) {
         {renderAddMulticlass()}
         {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
       </div>
-      {currentClasses.length > 1 && renderClassTabRow()}
-      <div className="builder-content-section-1">
-        {selectedClass && <h3>Class Overview</h3>}
-        {selectedClass && (
-          <Collapsible
-            heading={"Progression"}
-            className={"builder-header-collapsible"}
-            content={renderClassTable()}
-          ></Collapsible>
-        )}
-      </div>
-      {selectedClassSpellcastingFeature && (
-        <div className="builder-content-col builder-content-section-1">
-          <h3>Spells</h3>
-          {
-            <Collapsible
-              heading={selectedClassSpellcastingFeature.name}
-              className={"builder-header-collapsible"}
-              content={renderSpellSelect(selectedClassSpellcastingFeature)}
-            ></Collapsible>
-          }
-        </div>
+      {selectedClass && renderClassTabRow()}
+      {selectedSectionTab == SectionTabs.ClassOverview && renderClassOverview()}
+      {selectedSectionTab == SectionTabs.ClassFeatures && renderClassFeatureList()}
+      {selectedSectionTab == SectionTabs.Spells && spellcastingFeature && (
+        <div className="builder-content-section-1">{renderSpellSelect()}</div>
       )}
-      {renderClassFeatureList()}
     </div>
   );
 }
