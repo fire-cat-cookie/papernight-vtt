@@ -189,7 +189,7 @@ export const GameUtil = {
   DisplayMarkdown: function (lines: string[]) {
     let content = [];
     lines = lines.map((l) => {
-      return l.replace("{", "").replace("}", "");
+      return l.replaceAll("{", "").replaceAll("}", "");
     });
     for (let i = 0; i < lines.length; i++) {
       let line;
