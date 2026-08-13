@@ -142,12 +142,15 @@
     flex-direction: column;
     overflow-y: scroll;
     flex: 1;
+    h4 {
+      padding: 0px 0px 8px 8px;
+    }
   }
 
   .builder-multiselect-pane-list-item {
     div {
       color: rgba(variables.$text-color, 0.4);
-      padding: 4px;
+      padding: 0px 0px 8px 8px;
     }
 
     div:hover {
