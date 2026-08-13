@@ -532,6 +532,18 @@ export default function CharacterBuilderClass(props: Props) {
   }
 
   function renderSpellSelect() {
+    return (
+      <React.Fragment>
+        {renderSpellSelectHeader()}
+        <div className="builder-multiselect">
+          {renderSpellSelectList()}
+          {renderSpellSelectDetails()}
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  function renderSpellSelectHeader() {
     if (!selectedClass) {
       return null;
     }
@@ -540,6 +552,20 @@ export default function CharacterBuilderClass(props: Props) {
     let totalCantrips = selectedClass.cantripsKnown[selectedClass.level - 1];
     let availableSpells = totalSpells - (selectedClass.spells?.length ?? 0);
     let availableCantrips = totalCantrips - (selectedClass.cantrips?.length ?? 0);
+
+    return (
+      <div className="builder-content-col">
+        {totalCantrips > 0 && (
+          <label>{"Cantrips available: " + availableCantrips + "/" + totalCantrips}</label>
+        )}
+        {totalSpells > 0 && (
+          <label>{"Spells available: " + availableSpells + "/" + totalSpells}</label>
+        )}
+      </div>
+    );
+  }
+
+  function renderSpellSelectList() {
     let spellsByLevel: Map<number, Spell[]> = new Map();
     for (let spell of spellOptions) {
       if (!spellsByLevel.has(spell.level)) {
@@ -559,51 +585,47 @@ export default function CharacterBuilderClass(props: Props) {
       "8th Level",
       "9th Level",
     ];
-
     return (
-      <React.Fragment>
-        <div className="builder-content-col">
-          {totalCantrips > 0 && (
-            <label>{"Cantrips available: " + availableCantrips + "/" + totalCantrips}</label>
-          )}
-          {totalSpells > 0 && (
-            <label>{"Spells available: " + availableSpells + "/" + totalSpells}</label>
-          )}
-        </div>
-        <div className="builder-multiselect">
-          <div className="builder-multiselect-pane-list">
-            {levelsAsText.map((spellLevel, index) => {
-              return spellsByLevel.has(index) ? (
-                <div key={index}>
-                  <h4>{spellLevel}</h4>
-                  {spellsByLevel.get(index)?.map((spells) => (
-                    <React.Fragment key={spells.name}>
-                      <div className="builder-multiselect-pane-list-item">
-                        <div
-                          className={selectedSpellName == spells.name ? "active" : ""}
-                          onClick={() => setSelectedSpellName(spells.name)}
-                        >
-                          {spells.name}
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </div>
-              ) : null;
-            })}
-          </div>
-          <div className="builder-multiselect-pane-details">
-            {selectedSpell && <h3>{selectedSpell.name}</h3>}
-            <div className="builder-content-col">
-              {!selectedSpell ? (
-                <p>Select a spell to view its details.</p>
-              ) : (
-                <div>{GameUtil.DisplayMarkdown(selectedSpell?.description ?? [])}</div>
-              )}
+      <div className="builder-multiselect-pane-list">
+        {levelsAsText.map((spellLevel, index) => {
+          return spellsByLevel.has(index) ? (
+            <div key={index}>
+              <h4>{spellLevel}</h4>
+              {spellsByLevel.get(index)?.map((spell) => renderSpellSelectListItem(spell))}
             </div>
+          ) : null;
+        })}
+      </div>
+    );
+  }
+
+  function renderSpellSelectListItem(spell: Spell) {
+    return (
+      <React.Fragment key={spell.name}>
+        <div className="builder-multiselect-pane-list-item">
+          <div
+            className={selectedSpellName == spell.name ? "active" : ""}
+            onClick={() => setSelectedSpellName(spell.name)}
+          >
+            {spell.name}
           </div>
         </div>
       </React.Fragment>
+    );
+  }
+
+  function renderSpellSelectDetails() {
+    return (
+      <div className="builder-multiselect-pane-details">
+        {selectedSpell && <h3>{selectedSpell.name}</h3>}
+        <div className="builder-content-col">
+          {!selectedSpell ? (
+            <p>Select a spell to view its details.</p>
+          ) : (
+            <div>{GameUtil.DisplayMarkdown(selectedSpell?.description ?? [])}</div>
+          )}
+        </div>
+      </div>
     );
   }
 
