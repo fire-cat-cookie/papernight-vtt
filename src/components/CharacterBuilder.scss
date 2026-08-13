@@ -16,6 +16,7 @@
   }
 
   .builder-content-section-1 {
+    width: 100%;
     h3 {
       color: variables.$heading-color-1;
       display: flex;
@@ -42,7 +43,6 @@
   .builder-content-col {
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 2px;
     margin-bottom: 15px;
     align-items: baseline;
@@ -172,7 +172,6 @@
     flex-direction: column;
     flex: 3;
     overflow-y: scroll;
-    overflow-x: hidden;
     border-left-style: solid;
     border-left-width: 1px;
     border-color: variables.$border-color;

@@ -477,10 +477,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     return (
-      <div
-        className="builder-content-col builder-content-section-1"
-        key={selectedClass.name + level}
-      >
+      <div className="builder-content-section-1" key={selectedClass.name + level}>
         <h3>{"Level " + level}</h3>
         {level == 1 && renderClassHitDiceProficiencies()}
         {features.map((feature: Feature) => {
