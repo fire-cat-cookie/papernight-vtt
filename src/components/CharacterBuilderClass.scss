@@ -1,26 +1,30 @@
 @use "../variables";
 
 .builder-class-level {
-  width: 60px;
+  width: 60px !important;
 }
 
 .builder-class-select {
-  width: 120px;
+  width: 120px !important;
 }
 
 .builder-btn-multiclass {
-  height: 30px;
-  width: 160px;
+  height: 30px !important;
+  width: 120px !important;
 }
 
 .builder-btn-remove-class {
-  width: 100px;
-  height: 30px;
-  margin-top: 20px;
+  width: 100px !important;
+  height: 30px !important;
+  margin-top: 20px !important;
 }
 
-.builder-class-table {
+.builder-table {
   display: grid;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+}
+
+.builder-spell-details-placeholder {
+  padding: 10px;
 }

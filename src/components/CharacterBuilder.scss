@@ -45,9 +45,13 @@
     flex-direction: column;
     gap: 2px;
     margin-bottom: 15px;
-    align-items: baseline;
     padding-left: 2px;
     padding-right: 2px;
+
+    select,
+    button {
+      width: fit-content;
+    }
   }
 
   .builder-content-row {
@@ -180,5 +184,9 @@
     border-color: variables.$border-color;
     padding-left: 10px;
     padding-right: 10px;
+  }
+
+  span {
+    color: rgba(variables.$text-color, 0.4);
   }
 }

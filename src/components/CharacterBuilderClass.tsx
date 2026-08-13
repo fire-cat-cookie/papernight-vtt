@@ -4,7 +4,6 @@ import {
   getClasses,
   getSubclasses,
   getFeatureOptions,
-  getSpells,
   getClassSpells,
 } from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
@@ -218,11 +217,9 @@ export default function CharacterBuilderClass(props: Props) {
     };
 
     return (
-      <div className="builder-class-table" style={gridStyle}>
+      <div className="builder-table" style={gridStyle}>
         {headers.map((prog) => (
-          <div className="builder-class-table-col" key={selectedClass.name + " " + prog}>
-            {prog}
-          </div>
+          <div key={selectedClass.name + " " + prog}>{prog}</div>
         ))}
         {levels.map((level) => {
           return (
@@ -618,12 +615,82 @@ export default function CharacterBuilderClass(props: Props) {
         {selectedSpell && <h3>{selectedSpell.name}</h3>}
         <div className="builder-content-col">
           {!selectedSpell ? (
-            <p>Select a spell to view its details.</p>
+            <div className="builder-spell-details-placeholder">
+              <p>Select a spell to view its details.</p>
+            </div>
           ) : (
-            <div>{GameUtil.DisplayMarkdown(selectedSpell?.description ?? [])}</div>
+            <div className="builder-content-col">
+              {SpellInfoHeader()}
+              {GameUtil.DisplayMarkdown(selectedSpell?.description ?? [])}
+            </div>
           )}
         </div>
       </div>
+    );
+  }
+
+  function SpellInfoHeader() {
+    let s: Spell = selectedSpell;
+    let spellLevel = "";
+    switch (s.level) {
+      case 0:
+        spellLevel = "Cantrip";
+        break;
+      case 1:
+        spellLevel = "1st";
+        break;
+      case 2:
+        spellLevel = "2nd";
+        break;
+      case 3:
+        spellLevel = "3rd";
+        break;
+    }
+    if (s.level >= 4 && s.level <= 9) {
+      spellLevel = s.level + "th";
+    }
+
+    let gridStyle = {
+      gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    };
+
+    return (
+      <React.Fragment>
+        <div className="builder-table" style={gridStyle}>
+          <div className="builder-content-col">
+            <label>Spell Level</label>
+            <span>{spellLevel}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>School</label>
+            <span>{s.school}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Components</label>
+            <span>{s.components}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Material Cost</label>
+            <span>{s.cost ? "Yes" : "No"}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Casting Time</label>
+            <span>{s.castingTime}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Range</label>
+            <span>{s.range}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Duration</label>
+            <span>{GameUtil.Capitalize(s.duration)}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Ritual</label>
+            <span>{s.ritual ? "Yes" : "No"}</span>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 
