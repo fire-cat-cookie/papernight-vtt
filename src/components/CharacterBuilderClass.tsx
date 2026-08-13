@@ -58,7 +58,7 @@ export default function CharacterBuilderClass(props: Props) {
     if (currentClasses.length == 1) setSelectedClassTab(currentClasses[0]?.name);
   }, [currentClasses]);
 
-  function renderClassLevel(charClass: Class | undefined) {
+  function SelectClassLevel(charClass: Class | undefined) {
     return (
       <div className="builder-content-col">
         <label>Level</label>
@@ -111,7 +111,7 @@ export default function CharacterBuilderClass(props: Props) {
     });
   }
 
-  function renderClassSelect(charClass: Class | undefined, classIndex: number) {
+  function SelectClass(charClass: Class | undefined, classIndex: number) {
     return (
       <div className="builder-content-col">
         <label htmlFor="class">{classIndex == 0 ? "Primary class" : "Multiclass"}</label>
@@ -142,7 +142,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderAddMulticlass() {
+  function AddMulticlass() {
     if (
       currentClasses.length > 0 &&
       getRemainingLevels(undefined).length > 0 &&
@@ -164,7 +164,7 @@ export default function CharacterBuilderClass(props: Props) {
     }
   }
 
-  function renderRemoveClassButton(charClass: Class | undefined) {
+  function RemoveClass(charClass: Class | undefined) {
     return (
       <div className="builder-content-col">
         <button
@@ -180,17 +180,17 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassSelectEntry(charClass: Class | undefined, classIndex: number) {
+  function SelectClassRow(charClass: Class | undefined, classIndex: number) {
     return (
       <section className="builder-content-row" key={classIndex}>
-        {renderClassSelect(charClass, classIndex)}
-        {renderClassLevel(charClass)}
-        {renderRemoveClassButton(charClass)}
+        {SelectClass(charClass, classIndex)}
+        {SelectClassLevel(charClass)}
+        {RemoveClass(charClass)}
       </section>
     );
   }
 
-  function renderClassTable() {
+  function ProgressionTable() {
     if (!selectedClass) {
       return null;
     }
@@ -227,7 +227,7 @@ export default function CharacterBuilderClass(props: Props) {
         {levels.map((level) => {
           return (
             <React.Fragment key={selectedClass + " " + level}>
-              {renderClassTableRow(level)}
+              {ProgressionTableRow(level)}
             </React.Fragment>
           );
         })}
@@ -245,7 +245,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassTableRow(level: number) {
+  function ProgressionTableRow(level: number) {
     if (!selectedClass) {
       return null;
     }
@@ -300,7 +300,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassHitDiceProficiencies() {
+  function HitDiceProficiencies() {
     if (!selectedClass) {
       return null;
     }
@@ -366,7 +366,7 @@ export default function CharacterBuilderClass(props: Props) {
           <div className="builder-content-col">
             <label>Skills</label>
             <p>{"Choose " + Util.NumberToWord(skillNumber) + ":"}</p>
-            {renderclassSkillSelects(skillNumber, skillChoices, skillsSelected, multiclass)}
+            {SkillChoices(skillNumber, skillChoices, skillsSelected, multiclass)}
           </div>
         )}
       </div>
@@ -384,7 +384,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassTabRow() {
+  function ClassNavMenu() {
     return (
       <div className="builder-tab-row-nested">
         <div className="builder-tab-row">
@@ -448,19 +448,19 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassFeatureList() {
+  function ClassFeatures() {
     if (!selectedClass) {
       return null;
     }
 
     return (
       <div className="builder-content-col">
-        {Util.Sequence(1, 20).map((level) => renderClassFeatureLevelEntry(level))}
+        {Util.Sequence(1, 20).map((level) => ClassFeatureLevelEntry(level))}
       </div>
     );
   }
 
-  function renderClassFeatureLevelEntry(level: number) {
+  function ClassFeatureLevelEntry(level: number) {
     if (!selectedClass) {
       return null;
     }
@@ -479,11 +479,11 @@ export default function CharacterBuilderClass(props: Props) {
     return (
       <div className="builder-content-section-1" key={selectedClass.name + level}>
         <h3>{"Level " + level}</h3>
-        {level == 1 && renderClassHitDiceProficiencies()}
+        {level == 1 && HitDiceProficiencies()}
         {features.map((feature: Feature) => {
           return (
             <React.Fragment key={selectedClass.name + feature.level + " " + feature.name}>
-              {renderClassFeature(feature, firstSubclassLevel)}
+              {ClassFeature(feature, firstSubclassLevel)}
             </React.Fragment>
           );
         })}
@@ -504,7 +504,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassFeature(feature: Feature, firstSubclassLevel: number) {
+  function ClassFeature(feature: Feature, firstSubclassLevel: number) {
     return (
       <div>
         <Collapsible
@@ -517,33 +517,31 @@ export default function CharacterBuilderClass(props: Props) {
                 (!feature.subclassFeature || feature.level == firstSubclassLevel) &&
                   GameUtil.DisplayFeatureDescription(feature, false)
               }
-              {feature.choices && renderChoiceSelects(feature)}
-              {feature.level == firstSubclassLevel &&
-                feature.subclassFeature &&
-                renderSubclassSelect()}
-              {feature.choices && renderFeatureChoiceDescriptions(feature.choices.selected)}
-              {feature.abilityScoreImprovement && renderASIFeature(feature)}
+              {feature.choices && ClassFeatureChoices(feature)}
+              {feature.level == firstSubclassLevel && feature.subclassFeature && SelectSubclass()}
+              {feature.choices && ClassFeatureChoiceDescriptions(feature.choices.selected)}
+              {feature.abilityScoreImprovement && ClassFeatureASI(feature)}
             </React.Fragment>
           }
         ></Collapsible>
-        {feature.subclassFeature && renderSubclassFeatures(feature.level)}
+        {feature.subclassFeature && SubclassFeatures(feature.level)}
       </div>
     );
   }
 
-  function renderSpellSelect() {
+  function SpellSelect() {
     return (
       <React.Fragment>
-        {renderSpellSelectHeader()}
+        {SpellSelectHeader()}
         <div className="builder-multiselect">
-          {renderSpellSelectList()}
-          {renderSpellSelectDetails()}
+          {SpellSelectList()}
+          {SpellSelectDetails()}
         </div>
       </React.Fragment>
     );
   }
 
-  function renderSpellSelectHeader() {
+  function SpellSelectHeader() {
     if (!selectedClass) {
       return null;
     }
@@ -565,7 +563,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSpellSelectList() {
+  function SpellSelectList() {
     let spellsByLevel: Map<number, Spell[]> = new Map();
     for (let spell of spellOptions) {
       if (!spellsByLevel.has(spell.level)) {
@@ -591,7 +589,7 @@ export default function CharacterBuilderClass(props: Props) {
           return spellsByLevel.has(index) ? (
             <div key={index}>
               <h4>{spellLevel}</h4>
-              {spellsByLevel.get(index)?.map((spell) => renderSpellSelectListItem(spell))}
+              {spellsByLevel.get(index)?.map((spell) => SpellSelectListItem(spell))}
             </div>
           ) : null;
         })}
@@ -599,7 +597,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSpellSelectListItem(spell: Spell) {
+  function SpellSelectListItem(spell: Spell) {
     return (
       <React.Fragment key={spell.name}>
         <div className="builder-multiselect-pane-list-item">
@@ -614,7 +612,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSpellSelectDetails() {
+  function SpellSelectDetails() {
     return (
       <div className="builder-multiselect-pane-details">
         {selectedSpell && <h3>{selectedSpell.name}</h3>}
@@ -629,7 +627,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderFeatureChoiceDescriptions(features: Feature[]) {
+  function ClassFeatureChoiceDescriptions(features: Feature[]) {
     return features
       ?.filter((f) => f != undefined)
       .map((f) => (
@@ -642,7 +640,7 @@ export default function CharacterBuilderClass(props: Props) {
       ));
   }
 
-  function renderChoiceSelects(feature: Feature) {
+  function ClassFeatureChoices(feature: Feature) {
     if (!selectedClass) {
       return null;
     }
@@ -657,12 +655,12 @@ export default function CharacterBuilderClass(props: Props) {
       <div className="builder-content-col">
         {Array(feature.choices.number)
           .fill(1)
-          .map((_, index) => renderChoiceSelect(feature, index))}
+          .map((_, index) => SelectChoice(feature, index))}
       </div>
     );
   }
 
-  function renderChoiceSelect(feature: Feature, index: number) {
+  function SelectChoice(feature: Feature, index: number) {
     if (!selectedClass) {
       return null;
     }
@@ -707,12 +705,12 @@ export default function CharacterBuilderClass(props: Props) {
               <option key={option.name}>{option.name}</option>
             ))}
         </select>
-        {selectedChoice?.requirements && renderRequirements(selectedChoice)}
+        {selectedChoice?.requirements && ChoiceRequirements(selectedChoice)}
       </React.Fragment>
     );
   }
 
-  function renderRequirements(feature: Feature) {
+  function ChoiceRequirements(feature: Feature) {
     return (
       <div className="builder-content-col">
         <label>{"Requirements"}</label>
@@ -731,7 +729,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderASIFeature(feature: Feature) {
+  function ClassFeatureASI(feature: Feature) {
     return (
       <>
         {selectedClass && (
@@ -746,7 +744,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSubclassFeatures(level: number) {
+  function SubclassFeatures(level: number) {
     if (!selectedClass?.subclass) {
       return null;
     }
@@ -768,7 +766,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderSubclassSelect() {
+  function SelectSubclass() {
     if (!selectedClass) {
       return null;
     }
@@ -799,7 +797,7 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderclassSkillSelects(
+  function SkillChoices(
     skillNumber: number,
     skillChoices: Skill[],
     skillsSelected: Skill[],
@@ -847,25 +845,23 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function renderClassOverview() {
-    return <div className="builder-content-section-1">{renderClassTable()}</div>;
+  function ClassOverview() {
+    return <div className="builder-content-section-1">{ProgressionTable()}</div>;
   }
 
   return (
     <div className="builder-content-main" id="builder-class">
       <div className="builder-content-col">
-        {currentClasses.length == 0 && renderClassSelectEntry(undefined, 0)}
-        {currentClasses.map((charClass: Class, index: number) =>
-          renderClassSelectEntry(charClass, index),
-        )}
-        {renderAddMulticlass()}
-        {additionalClassEntryVisible && renderClassSelectEntry(undefined, currentClasses.length)}
+        {currentClasses.length == 0 && SelectClassRow(undefined, 0)}
+        {currentClasses.map((charClass: Class, index: number) => SelectClassRow(charClass, index))}
+        {AddMulticlass()}
+        {additionalClassEntryVisible && SelectClassRow(undefined, currentClasses.length)}
       </div>
-      {selectedClass && renderClassTabRow()}
-      {selectedSectionTab == SectionTabs.ClassOverview && renderClassOverview()}
-      {selectedSectionTab == SectionTabs.ClassFeatures && renderClassFeatureList()}
+      {selectedClass && ClassNavMenu()}
+      {selectedSectionTab == SectionTabs.ClassOverview && ClassOverview()}
+      {selectedSectionTab == SectionTabs.ClassFeatures && ClassFeatures()}
       {selectedSectionTab == SectionTabs.Spells && spellcastingFeature && (
-        <div className="builder-content-section-1">{renderSpellSelect()}</div>
+        <div className="builder-content-section-1">{SpellSelect()}</div>
       )}
     </div>
   );
