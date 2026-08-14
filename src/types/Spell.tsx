@@ -10,6 +10,6 @@ export interface Spell {
   cost: boolean;
   duration: string;
   ritual: boolean;
-  description: string;
+  description: string[];
   source: string;
 }

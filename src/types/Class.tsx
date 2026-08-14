@@ -21,6 +21,5 @@ export interface Class {
   };
   cantripsKnown: number[];
   spellsKnown: number[];
-  cantrips: Spell[];
   spells: Spell[];
 }

@@ -52,6 +52,9 @@
     button {
       width: fit-content;
     }
+    button {
+      padding: 8px;
+    }
   }
 
   .builder-content-row {
@@ -178,12 +181,36 @@
     display: flex;
     flex-direction: column;
     flex: 3;
-    overflow-y: scroll;
     border-left-style: solid;
     border-left-width: 1px;
     border-color: variables.$border-color;
+  }
+
+  .builder-multiselect-pane-details-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 450px;
     padding-left: 10px;
     padding-right: 10px;
+    flex: 1;
+    overflow-y: scroll;
+    margin-bottom: 0;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: variables.$border-color;
+  }
+
+  .builder-multiselect-pane-details-header {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: variables.$border-color;
+  }
+
+  .builder-multiselect-pane-details-footer {
+    padding: 8px;
+    height: 20px;
   }
 
   span {

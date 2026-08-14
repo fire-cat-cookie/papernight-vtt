@@ -4,7 +4,7 @@ import { Feature } from "../types/Feature.tsx";
 import { Skill } from "../types/Skill.tsx";
 import { Subclass } from "../types/Subclass.tsx";
 import { GameUtil } from "./GameUtil.tsx";
-import { getClass, getLineageData, getSubclass } from "./GetStaticData.tsx";
+import * as GetStaticData from "./GetStaticData.tsx";
 
 export type CharDataAction =
   | { type: "set-lineage"; lineage: string }
@@ -15,7 +15,9 @@ export type CharDataAction =
   | { type: "update-class-feature"; className: string; feature: Feature }
   | { type: "set-class-skills"; className: string; skills: Skill[] }
   | { type: "set-subclass"; className: string; subclass: string }
-  | { type: "remove-class"; className: string };
+  | { type: "remove-class"; className: string }
+  | { type: "add-spell"; spellName: string; className: string }
+  | { type: "remove-spell"; spellName: string; className: string };
 
 export function charDataReducer(charData: CharData, action: CharDataAction) {
   switch (action.type) {
@@ -49,14 +51,45 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
         charData.firstClass = "";
       }
       return { ...charData };
+    case "add-spell":
+      addSpell(charData, action.spellName, action.className);
+      return { ...charData };
+    case "remove-spell":
+      removeSpell(charData, action.spellName, action.className);
+      return { ...charData };
     default:
       return { ...charData };
+  }
+
+  function addSpell(charData: CharData, spellName: string, className: string) {
+    let newClasses = charData.classes.slice().filter((c) => c.name != className);
+    let newClass = charData.classes.find((c) => c.name == className);
+    let spells = newClass?.spells ?? [];
+    let loadedSpell: any = GetStaticData.getSpell(spellName);
+    if (loadedSpell && newClass) {
+      spells.push(loadedSpell);
+      newClass.spells = spells;
+      newClasses.push(newClass);
+      charData.classes = newClasses;
+    }
+  }
+
+  function removeSpell(charData: CharData, spellName: string, className: string) {
+    let newClasses = charData.classes.slice().filter((c) => c.name != className);
+    let newClass = charData.classes.find((c) => c.name == className);
+    let spells = newClass?.spells;
+    if (spells && newClass) {
+      spells = spells.filter((s) => s.name != spellName);
+      newClass.spells = spells;
+      newClasses.push(newClass);
+      charData.classes = newClasses;
+    }
   }
 
   function setSubclass(charData: CharData, className: string, subclassName: string) {
     let newClasses = charData.classes.slice().filter((c) => c.name != className);
     let newClass = charData.classes.find((c) => c.name == className);
-    let loadedSubclass: any = getSubclass(className, subclassName);
+    let loadedSubclass: any = GetStaticData.getSubclass(className, subclassName);
     let subclass: Subclass = {
       name: loadedSubclass.name,
       features: loadedSubclass.features,
@@ -72,7 +105,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
     let newClasses = charData.classes.slice().filter((c) => c.name != className);
     let newClass = charData.classes.find((c) => c.name == className);
     let newFeatures = newClass?.features?.filter(
-      (f) => !(f.level == feature.level && f.name == feature.name)
+      (f) => !(f.level == feature.level && f.name == feature.name),
     );
     newFeatures?.push(feature);
     if (newClass && newFeatures) {
@@ -95,7 +128,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
   }
 
   function addClass(charData: CharData, className: string, level: number) {
-    let classData = getClass(className);
+    let classData = GetStaticData.getClass(className);
     charData.classes.push({
       name: classData.name,
       level: level,
@@ -110,6 +143,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       skills: { firstLevel: [], multiclass: [] },
       cantripsKnown: classData.cantripsKnown,
       spellsKnown: classData.spellsKnown,
+      spells: [],
     });
     if (charData.classes.length == 1) {
       charData.firstClass = className;
@@ -134,7 +168,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
 
   function setLineage(charData: CharData, lineage: string) {
     charData.lineage = undefined;
-    let lineageData = getLineageData(lineage);
+    let lineageData = GetStaticData.getLineageData(lineage);
     if (lineageData) {
       charData.lineage = {
         name: lineageData.name,
@@ -149,8 +183,8 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
 
   function setSublineage(charData: CharData, sublineageName: string) {
     if (charData.lineage) {
-      let sublineageData = getLineageData(charData.lineage.name)?.sublineages?.find(
-        (sublineage: any) => sublineage.name == sublineageName
+      let sublineageData = GetStaticData.getLineageData(charData.lineage.name)?.sublineages?.find(
+        (sublineage: any) => sublineage.name == sublineageName,
       );
       if (sublineageData) {
         charData.lineage.sublineage = {

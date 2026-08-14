@@ -9,6 +9,7 @@ import { Feature } from "../types/Feature";
 import { Formula } from "../types/Formula";
 import { Skill } from "../types/Skill";
 import { SkillProf } from "../types/SkillProf";
+import { Spell } from "../types/Spell";
 import { GameUtil } from "./GameUtil";
 
 export function ComposeChar(charData: CharData): CharComposed {
@@ -159,6 +160,7 @@ export function ComposeChar(charData: CharData): CharComposed {
     size: charData.lineage ? charData.lineage.size : CreatureSize.None,
     proficiency_bonus: proficiencyBonus(charData),
     features: evaluatedFeatures(charData),
+    spells: getSpells(charData),
     status: charData.status,
   };
 }
@@ -270,6 +272,16 @@ function evaluatedFeatures(charData: CharData) {
     }
   }
   return features;
+}
+
+function getSpells(charData: CharData) {
+  let spells: { spell: Spell; source: string }[] = [];
+  for (let c of charData.classes) {
+    for (let s of c.spells) {
+      spells.push({ spell: s, source: c.name });
+    }
+  }
+  return spells;
 }
 
 function evaluateFormula(charData: CharData, source: string, formula: Formula): number {

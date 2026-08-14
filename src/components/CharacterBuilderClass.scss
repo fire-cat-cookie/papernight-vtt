@@ -9,13 +9,10 @@
 }
 
 .builder-btn-multiclass {
-  height: 30px !important;
   width: 120px !important;
 }
 
 .builder-btn-remove-class {
-  width: 100px !important;
-  height: 30px !important;
   margin-top: 20px !important;
 }
 
@@ -23,6 +20,10 @@
   display: grid;
   gap: 8px;
   margin-bottom: 8px;
+  .builder-content-col {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
 }
 
 .builder-spell-details-placeholder {

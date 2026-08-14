@@ -347,9 +347,26 @@ export default function CharacterSheet(props: Props) {
   function renderTabContent(tabName: string) {
     if (selectedTab === tabName && tabName === "Features") {
       return renderFeaturesTabContent();
+    } else if (selectedTab === tabName && tabName === "Spells") {
+      return renderSpellsTabContent();
     } else {
       return null;
     }
+  }
+
+  function renderSpellsTabContent() {
+    console.log(char);
+    let spellsSortedByLevel = char.spells.sort((a, b) => a.spell.level - b.spell.level);
+    let content = spellsSortedByLevel.map((s) => (
+      <div className="sheet-column" key={s.source + " " + s.spell.name}>
+        <Collapsible
+          heading={s.spell.name}
+          className={"label-heading"}
+          content={GameUtil.DisplayMarkdown(s.spell.description)}
+        ></Collapsible>
+      </div>
+    ));
+    return <div className="sheet-sections sheet-feature-list">{content}</div>;
   }
 
   function renderFeaturesTabContent() {

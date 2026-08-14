@@ -545,8 +545,10 @@ export default function CharacterBuilderClass(props: Props) {
 
     let totalSpells = selectedClass.spellsKnown[selectedClass.level - 1];
     let totalCantrips = selectedClass.cantripsKnown[selectedClass.level - 1];
-    let availableSpells = totalSpells - (selectedClass.spells?.length ?? 0);
-    let availableCantrips = totalCantrips - (selectedClass.cantrips?.length ?? 0);
+    let availableSpells =
+      totalSpells - (selectedClass.spells?.filter((s) => s.level > 0)?.length ?? 0);
+    let availableCantrips =
+      totalCantrips - (selectedClass.spells?.filter((s) => s.level == 0)?.length ?? 0);
 
     return (
       <div className="builder-content-col">
@@ -612,8 +614,8 @@ export default function CharacterBuilderClass(props: Props) {
   function SpellSelectDetails() {
     return (
       <div className="builder-multiselect-pane-details">
-        {selectedSpell && <h3>{selectedSpell.name}</h3>}
-        <div className="builder-content-col">
+        <div className="builder-content-col builder-multiselect-pane-details-content">
+          {selectedSpell && <h3>{selectedSpell.name}</h3>}
           {!selectedSpell ? (
             <div className="builder-spell-details-placeholder">
               <p>Select a spell to view its details.</p>
@@ -625,8 +627,80 @@ export default function CharacterBuilderClass(props: Props) {
             </div>
           )}
         </div>
+        <div className="builder-content-col builder-multiselect-pane-details-footer">
+          {LearnOrRemoveSpell()}
+        </div>
       </div>
     );
+  }
+
+  function LearnOrRemoveSpell() {
+    if (!selectedClass || !selectedSpell) {
+      return null;
+    }
+    let findSpell = selectedClass.spells?.map((s) => s.name)?.indexOf(selectedSpell.name);
+    let spellIsLearnt = findSpell != -1 && findSpell != undefined;
+    let canLearnSpell = CanLearnSpell(spellIsLearnt);
+    let learnSpellButton = (
+      <button
+        disabled={!canLearnSpell}
+        onClick={() =>
+          props.updateCharData({
+            type: "add-spell",
+            spellName: selectedSpell.name,
+            className: selectedClass.name,
+          })
+        }
+      >
+        Learn Spell
+      </button>
+    );
+    let removeSpellButton = (
+      <button
+        onClick={() =>
+          props.updateCharData({
+            type: "remove-spell",
+            spellName: selectedSpell.name,
+            className: selectedClass.name,
+          })
+        }
+      >
+        Remove Spell
+      </button>
+    );
+
+    return spellIsLearnt ? removeSpellButton : learnSpellButton;
+  }
+
+  function CanLearnSpell(spellIsLearnt: boolean) {
+    if (!selectedClass || !selectedSpell || !spellcastingFeature) {
+      return false;
+    }
+    if (spellIsLearnt) {
+      return false;
+    }
+    let requiredSpellLevel = true;
+    let choicesRemaining = true;
+    if (spellcastingFeature.name == "Pact Magic") {
+      let spellSlotProgression = selectedClass.progression
+        ?.find((p) => p.name == "Slot Level")
+        ?.entries?.map((e) => e.value);
+      let highestSpellSlot: number = spellSlotProgression?.[selectedClass.level - 1] ?? 0;
+      let cantripsKnown: number = selectedClass.cantripsKnown?.[selectedClass.level - 1] ?? 0;
+      let spellsKnown: number = selectedClass.spellsKnown?.[selectedClass.level - 1] ?? 0;
+      let cantripsLearnt: number = selectedClass.spells?.filter((s) => s.level == 0)?.length ?? 0;
+      let spellsLearnt: number = selectedClass.spells?.filter((s) => s.level > 0)?.length ?? 0;
+      if (selectedSpell.level > highestSpellSlot) {
+        requiredSpellLevel = false;
+      }
+      if (selectedSpell.level == 0 && cantripsKnown - cantripsLearnt < 1) {
+        requiredSpellLevel = false;
+      }
+      if (selectedSpell.level > 0 && spellsKnown - spellsLearnt < 1) {
+        choicesRemaining = false;
+      }
+    }
+    return requiredSpellLevel == true && choicesRemaining == true;
   }
 
   function SpellInfoHeader() {
@@ -650,13 +724,9 @@ export default function CharacterBuilderClass(props: Props) {
       spellLevel = s.level + "th";
     }
 
-    let gridStyle = {
-      gridTemplateColumns: "1fr 1fr 1fr 1fr",
-    };
-
     return (
-      <React.Fragment>
-        <div className="builder-table" style={gridStyle}>
+      <div className="builder-multiselect-pane-details-header">
+        <div className="builder-table" style={{ gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr" }}>
           <div className="builder-content-col">
             <label>Spell Level</label>
             <span>{spellLevel}</span>
@@ -666,16 +736,8 @@ export default function CharacterBuilderClass(props: Props) {
             <span>{s.school}</span>
           </div>
           <div className="builder-content-col">
-            <label>Components</label>
-            <span>{s.components}</span>
-          </div>
-          <div className="builder-content-col">
-            <label>Material Cost</label>
-            <span>{s.cost ? "Yes" : "No"}</span>
-          </div>
-          <div className="builder-content-col">
-            <label>Casting Time</label>
-            <span>{s.castingTime}</span>
+            <label>Ritual</label>
+            <span>{s.ritual ? "Yes" : "No"}</span>
           </div>
           <div className="builder-content-col">
             <label>Range</label>
@@ -685,12 +747,18 @@ export default function CharacterBuilderClass(props: Props) {
             <label>Duration</label>
             <span>{GameUtil.Capitalize(s.duration)}</span>
           </div>
+        </div>
+        <div className="builder-table" style={{ gridTemplateColumns: "3fr 2fr" }}>
           <div className="builder-content-col">
-            <label>Ritual</label>
-            <span>{s.ritual ? "Yes" : "No"}</span>
+            <label>Components</label>
+            <span>{s.components}</span>
+          </div>
+          <div className="builder-content-col">
+            <label>Casting Time</label>
+            <span>{s.castingTime}</span>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 
