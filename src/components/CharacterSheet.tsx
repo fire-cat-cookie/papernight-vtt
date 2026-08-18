@@ -355,7 +355,6 @@ export default function CharacterSheet(props: Props) {
   }
 
   function renderSpellsTabContent() {
-    console.log(char);
     let spellsSortedByLevel = char.spells.sort((a, b) => a.spell.level - b.spell.level);
     let content = spellsSortedByLevel.map((s) => (
       <div className="sheet-column" key={s.source + " " + s.spell.name}>

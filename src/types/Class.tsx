@@ -1,7 +1,6 @@
 import { Ability } from "./Ability";
 import { Feature } from "./Feature";
 import { Skill } from "./Skill";
-import { Spell } from "./Spell";
 import { Subclass } from "./Subclass";
 
 export interface Class {
@@ -21,5 +20,4 @@ export interface Class {
   };
   cantripsKnown: number[];
   spellsKnown: number[];
-  spells: Spell[];
 }

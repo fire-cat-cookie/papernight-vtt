@@ -78,7 +78,6 @@ export default function CharacterBuilderClassASI(props: Props) {
     if (selectedAbility == undefined) {
       selectedAbility = "";
     }
-    console.log(selectedAbility);
 
     let abilityTotal = 0;
     if (index == "first") {

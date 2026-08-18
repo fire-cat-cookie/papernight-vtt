@@ -16,120 +16,124 @@ export type CharDataAction =
   | { type: "set-class-skills"; className: string; skills: Skill[] }
   | { type: "set-subclass"; className: string; subclass: string }
   | { type: "remove-class"; className: string }
-  | { type: "add-spell"; spellName: string; className: string }
-  | { type: "remove-spell"; spellName: string; className: string };
+  | { type: "add-spell"; spellName: string; className: string; featureName: string }
+  | { type: "remove-spell"; spellName: string; className: string; featureName: string };
 
 export function charDataReducer(charData: CharData, action: CharDataAction) {
   switch (action.type) {
     case "set-lineage":
-      setLineage(charData, action.lineage);
-      return { ...charData };
+      return setLineage(charData, action.lineage);
     case "set-sublineage":
-      setSublineage(charData, action.sublineage);
-      return { ...charData };
+      return setSublineage(charData, action.sublineage);
     case "set-name":
-      charData.name = action.name;
-      return { ...charData };
+      return { ...charData, name: action.name };
     case "set-ability-score":
-      charData.base_ability_scores[GameUtil.AbilityFromIndex(action.ability)].score = action.value;
-      return { ...charData };
+      return setAbilityScore(action.ability, action.value);
     case "set-class-level":
-      setClassLevel(charData, action.className, action.level);
-      return { ...charData };
+      return setClassLevel(charData, action.className, action.level);
     case "update-class-feature":
-      updateClassFeature(charData, action.className, action.feature);
-      return { ...charData };
+      return updateClassFeature(charData, action.className, action.feature);
     case "set-class-skills":
-      setClassSkills(charData, action.className, action.skills);
-      return { ...charData };
+      return setClassSkills(charData, action.className, action.skills);
     case "set-subclass":
-      setSubclass(charData, action.className, action.subclass);
-      return { ...charData };
+      return setSubclass(charData, action.className, action.subclass);
     case "remove-class":
-      charData.classes = charData.classes.filter((c) => c.name != action.className);
-      if (charData.classes.length == 0) {
-        charData.firstClass = "";
-      }
-      return { ...charData };
+      return removeClass(charData, action.className);
     case "add-spell":
-      addSpell(charData, action.spellName, action.className);
-      return { ...charData };
+      return addSpell(charData, action.spellName, action.className, action.featureName);
     case "remove-spell":
-      removeSpell(charData, action.spellName, action.className);
-      return { ...charData };
+      return removeSpell(charData, action.spellName, action.className, action.featureName);
     default:
       return { ...charData };
   }
 
-  function addSpell(charData: CharData, spellName: string, className: string) {
-    let newClasses = charData.classes.slice().filter((c) => c.name != className);
-    let newClass = charData.classes.find((c) => c.name == className);
-    let spells = newClass?.spells ?? [];
+  function addSpell(charData: CharData, spellName: string, className: string, featureName: string) {
     let loadedSpell: any = GetStaticData.getSpell(spellName);
-    if (loadedSpell && newClass) {
-      spells.push(loadedSpell);
-      newClass.spells = spells;
-      newClasses.push(newClass);
-      charData.classes = newClasses;
-    }
+    return {
+      ...charData,
+      classes: charData.classes.map((c) =>
+        c.name === className
+          ? {
+              ...c,
+              features: c.features.map((f) =>
+                f.name === featureName
+                  ? { ...f, spellcasting: [...(f.spellcasting ?? []), loadedSpell] }
+                  : f,
+              ),
+            }
+          : c,
+      ),
+    };
   }
 
-  function removeSpell(charData: CharData, spellName: string, className: string) {
-    let newClasses = charData.classes.slice().filter((c) => c.name != className);
-    let newClass = charData.classes.find((c) => c.name == className);
-    let spells = newClass?.spells;
-    if (spells && newClass) {
-      spells = spells.filter((s) => s.name != spellName);
-      newClass.spells = spells;
-      newClasses.push(newClass);
-      charData.classes = newClasses;
-    }
+  function removeSpell(
+    charData: CharData,
+    spellName: string,
+    className: string,
+    featureName: string,
+  ) {
+    return {
+      ...charData,
+      classes: charData.classes.map((c) =>
+        c.name === className
+          ? {
+              ...c,
+              features: c.features.map((f) =>
+                f.name === featureName
+                  ? { ...f, spellcasting: f.spellcasting.filter((s) => s.name != spellName) }
+                  : f,
+              ),
+            }
+          : c,
+      ),
+    };
   }
 
   function setSubclass(charData: CharData, className: string, subclassName: string) {
-    let newClasses = charData.classes.slice().filter((c) => c.name != className);
-    let newClass = charData.classes.find((c) => c.name == className);
     let loadedSubclass: any = GetStaticData.getSubclass(className, subclassName);
-    let subclass: Subclass = {
+    let subclassData: Subclass = {
       name: loadedSubclass.name,
       features: loadedSubclass.features,
     };
-    if (newClass) {
-      newClass.subclass = subclass;
-      newClasses.push(newClass);
-      charData.classes = newClasses;
-    }
+
+    return {
+      ...charData,
+      classes: charData.classes.map((c) =>
+        c.name === className ? { ...c, subclass: subclassData } : c,
+      ),
+    };
   }
 
   function updateClassFeature(charData: CharData, className: string, feature: Feature) {
-    let newClasses = charData.classes.slice().filter((c) => c.name != className);
-    let newClass = charData.classes.find((c) => c.name == className);
-    let newFeatures = newClass?.features?.filter(
-      (f) => !(f.level == feature.level && f.name == feature.name),
-    );
-    newFeatures?.push(feature);
-    if (newClass && newFeatures) {
-      newClass.features = newFeatures;
-      newClasses.push(newClass);
-    }
-    charData.classes = newClasses;
+    return {
+      ...charData,
+      classes: charData.classes.map((c) =>
+        c.name === className
+          ? {
+              ...c,
+              features: c.features.map((f) =>
+                f.level == feature.level && f.name === feature.name ? feature : f,
+              ),
+            }
+          : c,
+      ),
+    };
   }
 
   function setClassLevel(charData: CharData, className: string, level: number) {
     if (!charData.classes.find((c) => c.name == className)) {
-      addClass(charData, className, level);
+      return addClass(charData, className, level);
     } else {
-      for (let i = 0; i < charData.classes.length; i++) {
-        if (charData.classes[i].name == className) {
-          charData.classes[i].level = level;
-        }
-      }
+      return {
+        ...charData,
+        classes: charData.classes.map((c) => (c.name === className ? { ...c, level: level } : c)),
+      };
     }
   }
 
   function addClass(charData: CharData, className: string, level: number) {
     let classData = GetStaticData.getClass(className);
-    charData.classes.push({
+    let newClass = {
       name: classData.name,
       level: level,
       hitDie: classData.hitdie,
@@ -143,34 +147,38 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
       skills: { firstLevel: [], multiclass: [] },
       cantripsKnown: classData.cantripsKnown,
       spellsKnown: classData.spellsKnown,
-      spells: [],
-    });
-    if (charData.classes.length == 1) {
-      charData.firstClass = className;
-    }
+    };
+    return {
+      ...charData,
+      firstClass: charData.classes.length == 0 ? className : charData.firstClass,
+      classes: [...charData.classes, newClass],
+    };
   }
 
   function setClassSkills(charData: CharData, className: string, skills: Skill[]) {
-    let newClasses = charData.classes.slice().filter((c) => c.name != className);
-    let newClass = charData.classes.find((c) => c.name == className);
-
     let multiclass = charData.classes.length > 1 && charData.classes[0].name != className;
-    if (newClass) {
-      if (multiclass) {
-        newClass.skills.multiclass = skills;
-      } else {
-        newClass.skills.firstLevel = skills;
-      }
-      newClasses.push(newClass);
+    if (multiclass) {
+      return {
+        ...charData,
+        classes: charData.classes.map((c) =>
+          c.name === className ? { ...c, skills: { ...c.skills, multiclass: skills } } : c,
+        ),
+      };
+    } else {
+      return {
+        ...charData,
+        classes: charData.classes.map((c) =>
+          c.name === className ? { ...c, skills: { ...c.skills, firstLevel: skills } } : c,
+        ),
+      };
     }
-    charData.classes = newClasses;
   }
 
   function setLineage(charData: CharData, lineage: string) {
-    charData.lineage = undefined;
     let lineageData = GetStaticData.getLineageData(lineage);
+    let lineageParsed = charData.lineage;
     if (lineageData) {
-      charData.lineage = {
+      lineageParsed = {
         name: lineageData.name,
         speed: lineageData.speed,
         creatureType: lineageData.creature_type,
@@ -179,6 +187,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
         sublineage: undefined,
       };
     }
+    return { ...charData, lineage: lineageParsed };
   }
 
   function setSublineage(charData: CharData, sublineageName: string) {
@@ -187,11 +196,30 @@ export function charDataReducer(charData: CharData, action: CharDataAction) {
         (sublineage: any) => sublineage.name == sublineageName,
       );
       if (sublineageData) {
-        charData.lineage.sublineage = {
-          name: sublineageData.name,
-          features: sublineageData.features,
+        return {
+          ...charData,
+          lineage: {
+            ...charData.lineage,
+            sublineage: { name: sublineageData.name, features: sublineageData.features },
+          },
         };
       }
     }
+    return charData;
+  }
+
+  function setAbilityScore(ability: Ability, value: number) {
+    let index = GameUtil.AbilityFromIndex(ability);
+    let newAbilities = charData.base_ability_scores.slice();
+    newAbilities[index].score = value;
+    return { ...charData, base_ability_scores: newAbilities };
+  }
+
+  function removeClass(charData: CharData, className: string) {
+    let newCharData = { ...charData, classes: charData.classes.filter((c) => c.name != className) };
+    if (newCharData.classes.length == 0) {
+      newCharData.firstClass = "";
+    }
+    return newCharData;
   }
 }

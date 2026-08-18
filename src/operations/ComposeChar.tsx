@@ -276,9 +276,9 @@ function evaluatedFeatures(charData: CharData) {
 
 function getSpells(charData: CharData) {
   let spells: { spell: Spell; source: string }[] = [];
-  for (let c of charData.classes) {
-    for (let s of c.spells) {
-      spells.push({ spell: s, source: c.name });
+  for (let f of allFeatures(charData)) {
+    for (let s of f.feature.spellcasting ?? []) {
+      spells.push({ spell: s, source: f.source });
     }
   }
   return spells;
@@ -332,10 +332,9 @@ function allFeatures(charData: CharData) {
     }
   }
   if (charData.classes) {
-    for (let class_ of charData.classes) {
-      let classFeatures = class_.features.filter(
-        (f) => f.level == undefined || f.level <= class_.level,
-      );
+    for (let class_ of charData.classes ?? []) {
+      let classFeatures =
+        class_.features?.filter((f) => f.level == undefined || f.level <= class_.level) ?? [];
       for (let f of classFeatures) {
         for (let upgrade of f.upgrades ?? []) {
           if (upgrade.upgradeLevel <= class_.level) {
@@ -497,14 +496,14 @@ function skillMod(charData: CharData, skill: Skill) {
 function skillProf(charData: CharData, skill: Skill): number {
   let proficiencyMultiplier = 0;
   let skillProficiencies: SkillProf[] = [];
-  for (let c of charData.classes) {
+  for (let c of charData.classes ?? []) {
     if (charData.firstClass == c.name) {
       skillProficiencies.push(
         ...c.skills.firstLevel.map((s) => {
           return { skill: s, expertise: false };
         }),
       );
-    } else if (c.skills.multiclass) {
+    } else if (c.skills?.multiclass != undefined) {
       skillProficiencies.push(
         ...c.skills.multiclass.map((s) => {
           return { skill: s, expertise: false };

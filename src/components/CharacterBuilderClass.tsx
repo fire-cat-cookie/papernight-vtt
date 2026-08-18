@@ -45,7 +45,7 @@ export default function CharacterBuilderClass(props: Props) {
   let spellOptions: any[] = getClassSpells(selectedClass?.name ?? "");
   let selectedSpell: any = spellOptions?.find((s) => s.name == selectedSpellName);
   let charComposed = props.charComposed;
-  let spellcastingFeature = selectedClass?.features.find((f) => f.spellcastingFeature);
+  let spellcastingFeature = selectedClass?.features?.find((f) => f.spellcastingFeature);
   if (selectedSectionTab == SectionTabs.Spells && !spellcastingFeature) {
     setSelectedSectionTab(SectionTabs.ClassOverview);
   }
@@ -247,7 +247,7 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
-    let featuresAtLevel = selectedClass.features.filter((f) => f.level == level);
+    let featuresAtLevel = selectedClass.features?.filter((f) => f.level == level);
     let namedUpgrades = namedUpgradesAtLevel(level);
     let featuresDisplay = "";
 
@@ -546,9 +546,9 @@ export default function CharacterBuilderClass(props: Props) {
     let totalSpells = selectedClass.spellsKnown[selectedClass.level - 1];
     let totalCantrips = selectedClass.cantripsKnown[selectedClass.level - 1];
     let availableSpells =
-      totalSpells - (selectedClass.spells?.filter((s) => s.level > 0)?.length ?? 0);
+      totalSpells - (spellcastingFeature?.spellcasting?.filter((s) => s.level > 0)?.length ?? 0);
     let availableCantrips =
-      totalCantrips - (selectedClass.spells?.filter((s) => s.level == 0)?.length ?? 0);
+      totalCantrips - (spellcastingFeature?.spellcasting?.filter((s) => s.level == 0)?.length ?? 0);
 
     return (
       <div className="builder-content-col">
@@ -635,10 +635,12 @@ export default function CharacterBuilderClass(props: Props) {
   }
 
   function LearnOrRemoveSpell() {
-    if (!selectedClass || !selectedSpell) {
+    if (!selectedClass || !selectedSpell || !spellcastingFeature) {
       return null;
     }
-    let findSpell = selectedClass.spells?.map((s) => s.name)?.indexOf(selectedSpell.name);
+    let findSpell = spellcastingFeature.spellcasting
+      ?.map((s) => s.name)
+      ?.indexOf(selectedSpell.name);
     let spellIsLearnt = findSpell != -1 && findSpell != undefined;
     let canLearnSpell = CanLearnSpell(spellIsLearnt);
     let learnSpellButton = (
@@ -649,6 +651,7 @@ export default function CharacterBuilderClass(props: Props) {
             type: "add-spell",
             spellName: selectedSpell.name,
             className: selectedClass.name,
+            featureName: spellcastingFeature.name,
           })
         }
       >
@@ -662,6 +665,7 @@ export default function CharacterBuilderClass(props: Props) {
             type: "remove-spell",
             spellName: selectedSpell.name,
             className: selectedClass.name,
+            featureName: spellcastingFeature.name,
           })
         }
       >
@@ -688,8 +692,10 @@ export default function CharacterBuilderClass(props: Props) {
       let highestSpellSlot: number = spellSlotProgression?.[selectedClass.level - 1] ?? 0;
       let cantripsKnown: number = selectedClass.cantripsKnown?.[selectedClass.level - 1] ?? 0;
       let spellsKnown: number = selectedClass.spellsKnown?.[selectedClass.level - 1] ?? 0;
-      let cantripsLearnt: number = selectedClass.spells?.filter((s) => s.level == 0)?.length ?? 0;
-      let spellsLearnt: number = selectedClass.spells?.filter((s) => s.level > 0)?.length ?? 0;
+      let cantripsLearnt: number =
+        spellcastingFeature.spellcasting?.filter((s) => s.level == 0)?.length ?? 0;
+      let spellsLearnt: number =
+        spellcastingFeature.spellcasting?.filter((s) => s.level > 0)?.length ?? 0;
       if (selectedSpell.level > highestSpellSlot) {
         requiredSpellLevel = false;
       }

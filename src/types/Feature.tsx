@@ -8,6 +8,7 @@ import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
 import { Skill } from "./Skill";
 import { Requirement } from "./Requirement";
+import { Spell } from "./Spell";
 
 export interface Feature {
   level: number;
@@ -16,6 +17,8 @@ export interface Feature {
   conditional_effects: ConditionalEffect[];
   resistances: DamageType[];
   gainSpells: GainSpells;
+  spellcastingFeature: boolean;
+  spellcasting: Spell[];
   bonuses: Bonus[];
   skillProf: {
     skill: Skill;
@@ -28,7 +31,6 @@ export interface Feature {
   senses: Sense[];
   abilityScoreImprovement: boolean;
   subclassFeature: boolean;
-  spellcastingFeature: boolean;
   limitedUse: LimitedUse;
   upgrades: FeatureUpgrade[];
   choices: {
