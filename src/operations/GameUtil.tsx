@@ -24,23 +24,6 @@ export const GameUtil = {
     return (dice.sides / 2 + 0.5) * dice.amount;
   },
 
-  AbilityFromIndex: function (ability: Ability) {
-    switch (ability) {
-      case Ability.str:
-        return 0;
-      case Ability.dex:
-        return 1;
-      case Ability.con:
-        return 2;
-      case Ability.int:
-        return 3;
-      case Ability.wis:
-        return 4;
-      case Ability.cha:
-        return 5;
-    }
-  },
-
   TargetFromAbilityScore: function (ability: Ability) {
     switch (ability) {
       case Ability.str:

@@ -3,7 +3,6 @@ import { CharData } from "../types/CharData.tsx";
 import { Feature } from "../types/Feature.tsx";
 import { Skill } from "../types/Skill.tsx";
 import { Subclass } from "../types/Subclass.tsx";
-import { GameUtil } from "./GameUtil.tsx";
 import * as GetStaticData from "./GetStaticData.tsx";
 
 export type CharDataAction =
@@ -209,10 +208,12 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
   }
 
   function setAbilityScore(ability: Ability, value: number) {
-    let index = GameUtil.AbilityFromIndex(ability);
-    let newAbilities = charData.base_ability_scores.slice();
-    newAbilities[index].score = value;
-    return { ...charData, base_ability_scores: newAbilities };
+    return {
+      ...charData,
+      base_ability_scores: charData.base_ability_scores.map((a) =>
+        a.ability == ability ? { ...a, score: value } : a,
+      ),
+    };
   }
 
   function removeClass(charData: CharData, className: string) {
