@@ -19,7 +19,7 @@ export type CharDataAction =
   | { type: "add-spell"; spellName: string; className: string; featureName: string }
   | { type: "remove-spell"; spellName: string; className: string; featureName: string };
 
-export function charDataReducer(charData: CharData, action: CharDataAction) {
+export function charDataReducer(charData: CharData, action: CharDataAction): CharData {
   switch (action.type) {
     case "set-lineage":
       return setLineage(charData, action.lineage);
