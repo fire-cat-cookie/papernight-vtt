@@ -11,7 +11,8 @@ export type CharDataAction =
   | { type: "set-name"; name: string }
   | { type: "set-ability-score"; ability: Ability; value: number }
   | { type: "set-class-level"; className: string; level: number }
-  | { type: "update-class-feature"; className: string; feature: Feature }
+  | { type: "update-class-feature"; feature: Feature; className: string }
+  | { type: "update-subclass-feature"; feature: Feature; className: string }
   | { type: "set-class-skills"; className: string; skills: Skill[] }
   | { type: "set-subclass"; className: string; subclass: string }
   | { type: "remove-class"; className: string }
@@ -31,7 +32,9 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
     case "set-class-level":
       return setClassLevel(charData, action.className, action.level);
     case "update-class-feature":
-      return updateClassFeature(charData, action.className, action.feature);
+      return updateClassFeature(charData, action.feature, action.className);
+    case "update-subclass-feature":
+      return updateSubClassFeature(charData, action.feature, action.className);
     case "set-class-skills":
       return setClassSkills(charData, action.className, action.skills);
     case "set-subclass":
@@ -103,7 +106,7 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
     };
   }
 
-  function updateClassFeature(charData: CharData, className: string, feature: Feature) {
+  function updateClassFeature(charData: CharData, feature: Feature, className: string) {
     return {
       ...charData,
       classes: charData.classes.map((c) =>
@@ -117,6 +120,31 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
           : c,
       ),
     };
+  }
+
+  function updateSubClassFeature(charData: CharData, feature: Feature, className: string) {
+    let _class = charData.classes.find((c) => c.name === className);
+    let _subclass = _class?.subclass;
+    if (!_subclass) {
+      return charData;
+    } else {
+      return {
+        ...charData,
+        classes: charData.classes.map((c) =>
+          c.name === className
+            ? {
+                ...c,
+                subclass: {
+                  ..._subclass,
+                  features: _subclass.features.map((f) =>
+                    f.level == feature.level && f.name === feature.name ? feature : f,
+                  ),
+                },
+              }
+            : c,
+        ),
+      };
+    }
   }
 
   function setClassLevel(charData: CharData, className: string, level: number) {

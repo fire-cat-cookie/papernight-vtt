@@ -5,6 +5,8 @@ import { Dice } from "../types/Dice";
 import { Feature } from "../types/Feature";
 import { CharComposed } from "../types/CharComposed";
 import { Requirement } from "../types/Requirement";
+import { CharData } from "../types/CharData";
+import { Formula } from "../types/Formula";
 
 export const GameUtil = {
   FeatureText_ASI:
@@ -126,23 +128,22 @@ export const GameUtil = {
     let missingRequirements = feature.requirements?.filter(
       (r) => !GameUtil.CheckRequirement(char, r),
     );
-    return !feature.requirements || missingRequirements.length == 0;
+    return (
+      !feature.requirements || feature.requirements.length == 0 || missingRequirements.length == 0
+    );
   },
 
   CheckRequirement: function (char: CharComposed, r: Requirement): boolean {
     switch (r.type) {
       case "feature":
-        if (char.features.map((f) => f.feature.name).indexOf(r.value) == -1) {
-          return false;
-        }
-        break;
+        return char.features?.find((f) => f.feature.name == r.value) != undefined;
       case "level":
         if (char.level < r.value) {
           return false;
         }
         break;
       case "spell":
-        return false;
+        return char.spells?.find((s) => s.spell.name == r.value) != undefined;
       case "choice":
         let choiceFeature = char.features.find((f) => f.feature.name == r.value.feature)?.feature;
         let selectedChoices = choiceFeature?.choices?.selected;
@@ -256,5 +257,35 @@ export const GameUtil = {
 
   Capitalize(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
+  },
+
+  EvaluateFormula(
+    charData: CharData,
+    source: string,
+    formula: Formula,
+    proficiencyBonus: number,
+  ): number {
+    let result = 0;
+    let _class = charData.classes.find((c) => c.name == source);
+
+    //replace string variable operands with their respective values
+    for (let i = 0; i < formula.operands.length; i++) {
+      if (formula.operands[i].variable) {
+        formula.operands[i].value = 0;
+        switch (formula.operands[i].variable) {
+          case "Proficiency Bonus":
+            formula.operands[i].value = proficiencyBonus;
+            break;
+          default: //if the operand is none of the above, it is assumed to come from the class progression table.
+            formula.operands[i].value =
+              _class?.progression?.find((prog) => prog.name == formula.operands[i].variable)
+                ?.entries[_class.level - 1].value ?? 0;
+        }
+      }
+    }
+    if (formula.formula == "add") {
+      result = formula.operands.reduce((a, b) => a + b.value, 0);
+    }
+    return result;
   },
 };

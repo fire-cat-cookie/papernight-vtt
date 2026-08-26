@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CharDataAction } from "../operations/CharDataReducer";
-import { getClasses, getSubclasses, getFeatureOptions } from "../operations/GetStaticData";
+import * as GetStaticData from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { Class } from "../types/Class";
 import "./CharacterBuilder.scss";
@@ -15,6 +15,7 @@ import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
 import Collapsible from "./Collapsible";
 import SpellSelect from "./SpellSelect";
+import ChoiceSelect from "./ChoiceSelect";
 
 type Props = {
   charData: CharData;
@@ -31,7 +32,7 @@ enum SectionTabs {
 export default function CharacterBuilderClass(props: Props) {
   let levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   let currentClasses = props.charData.classes.slice();
-  let loadedClasses = getClasses();
+  let loadedClasses = GetStaticData.getClasses();
 
   const [additionalClassEntryVisible, setAdditionalClassEntryVisible] = useState(false);
   const [selectedClassTab, setSelectedClassTab] = useState(currentClasses[0]?.name ?? "");
@@ -454,9 +455,9 @@ export default function CharacterBuilderClass(props: Props) {
     }
 
     let features = selectedClass.features.filter((f) => f.level == level) ?? [];
-    let firstSubclassLevel = selectedClass.features.filter((f) => f.subclassFeature)[0].level;
+    let firstSubclassLevel = selectedClass.features.filter((f) => f.gainSubclassFeature)[0].level;
     if (!selectedClass.subclass) {
-      features = features.filter((f) => !f.subclassFeature || f.level == firstSubclassLevel);
+      features = features.filter((f) => !f.gainSubclassFeature || f.level == firstSubclassLevel);
     }
     let namedUpgrades = namedUpgradesAtLevel(level);
 
@@ -502,32 +503,20 @@ export default function CharacterBuilderClass(props: Props) {
             <React.Fragment>
               {
                 //show description for base class features
-                (!feature.subclassFeature || feature.level == firstSubclassLevel) &&
+                (!feature.gainSubclassFeature || feature.level == firstSubclassLevel) &&
                   GameUtil.DisplayFeatureDescription(feature, false)
               }
               {feature.choices && ClassFeatureChoices(feature)}
-              {feature.level == firstSubclassLevel && feature.subclassFeature && SelectSubclass()}
-              {feature.choices && ClassFeatureChoiceDescriptions(feature.choices.selected)}
+              {feature.level == firstSubclassLevel &&
+                feature.gainSubclassFeature &&
+                SelectSubclass()}
               {feature.abilityScoreImprovement && ClassFeatureASI(feature)}
             </React.Fragment>
           }
         ></Collapsible>
-        {feature.subclassFeature && SubclassFeatures(feature.level)}
+        {feature.gainSubclassFeature && SubclassFeatures(feature.level)}
       </div>
     );
-  }
-
-  function ClassFeatureChoiceDescriptions(features: Feature[]) {
-    return features
-      ?.filter((f) => f != undefined)
-      .map((f) => (
-        <React.Fragment key={f.name}>
-          <div className="builder-content-col">
-            <label>{f.name}</label>
-            {GameUtil.DisplayFeatureDescription(f, false)}
-          </div>
-        </React.Fragment>
-      ));
   }
 
   function ClassFeatureChoices(feature: Feature) {
@@ -535,87 +524,24 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
-    if (feature.choices.variableNumber) {
-      feature.choices.number =
-        charComposed.features.find((f) => f.feature.name == feature.name)?.feature.choices.number ??
-        0;
+    let contentHeight: "Medium" | "Large" = "Medium";
+    let options = feature.choices?.options ?? [];
+    if (feature.choices?.optionsSource) {
+      options = GetStaticData.getFeatureOptions(feature.choices.optionsSource);
+    }
+    if (options.length > 9) {
+      contentHeight = "Large";
     }
 
     return (
-      <div className="builder-content-col">
-        {Array(feature.choices.number)
-          .fill(1)
-          .map((_, index) => SelectChoice(feature, index))}
-      </div>
-    );
-  }
-
-  function SelectChoice(feature: Feature, index: number) {
-    if (!selectedClass) {
-      return null;
-    }
-
-    if (feature.choices.selected == undefined) {
-      feature.choices.selected = Array(feature.choices.number).fill(undefined);
-    }
-
-    if (feature.choices.optionsSource) {
-      feature.choices.options = getFeatureOptions(feature.choices.optionsSource);
-    }
-
-    let selectedChoice = feature.choices.selected[index];
-
-    return (
-      <React.Fragment
-        key={selectedClass.name + " " + feature.level + feature.name + " choice select" + index}
-      >
-        <select
-          value={selectedChoice?.name ?? ""}
-          onChange={(e) => {
-            let selectedFeature = feature.choices.options.find((f) => f.name == e.target.value);
-            if (selectedFeature) {
-              feature.choices.selected[index] = selectedFeature;
-            }
-            props.updateCharData({
-              type: "update-class-feature",
-              className: selectedClass.name,
-              feature: feature,
-            });
-          }}
-        >
-          <option hidden value=""></option>
-          {feature.choices.options
-            .slice()
-            .filter(
-              (option) =>
-                feature.choices.selected.find((selected) => selected?.name == option.name) ==
-                  undefined || option.name == feature.choices.selected[index]?.name,
-            )
-            .map((option) => (
-              <option key={option.name}>{option.name}</option>
-            ))}
-        </select>
-        {selectedChoice?.requirements && ChoiceRequirements(selectedChoice)}
-      </React.Fragment>
-    );
-  }
-
-  function ChoiceRequirements(feature: Feature) {
-    return (
-      <div className="builder-content-col">
-        <label>{"Requirements"}</label>
-        {feature?.requirements?.map((r) =>
-          GameUtil.CheckRequirement(charComposed, r) ? (
-            <label key={r.type + ": " + r.value}>
-              &#9745;{" " + GameUtil.DisplayRequirement(r)}
-            </label>
-          ) : (
-            <label key={r.type + ": " + r.value} className={"text-warning"}>
-              &#9744;{" " + GameUtil.DisplayRequirement(r)}
-            </label>
-          ),
-        )}
-      </div>
+      <ChoiceSelect
+        selectedClass={selectedClass}
+        charComposed={props.charComposed}
+        feature={feature}
+        charData={props.charData}
+        updateCharData={props.updateCharData}
+        contentHeight={contentHeight}
+      ></ChoiceSelect>
     );
   }
 
@@ -638,7 +564,7 @@ export default function CharacterBuilderClass(props: Props) {
     if (!selectedClass?.subclass) {
       return null;
     }
-    let subclassFeatureTag = selectedClass.features.find((f) => f.subclassFeature)?.name;
+    let subclassFeatureTag = selectedClass.features.find((f) => f.gainSubclassFeature)?.name;
     return (
       <>
         {selectedClass.subclass.features
@@ -661,7 +587,7 @@ export default function CharacterBuilderClass(props: Props) {
       return null;
     }
 
-    let subclasses = getSubclasses(selectedClass.name);
+    let subclasses = GetStaticData.getSubclasses(selectedClass.name);
 
     return (
       <div className="builder-content-col">

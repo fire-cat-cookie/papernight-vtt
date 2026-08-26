@@ -377,7 +377,7 @@ export default function CharacterSheet(props: Props) {
           .filter(
             (f) =>
               !f.feature.abilityScoreImprovement &&
-              !f.feature.subclassFeature &&
+              !f.feature.gainSubclassFeature &&
               hiddenFeatures.indexOf(f.feature.name) == -1,
           )
           .map((f) => (

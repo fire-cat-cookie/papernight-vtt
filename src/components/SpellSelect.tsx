@@ -99,7 +99,7 @@ export default function SpellSelect(props: Props) {
 
   function SpellSelectDetails() {
     return (
-      <div className="builder-multiselect-pane-details">
+      <div className="builder-multiselect-pane-details" style={{ height: "450px" }}>
         <div className="builder-content-col builder-multiselect-pane-details-content">
           {selectedSpell && <h3>{selectedSpell.name}</h3>}
           {!selectedSpell ? (
@@ -257,7 +257,7 @@ export default function SpellSelect(props: Props) {
   return (
     <React.Fragment>
       {SpellSelectHeader()}
-      <div className="builder-multiselect">
+      <div className="builder-multiselect" style={{ height: "450px" }}>
         {SpellSelectList()}
         {SpellSelectDetails()}
       </div>

@@ -138,7 +138,6 @@
   .builder-multiselect {
     display: flex;
     flex-direction: row;
-    max-height: 500px;
     border: 1px solid;
     border-color: variables.$border-color;
     min-width: 0;
@@ -165,14 +164,13 @@
       cursor: pointer;
     }
 
-    div:active {
-      background-color: rgba(variables.$border-color, 0.5);
-      color: rgba(variables.$text-color, 1);
-    }
-
     div.active {
       background-color: rgba(variables.$border-color, 0.5);
       outline-color: rgba(variables.$border-color, 0.5);
+      color: rgba(variables.$text-color, 1);
+    }
+
+    div.emphasized {
       color: rgba(variables.$text-color, 1);
     }
   }
@@ -186,10 +184,13 @@
     border-color: variables.$border-color;
   }
 
+  .builder-multiselect-pane-details-placeholder {
+    padding: 10px;
+  }
+
   .builder-multiselect-pane-details-content {
     display: flex;
     flex-direction: column;
-    max-height: 450px;
     padding-left: 10px;
     padding-right: 10px;
     flex: 1;
@@ -206,6 +207,10 @@
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: variables.$border-color;
+
+    .builder-content-col {
+      margin: 0;
+    }
   }
 
   .builder-multiselect-pane-details-footer {

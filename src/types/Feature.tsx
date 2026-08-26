@@ -30,14 +30,14 @@ export interface Feature {
   languages: string[];
   senses: Sense[];
   abilityScoreImprovement: boolean;
-  subclassFeature: boolean;
+  gainSubclassFeature: boolean;
   limitedUse: LimitedUse;
   upgrades: FeatureUpgrade[];
   choices: {
-    number: number;
-    variableNumber: Formula;
-    optionsSource: string;
-    options: Feature[];
+    number?: number;
+    variableNumber?: Formula;
+    optionsSource?: string;
+    options?: Feature[];
     selected: Feature[];
   };
   requirements: Requirement[];

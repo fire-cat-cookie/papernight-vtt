@@ -180,7 +180,7 @@
       "description": [
         "You have struck a bargain with an otherworldly being of your choice. Your choice grants you features at 1st level and again at 6th, 10th, and 14th level."
       ],
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 1,
@@ -263,7 +263,7 @@
     {
       "level": 6,
       "name": "Otherworldly Patron Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 8,
@@ -273,7 +273,7 @@
     {
       "level": 10,
       "name": "Otherworldly Patron Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 11,
@@ -299,7 +299,7 @@
     {
       "level": 14,
       "name": "Otherworldly Patron Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 15,

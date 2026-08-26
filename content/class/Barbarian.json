@@ -132,7 +132,7 @@
       "description": [
         "Choose a path that shapes the nature of your rage from the list of available paths. Your choice grants you features at 3rd level and again at 6th, 10th, and 14th levels."
       ],
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 4,
@@ -156,7 +156,7 @@
     {
       "level": 6,
       "name": "Path Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 7,
@@ -199,7 +199,7 @@
     {
       "level": 10,
       "name": "Path Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 11,
@@ -217,7 +217,7 @@
     {
       "level": 14,
       "name": "Path Feature",
-      "subclassFeature": true
+      "gainSubclassFeature": true
     },
     {
       "level": 15,

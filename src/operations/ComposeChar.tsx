@@ -165,7 +165,7 @@ export function ComposeChar(charData: CharData): CharComposed {
   };
 }
 
-function level(charData: CharData): number {
+export function level(charData: CharData): number {
   let level = 0;
   for (let class_ of charData.classes) {
     level += class_.level;
@@ -173,7 +173,7 @@ function level(charData: CharData): number {
   return level;
 }
 
-function speed(charData: CharData): number {
+export function speed(charData: CharData): number {
   let result = 0;
   if (charData.lineage) {
     result = charData.lineage.speed;
@@ -183,7 +183,7 @@ function speed(charData: CharData): number {
   return result;
 }
 
-function hitDice(charData: CharData): Dice[] {
+export function hitDice(charData: CharData): Dice[] {
   let result: Dice[] = [];
   for (let class_ of charData.classes) {
     result.push({
@@ -194,7 +194,7 @@ function hitDice(charData: CharData): Dice[] {
   return GameUtil.GroupDiceByType(result);
 }
 
-function hitDiceRemaining(charData: CharData): Dice[] {
+export function hitDiceRemaining(charData: CharData): Dice[] {
   let totalDice: Dice[] = hitDice(charData);
   let missingDice: Dice[] = GameUtil.GroupDiceByType(charData.status.hit_dice_missing);
   let result: Dice[] = [];
@@ -205,7 +205,7 @@ function hitDiceRemaining(charData: CharData): Dice[] {
   return result;
 }
 
-function maxHP(charData: CharData) {
+export function maxHP(charData: CharData) {
   let result = 0;
   let firstClass_ = firstClass(charData);
   if (firstClass_) {
@@ -226,7 +226,7 @@ function maxHP(charData: CharData) {
   return Math.max(0, result);
 }
 
-function classLevel(charData: CharData) {
+export function classLevel(charData: CharData) {
   let classLevel: any[] = [];
   for (let c of charData.classes) {
     classLevel.push({
@@ -238,7 +238,7 @@ function classLevel(charData: CharData) {
   return classLevel;
 }
 
-function allBonuses(charData: CharData) {
+export function allBonuses(charData: CharData) {
   let result: Bonus[] = [];
   for (let feature of allFeatures(charData)) {
     if (feature.feature.bonuses) {
@@ -248,7 +248,7 @@ function allBonuses(charData: CharData) {
   return result;
 }
 
-function evaluatedFeatures(charData: CharData) {
+export function evaluatedFeatures(charData: CharData) {
   let features = allFeatures(charData).map((f) => JSON.parse(JSON.stringify(f)));
   for (let f of features) {
     if (f.feature.limitedUse && f.feature.limitedUse.variableUses != undefined) {
@@ -274,7 +274,7 @@ function evaluatedFeatures(charData: CharData) {
   return features;
 }
 
-function getSpells(charData: CharData) {
+export function getSpells(charData: CharData) {
   let spells: { spell: Spell; source: string }[] = [];
   for (let f of allFeatures(charData)) {
     for (let s of f.feature.spellcasting ?? []) {
@@ -284,9 +284,9 @@ function getSpells(charData: CharData) {
   return spells;
 }
 
-function evaluateFormula(charData: CharData, source: string, formula: Formula): number {
+export function evaluateFormula(charData: CharData, className: string, formula: Formula): number {
   let result = 0;
-  let _class = charData.classes.find((c) => c.name == source);
+  let _class = charData.classes.find((c) => c.name == className);
 
   //replace string variable operands with their respective values
   for (let i = 0; i < formula.operands.length; i++) {
@@ -310,7 +310,7 @@ function evaluateFormula(charData: CharData, source: string, formula: Formula): 
   return result;
 }
 
-function allFeatures(charData: CharData) {
+export function allFeatures(charData: CharData) {
   let result: { feature: Feature; source: string }[] = [];
   if (charData.lineage) {
     let lineageFeatures = charData.lineage.features.filter(
@@ -378,21 +378,21 @@ function allFeatures(charData: CharData) {
   return result;
 }
 
-function initiative(charData: CharData) {
+export function initiative(charData: CharData) {
   let result = abilityMod(charData, Ability.dex);
   let bonuses = allBonuses(charData).filter((b) => b.target == Target.initiative);
   bonuses.forEach((b) => (result += b.flat));
   return result;
 }
 
-function AC(charData: CharData) {
+export function AC(charData: CharData) {
   let result = abilityMod(charData, Ability.dex);
   let bonuses = allBonuses(charData).filter((b) => b.target == Target.ac);
   bonuses.forEach((b) => (result += b.flat));
   return 10 + result;
 }
 
-function abilityScore(charData: CharData, abilityType: Ability) {
+export function abilityScore(charData: CharData, abilityType: Ability) {
   let result = 0;
   let base_score = charData.base_ability_scores.find((a) => a.ability == abilityType)?.score;
   if (base_score) {
@@ -404,7 +404,7 @@ function abilityScore(charData: CharData, abilityType: Ability) {
   return result;
 }
 
-function targetAbilityScore(ability: Ability): Target {
+export function targetAbilityScore(ability: Ability): Target {
   switch (ability) {
     case Ability.str:
       return Target.str_score;
@@ -421,7 +421,7 @@ function targetAbilityScore(ability: Ability): Target {
   }
 }
 
-function abilityMod(charData: CharData, ability: Ability) {
+export function abilityMod(charData: CharData, ability: Ability) {
   let score = abilityScore(charData, ability);
   let mod = 0;
   if (score <= 8) {
@@ -432,11 +432,11 @@ function abilityMod(charData: CharData, ability: Ability) {
   return mod;
 }
 
-function firstClass(charData: CharData): Class | undefined {
+export function firstClass(charData: CharData): Class | undefined {
   return charData.classes.find((c) => c.name == charData.firstClass);
 }
 
-function savingThrowMod(charData: CharData, ability: Ability) {
+export function savingThrowMod(charData: CharData, ability: Ability) {
   let proficiency = false;
   if (firstClass(charData) && firstClass(charData)?.savingThrowProf.indexOf(ability) != -1) {
     proficiency = true;
@@ -451,7 +451,7 @@ function savingThrowMod(charData: CharData, ability: Ability) {
   return result;
 }
 
-function targetSavingThrow(ability: Ability): Target {
+export function targetSavingThrow(ability: Ability): Target {
   switch (ability) {
     case Ability.str:
       return Target.str_save;
@@ -468,7 +468,7 @@ function targetSavingThrow(ability: Ability): Target {
   }
 }
 
-function proficiencyBonus(charData: CharData) {
+export function proficiencyBonus(charData: CharData) {
   let charLevel = level(charData);
   if (charLevel >= 17) {
     return 6;
@@ -483,7 +483,7 @@ function proficiencyBonus(charData: CharData) {
   }
 }
 
-function skillMod(charData: CharData, skill: Skill) {
+export function skillMod(charData: CharData, skill: Skill) {
   let result = 0;
   let proficiencyMultiplier = skillProf(charData, skill);
   result += abilityMod(charData, skillAbilityMod(skill));
@@ -493,7 +493,7 @@ function skillMod(charData: CharData, skill: Skill) {
   return result;
 }
 
-function skillProf(charData: CharData, skill: Skill): number {
+export function skillProf(charData: CharData, skill: Skill): number {
   let proficiencyMultiplier = 0;
   let skillProficiencies: SkillProf[] = [];
   for (let c of charData.classes ?? []) {
@@ -525,7 +525,7 @@ function skillProf(charData: CharData, skill: Skill): number {
   return proficiencyMultiplier;
 }
 
-function targetSkill(skill: Skill) {
+export function targetSkill(skill: Skill) {
   switch (skill) {
     case Skill.acrobatics:
       return Target.acrobatics;
@@ -566,7 +566,7 @@ function targetSkill(skill: Skill) {
   }
 }
 
-function skillAbilityMod(skill: Skill) {
+export function skillAbilityMod(skill: Skill) {
   switch (skill) {
     case Skill.acrobatics:
       return Ability.dex;
