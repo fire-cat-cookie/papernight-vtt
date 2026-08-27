@@ -15,6 +15,19 @@ type Props = {
 };
 
 export default function SpellSelect(props: Props) {
+  const levelsAsText = [
+    "Cantrips",
+    "1st Level",
+    "2nd Level",
+    "3rd Level",
+    "4th Level",
+    "5th Level",
+    "6th Level",
+    "7th Level",
+    "8th Level",
+    "9th Level",
+  ];
+
   const [selectedSpellName, setSelectedSpellName] = useState("");
 
   let selectedClass = props.selectedClass;
@@ -56,18 +69,6 @@ export default function SpellSelect(props: Props) {
       }
       spellsByLevel.get(spell.level)?.push(spell);
     }
-    let levelsAsText = [
-      "Cantrips",
-      "1st Level",
-      "2nd Level",
-      "3rd Level",
-      "4th Level",
-      "5th Level",
-      "6th Level",
-      "7th Level",
-      "8th Level",
-      "9th Level",
-    ];
     return (
       <div className="builder-multiselect-pane-list">
         {levelsAsText.map((spellLevel, index) => {
@@ -83,13 +84,17 @@ export default function SpellSelect(props: Props) {
   }
 
   function SpellSelectListItem(spell: Spell) {
+    let className = "";
+    if (selectedSpell == spell.name) {
+      className += " active";
+    }
+    if (spellcastingFeature?.spellcasting?.find((c) => c.name == spell.name) != undefined) {
+      className += " emphasized";
+    }
     return (
       <React.Fragment key={spell.name}>
         <div className="builder-multiselect-pane-list-item">
-          <div
-            className={selectedSpellName == spell.name ? "active" : ""}
-            onClick={() => setSelectedSpellName(spell.name)}
-          >
+          <div className={className} onClick={() => setSelectedSpellName(spell.name)}>
             {spell.name}
           </div>
         </div>

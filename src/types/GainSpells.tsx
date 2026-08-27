@@ -1,10 +1,21 @@
+import { Formula } from "./Formula";
 import { LimitedUse } from "./LimitedUse";
 
 export interface GainSpells {
-  spells: {
+  fixed?: boolean;
+  selected?: {
     name: string;
-    levelRequirement: number;
-    limitedUse: LimitedUse;
+    limitedUse?: LimitedUse;
+    upcastLevel?: number;
+    requireLevel?: number;
   }[];
-  spellMod: string;
+  spellList?: {
+    source?: string;
+    spellNames?: string[];
+    spellLevel?: number;
+    spellSchool?: string;
+  };
+  number?: number;
+  variableNumber?: Formula;
+  spellMod?: string;
 }

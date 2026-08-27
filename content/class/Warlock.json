@@ -281,7 +281,18 @@
       "description": [
         "Your patron bestows upon you a magical secret called an arcanum. Choose one 6th-level spell from the warlock spell list as this arcanum.",
         "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
-      ]
+      ],
+      "gainSpells": {
+        "spellList": {
+          "source": "Warlock",
+          "spellLevel": 6
+        },
+        "number": 1
+      },
+      "limitedUse": {
+        "uses": 1,
+        "recharge": "Long Rest"
+      }
     },
     {
       "level": 12,
@@ -294,7 +305,18 @@
       "description": [
         "Your patron bestows upon you a magical secret called an arcanum. Choose one 7th-level spell from the warlock spell list as this arcanum.",
         "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
-      ]
+      ],
+      "gainSpells": {
+        "spellList": {
+          "source": "Warlock",
+          "spellLevel": 7
+        },
+        "number": 1
+      },
+      "limitedUse": {
+        "uses": 1,
+        "recharge": "Long Rest"
+      }
     },
     {
       "level": 14,
@@ -307,7 +329,18 @@
       "description": [
         "Your patron bestows upon you a magical secret called an arcanum. Choose one 8th-level spell from the warlock spell list as this arcanum.",
         "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
-      ]
+      ],
+      "gainSpells": {
+        "spellList": {
+          "source": "Warlock",
+          "spellLevel": 8
+        },
+        "number": 1
+      },
+      "limitedUse": {
+        "uses": 1,
+        "recharge": "Long Rest"
+      }
     },
     {
       "level": 16,
@@ -320,7 +353,18 @@
       "description": [
         "Your patron bestows upon you a magical secret called an arcanum. Choose one 9th-level spell from the warlock spell list as this arcanum.",
         "You can cast your arcanum spell once without expending a spell slot. You must finish a long rest before you can do so again."
-      ]
+      ],
+      "gainSpells": {
+        "spellList": {
+          "source": "Warlock",
+          "spellLevel": 9
+        },
+        "number": 1
+      },
+      "limitedUse": {
+        "uses": 1,
+        "recharge": "Long Rest"
+      }
     },
     {
       "level": 19,

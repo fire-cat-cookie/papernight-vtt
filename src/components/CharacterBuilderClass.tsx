@@ -16,6 +16,7 @@ import { FeatureUpgrade } from "../types/FeatureUpgrade";
 import Collapsible from "./Collapsible";
 import SpellSelect from "./SpellSelect";
 import ChoiceSelect from "./ChoiceSelect";
+import FeatureSpellSelect from "./FeatureSpellSelect";
 
 type Props = {
   charData: CharData;
@@ -429,7 +430,7 @@ export default function CharacterBuilderClass(props: Props) {
                 setSelectedSectionTab(SectionTabs.Spells);
               }}
             >
-              {SectionTabs.Spells}
+              {spellcastingFeature.name}
             </a>
           )}
         </div>
@@ -507,6 +508,7 @@ export default function CharacterBuilderClass(props: Props) {
                   GameUtil.DisplayFeatureDescription(feature, false)
               }
               {feature.choices && ClassFeatureChoices(feature)}
+              {feature.gainSpells && !feature.gainSpells.fixed && ClassFeatureGainSpells(feature)}
               {feature.level == firstSubclassLevel &&
                 feature.gainSubclassFeature &&
                 SelectSubclass()}
@@ -542,6 +544,21 @@ export default function CharacterBuilderClass(props: Props) {
         updateCharData={props.updateCharData}
         contentHeight={contentHeight}
       ></ChoiceSelect>
+    );
+  }
+
+  function ClassFeatureGainSpells(feature: Feature) {
+    if (!selectedClass) {
+      return null;
+    }
+    return (
+      <FeatureSpellSelect
+        selectedClass={selectedClass}
+        updateCharData={props.updateCharData}
+        feature={feature}
+        charData={props.charData}
+        charComposed={props.charComposed}
+      ></FeatureSpellSelect>
     );
   }
 

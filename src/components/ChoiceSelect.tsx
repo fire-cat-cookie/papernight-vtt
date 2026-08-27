@@ -182,7 +182,7 @@ export default function ChoiceSelect(props: Props) {
               ...feature,
               choices: {
                 ...feature.choices,
-                selected: feature.choices?.selected?.filter((c) => c.name == selectedOption) ?? [],
+                selected: feature.choices?.selected?.filter((c) => c.name != selectedOption) ?? [],
               },
             },
             className: props.selectedClass.name,
@@ -198,7 +198,7 @@ export default function ChoiceSelect(props: Props) {
 
   function IsOptionValid(optionIsChosen: boolean) {
     let valid = true;
-    if (optionIsChosen) {
+    if (optionIsChosen || choicesRemaining < 1) {
       return false;
     }
     if (selectedFeature?.requirements) {
