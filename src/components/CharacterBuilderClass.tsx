@@ -14,10 +14,7 @@ import { Util } from "../operations/Util";
 import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
 import Collapsible from "./Collapsible";
-import SpellSelect from "./SpellSelect";
 import ChoiceSelect_Spellcasting from "./ChoiceSelect_Spellcasting";
-import ChoiceSelectGeneric from "./ChoiceSelect";
-import * as ComposeChar from "../operations/ComposeChar";
 import ChoiceSelect_FeatureOptions from "./ChoiceSelect_FeatureOptions";
 import ChoiceSelect_FeatureGainSpells from "./ChoiceSelect_FeatureGainSpells";
 
