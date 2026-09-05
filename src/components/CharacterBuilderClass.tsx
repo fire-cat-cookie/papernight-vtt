@@ -15,8 +15,11 @@ import { Skill } from "../types/Skill";
 import { FeatureUpgrade } from "../types/FeatureUpgrade";
 import Collapsible from "./Collapsible";
 import SpellSelect from "./SpellSelect";
-import ChoiceSelect from "./ChoiceSelect";
-import FeatureSpellSelect from "./FeatureSpellSelect";
+import ChoiceSelect_Spellcasting from "./ChoiceSelect_Spellcasting";
+import ChoiceSelectGeneric from "./ChoiceSelect";
+import * as ComposeChar from "../operations/ComposeChar";
+import ChoiceSelect_FeatureOptions from "./ChoiceSelect_FeatureOptions";
+import ChoiceSelect_FeatureGainSpells from "./ChoiceSelect_FeatureGainSpells";
 
 type Props = {
   charData: CharData;
@@ -40,7 +43,6 @@ export default function CharacterBuilderClass(props: Props) {
   const [selectedSectionTab, setSelectedSectionTab] = useState(SectionTabs.ClassOverview);
 
   let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
-  let charComposed = props.charComposed;
   let spellcastingFeature = selectedClass?.features?.find((f) => f.spellcastingFeature);
   if (selectedSectionTab == SectionTabs.Spells && !spellcastingFeature) {
     setSelectedSectionTab(SectionTabs.ClassOverview);
@@ -494,21 +496,28 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function ClassFeature(feature: Feature, firstSubclassLevel: number) {
+  function ClassFeature(
+    feature: Feature,
+    firstSubclassLevel: number,
+    heading?: string,
+    subclassFeature?: boolean,
+  ) {
     return (
       <div>
         <Collapsible
-          heading={feature.name}
+          heading={heading ? heading : feature.name}
           className={"builder-header-collapsible"}
           content={
             <React.Fragment>
               {
-                //show description for base class features
+                //show description, unless it is a base feature that simply provides subclass features
                 (!feature.gainSubclassFeature || feature.level == firstSubclassLevel) &&
                   GameUtil.DisplayFeatureDescription(feature, false)
               }
-              {feature.choices && ClassFeatureChoices(feature)}
-              {feature.gainSpells && !feature.gainSpells.fixed && ClassFeatureGainSpells(feature)}
+              {feature.choices && ClassFeatureChoices(feature, subclassFeature)}
+              {feature.gainSpells &&
+                !feature.gainSpells.fixed &&
+                ClassFeatureGainSpells(feature, subclassFeature)}
               {feature.level == firstSubclassLevel &&
                 feature.gainSubclassFeature &&
                 SelectSubclass()}
@@ -521,44 +530,35 @@ export default function CharacterBuilderClass(props: Props) {
     );
   }
 
-  function ClassFeatureChoices(feature: Feature) {
+  function ClassFeatureChoices(feature: Feature, subclassFeature?: boolean) {
     if (!selectedClass) {
       return null;
     }
-
-    let contentHeight: "Medium" | "Large" = "Medium";
-    let options = feature.choices?.options ?? [];
-    if (feature.choices?.optionsSource) {
-      options = GetStaticData.getFeatureOptions(feature.choices.optionsSource);
-    }
-    if (options.length > 9) {
-      contentHeight = "Large";
-    }
-
     return (
-      <ChoiceSelect
-        selectedClass={selectedClass}
-        charComposed={props.charComposed}
+      <ChoiceSelect_FeatureOptions
         feature={feature}
+        subclassFeature={subclassFeature}
+        selectedClass={selectedClass}
         charData={props.charData}
+        charComposed={props.charComposed}
         updateCharData={props.updateCharData}
-        contentHeight={contentHeight}
-      ></ChoiceSelect>
+      ></ChoiceSelect_FeatureOptions>
     );
   }
 
-  function ClassFeatureGainSpells(feature: Feature) {
+  function ClassFeatureGainSpells(feature: Feature, subclassFeature?: boolean) {
     if (!selectedClass) {
       return null;
     }
     return (
-      <FeatureSpellSelect
+      <ChoiceSelect_FeatureGainSpells
         selectedClass={selectedClass}
+        subclassFeature={subclassFeature}
         updateCharData={props.updateCharData}
         feature={feature}
         charData={props.charData}
         charComposed={props.charComposed}
-      ></FeatureSpellSelect>
+      ></ChoiceSelect_FeatureGainSpells>
     );
   }
 
@@ -588,11 +588,7 @@ export default function CharacterBuilderClass(props: Props) {
           .filter((f) => f.level == level)
           .map((f) => (
             <React.Fragment key={selectedClass.name + f.level + subclassFeatureTag + " " + f.name}>
-              <Collapsible
-                heading={"" + subclassFeatureTag + ": " + f.name}
-                className={"builder-header-collapsible"}
-                content={GameUtil.DisplayFeatureDescription(f, false)}
-              ></Collapsible>
+              {ClassFeature(f, 0, "" + subclassFeatureTag + ": " + f.name)}
             </React.Fragment>
           ))}
       </>
@@ -696,11 +692,13 @@ export default function CharacterBuilderClass(props: Props) {
       {selectedSectionTab == SectionTabs.Spells && selectedClass && spellcastingFeature && (
         <div className="builder-content-section-1">
           {
-            <SpellSelect
+            <ChoiceSelect_Spellcasting
+              feature={spellcastingFeature}
               selectedClass={selectedClass}
-              spellcastingFeature={spellcastingFeature}
+              charData={props.charData}
+              charComposed={props.charComposed}
               updateCharData={props.updateCharData}
-            ></SpellSelect>
+            ></ChoiceSelect_Spellcasting>
           }
         </div>
       )}
