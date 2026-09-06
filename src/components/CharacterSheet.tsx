@@ -398,6 +398,10 @@ export default function CharacterSheet(props: Props) {
     }
 
     let featuresContent = featuresFiltered.map((f) => featureContent(f.feature, f.source));
+    for (let feature of featuresFiltered) {
+      let choices = feature.feature.choices?.selected ?? [];
+      featuresContent.push(...choices.map((f) => featureContent(f, feature.source)));
+    }
 
     return <div className="sheet-sections sheet-feature-list">{featuresContent}</div>;
   }

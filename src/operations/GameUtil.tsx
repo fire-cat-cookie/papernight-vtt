@@ -95,14 +95,7 @@ export const GameUtil = {
   },
 
   GetHiddenFeatures: function (): string[] {
-    return [
-      "Languages",
-      "Ability Scores",
-      "Darkvision",
-      "Pact Magic",
-      "Eldritch Invocations",
-      "Pact Boon",
-    ];
+    return ["Languages", "Ability Scores", "Darkvision", "Pact Magic"];
   },
 
   GetFeatureDescription: function (feature: Feature): string[] {
