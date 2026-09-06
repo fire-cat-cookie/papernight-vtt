@@ -20,4 +20,5 @@ export interface Class {
   };
   cantripsKnown: number[];
   spellsKnown: number[];
+  casterType: "full" | "half" | "third";
 }

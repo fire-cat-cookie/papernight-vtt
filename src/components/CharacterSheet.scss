@@ -204,4 +204,10 @@
       margin: 0;
     }
   }
+
+  #sheet-con-spellslots {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 4px;
+  }
 }

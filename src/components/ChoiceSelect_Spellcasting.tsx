@@ -61,13 +61,13 @@ export default function ChoiceSelect_Spellcasting(props: Props) {
   let totalSpells = selectedClass.spellsKnown[selectedClass.level - 1];
   let totalCantrips = selectedClass.cantripsKnown[selectedClass.level - 1];
   let availableSpells =
-    totalSpells - (feature?.spellcasting?.filter((s) => s.level > 0)?.length ?? 0);
+    totalSpells - (feature?.spellcasting?.spells?.filter((s) => s.level > 0)?.length ?? 0);
   let availableCantrips =
-    totalCantrips - (feature?.spellcasting?.filter((s) => s.level == 0)?.length ?? 0);
+    totalCantrips - (feature?.spellcasting?.spells?.filter((s) => s.level == 0)?.length ?? 0);
 
   //remove spells that are no longer on the options list
   useEffect(() => {
-    for (let spell of feature.spellcasting ?? []) {
+    for (let spell of feature.spellcasting?.spells ?? []) {
       if (options.find((o) => o.name == spell.name) == undefined) {
         OnOptionRemove(spell.name);
       }
@@ -122,8 +122,10 @@ export default function ChoiceSelect_Spellcasting(props: Props) {
       let highestSpellSlot: number = spellSlotProgression?.[selectedClass.level - 1] ?? 0;
       let cantripsKnown: number = selectedClass.cantripsKnown?.[selectedClass.level - 1] ?? 0;
       let spellsKnown: number = selectedClass.spellsKnown?.[selectedClass.level - 1] ?? 0;
-      let cantripsLearnt: number = feature.spellcasting?.filter((s) => s.level == 0)?.length ?? 0;
-      let spellsLearnt: number = feature.spellcasting?.filter((s) => s.level > 0)?.length ?? 0;
+      let cantripsLearnt: number =
+        feature.spellcasting?.spells?.filter((s) => s.level == 0)?.length ?? 0;
+      let spellsLearnt: number =
+        feature.spellcasting?.spells?.filter((s) => s.level > 0)?.length ?? 0;
       if (selectedSpell.level > highestSpellSlot) {
         requiredSpellLevel = false;
       }
@@ -138,7 +140,7 @@ export default function ChoiceSelect_Spellcasting(props: Props) {
   }
 
   function IsOptionPicked(option: string) {
-    return feature.spellcasting?.find((s) => s.name == option) != undefined;
+    return feature.spellcasting?.spells?.find((s) => s.name == option) != undefined;
   }
 
   function OnOptionAdd(option: string) {

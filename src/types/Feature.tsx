@@ -8,7 +8,7 @@ import { LimitedUse } from "./LimitedUse";
 import { Sense } from "./Sense";
 import { Skill } from "./Skill";
 import { Requirement } from "./Requirement";
-import { Spell } from "./Spell";
+import Spellcasting from "./Spellcasting";
 
 export interface Feature {
   level: number;
@@ -18,8 +18,7 @@ export interface Feature {
   resistances: DamageType[];
   gainSpells: GainSpells;
   addToSpellList: string[];
-  spellcastingFeature: boolean;
-  spellcasting: Spell[];
+  spellcasting: Spellcasting;
   bonuses: Bonus[];
   skillProf: {
     skill: Skill;

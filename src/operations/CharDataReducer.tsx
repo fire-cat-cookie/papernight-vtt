@@ -59,7 +59,13 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
               ...c,
               features: c.features.map((f) =>
                 f.name === featureName
-                  ? { ...f, spellcasting: [...(f.spellcasting ?? []), loadedSpell] }
+                  ? {
+                      ...f,
+                      spellcasting: {
+                        ...f.spellcasting,
+                        spells: [...(f.spellcasting?.spells ?? []), loadedSpell],
+                      },
+                    }
                   : f,
               ),
             }
@@ -82,7 +88,13 @@ export function charDataReducer(charData: CharData, action: CharDataAction): Cha
               ...c,
               features: c.features.map((f) =>
                 f.name === featureName
-                  ? { ...f, spellcasting: f.spellcasting.filter((s) => s.name != spellName) }
+                  ? {
+                      ...f,
+                      spellcasting: {
+                        ...f.spellcasting,
+                        spells: f.spellcasting?.spells?.filter((s) => s.name != spellName) ?? [],
+                      },
+                    }
                   : f,
               ),
             }

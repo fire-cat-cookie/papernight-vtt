@@ -202,7 +202,9 @@
         "# Spellcasting Focus",
         "You can use an arcane focus as a spellcasting focus for your warlock spells."
       ],
-      "spellcastingFeature": true
+      "spellcasting": {
+        "casterType": "Pact Magic"
+      }
     },
     {
       "level": 2,

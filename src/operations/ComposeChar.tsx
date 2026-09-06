@@ -11,6 +11,8 @@ import { Skill } from "../types/Skill";
 import { SkillProf } from "../types/SkillProf";
 import { Spell } from "../types/Spell";
 import { GameUtil } from "./GameUtil";
+import { getClass } from "./GetStaticData";
+import { Util } from "./Util";
 
 export function ComposeChar(charData: CharData): CharComposed {
   return {
@@ -160,7 +162,8 @@ export function ComposeChar(charData: CharData): CharComposed {
     size: charData.lineage ? charData.lineage.size : CreatureSize.None,
     proficiency_bonus: proficiencyBonus(charData),
     features: evaluatedFeatures(charData),
-    spellcasting: getSpells(charData),
+    classSpells: getSpells(charData),
+    spellSlots: getSpellSlots(charData),
     status: charData.status,
   };
 }
@@ -248,7 +251,7 @@ export function allBonuses(charData: CharData) {
   return result;
 }
 
-export function evaluatedFeatures(charData: CharData) {
+export function evaluatedFeatures(charData: CharData): { feature: Feature; source: string }[] {
   let features = allFeatures(charData).map((f) => JSON.parse(JSON.stringify(f)));
   for (let f of features) {
     if (f.feature.limitedUse && f.feature.limitedUse.variableUses != undefined) {
@@ -277,11 +280,78 @@ export function evaluatedFeatures(charData: CharData) {
 export function getSpells(charData: CharData) {
   let spells: { spell: Spell; source: string }[] = [];
   for (let f of allFeatures(charData)) {
-    for (let s of f.feature.spellcasting ?? []) {
+    for (let s of f.feature.spellcasting?.spells ?? []) {
       spells.push({ spell: s, source: f.source });
     }
   }
   return spells;
+}
+
+export function getSpellSlots(charData: CharData) {
+  let slots: { level: number; total: number; available: number }[] = [];
+  let casterLevel = 0;
+  let pactMagicLevel = 0;
+  for (let c of charData.classes) {
+    let casterType =
+      c.features.concat(c.subclass?.features ?? []).find((f) => f.spellcasting)?.spellcasting
+        ?.casterType ?? "";
+    if (casterType == "Full") {
+      casterLevel += 1 * c.level;
+    } else if (casterType == "Half") {
+      casterLevel += 0.5 * c.level;
+    } else if (casterType == "Third") {
+      casterLevel += 0.33 * c.level;
+    } else if (casterType == "Pact Magic") {
+      pactMagicLevel += c.level;
+    }
+    casterLevel = Math.floor(casterLevel);
+    casterLevel = Util.Clamp(casterLevel, 0, 20);
+  }
+  const spellSlotTable = [
+    [2, 0, 0, 0, 0, 0, 0, 0, 0],
+    [3, 0, 0, 0, 0, 0, 0, 0, 0],
+    [4, 2, 0, 0, 0, 0, 0, 0, 0],
+    [4, 3, 0, 0, 0, 0, 0, 0, 0],
+    [4, 3, 2, 0, 0, 0, 0, 0, 0],
+    [4, 3, 3, 0, 0, 0, 0, 0, 0],
+    [4, 3, 3, 1, 0, 0, 0, 0, 0],
+    [4, 3, 3, 2, 0, 0, 0, 0, 0],
+    [4, 3, 3, 3, 1, 0, 0, 0, 0],
+    [4, 3, 3, 3, 2, 0, 0, 0, 0],
+    [4, 3, 3, 3, 2, 1, 0, 0, 0],
+    [4, 3, 3, 3, 2, 1, 0, 0, 0],
+    [4, 3, 3, 3, 2, 1, 1, 0, 0],
+    [4, 3, 3, 3, 2, 1, 1, 0, 0],
+    [4, 3, 3, 3, 2, 1, 1, 1, 0],
+    [4, 3, 3, 3, 2, 1, 1, 1, 0],
+    [4, 3, 3, 3, 2, 1, 1, 1, 1],
+    [4, 3, 3, 3, 2, 1, 1, 1, 1],
+    [4, 3, 3, 3, 2, 1, 1, 1, 1],
+    [4, 3, 3, 3, 2, 1, 1, 1, 1],
+  ];
+  let warlock = getClass("Warlock");
+  for (let level = 1; level < 10; level++) {
+    let slotsTotal = 0;
+    if (casterLevel > 0) {
+      slotsTotal = spellSlotTable[casterLevel - 1][level - 1];
+    }
+    let warlockSlotLevel =
+      warlock?.progression?.find((e: any) => e.name == "Slot Level")?.entries?.[pactMagicLevel - 1]
+        ?.value ?? 0;
+    if (pactMagicLevel > 0 && level == warlockSlotLevel) {
+      slotsTotal +=
+        warlock?.progression?.find((e: any) => e.name == "Spell Slots")?.entries?.[
+          pactMagicLevel - 1
+        ]?.value ?? 0;
+    }
+    let slotsUsed = charData.status?.spell_slots_used?.find((e) => e.level == level)?.used ?? 0;
+    slots.push({
+      level: level,
+      total: slotsTotal,
+      available: slotsTotal - slotsUsed,
+    });
+  }
+  return slots;
 }
 
 export function evaluateFormula(charData: CharData, className: string, formula: Formula): number {

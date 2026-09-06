@@ -40,7 +40,7 @@ export default function CharacterBuilderClass(props: Props) {
   const [selectedSectionTab, setSelectedSectionTab] = useState(SectionTabs.ClassOverview);
 
   let selectedClass = currentClasses.find((c) => c.name == selectedClassTab);
-  let spellcastingFeature = selectedClass?.features?.find((f) => f.spellcastingFeature);
+  let spellcastingFeature = selectedClass?.features?.find((f) => f.spellcasting);
   if (selectedSectionTab == SectionTabs.Spells && !spellcastingFeature) {
     setSelectedSectionTab(SectionTabs.ClassOverview);
   }

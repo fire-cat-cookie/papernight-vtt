@@ -360,12 +360,14 @@ export default function CharacterSheet(props: Props) {
   function renderSpellsTabContent() {
     let gainSpellsFeatures = char.features.filter((f) => f.feature.gainSpells != undefined);
 
-    let featuresContent = gainSpellsFeatures.map((f) => (
-      <div className="sheet-column" key={f.source + " " + f.feature.name}>
-        <h4>{f.feature.name}</h4>
-        {featureSpellsContent(f)}
-      </div>
-    ));
+    let featuresContent = gainSpellsFeatures.map((f) =>
+      (f.feature.gainSpells?.selected?.length ?? 0) == 0 ? null : (
+        <div className="sheet-column" key={f.source + " " + f.feature.name}>
+          <h4>{f.feature.name}</h4>
+          {featureSpellsContent(f)}
+        </div>
+      ),
+    );
 
     function featureSpellsContent(f: { feature: Feature; source: string }) {
       let spells: Spell[] = [];
@@ -402,22 +404,74 @@ export default function CharacterSheet(props: Props) {
         "8th Level",
         "9th Level",
       ];
-      let spellsGroupedByLevel: { group: string; spells: Spell[] }[] = [];
-      let spellsSortedByLevel = char.spellcasting.sort((a, b) => a.spell.level - b.spell.level);
-      for (let level = 0; level < 10; level++) {
+      let spellsGroupedByLevel: {
+        group: string;
+        spells: Spell[];
+        slotsTotal: number;
+        slotsAvailable: number;
+      }[] = [];
+      let spellsSortedByLevel = char.classSpells.sort((a, b) => a.spell.level - b.spell.level);
+      let spellSlots = char.spellSlots;
+      for (let slotLevel = 0; slotLevel < 10; slotLevel++) {
         spellsGroupedByLevel.push({
-          group: levelsAsText[level],
+          group: levelsAsText[slotLevel],
           spells:
-            spellsSortedByLevel.filter((s) => s.spell.level == level)?.map((s) => s.spell) ?? [],
+            spellsSortedByLevel.filter((s) => s.spell.level == slotLevel)?.map((s) => s.spell) ??
+            [],
+          slotsTotal: slotLevel == 0 ? 0 : spellSlots[slotLevel - 1].total,
+          slotsAvailable: slotLevel == 0 ? 0 : spellSlots[slotLevel - 1].available,
         });
       }
       return (
         <>
           {spellsSortedByLevel.length > 0 && <h4>Class spells</h4>}
+          <span>Spell slots</span>
+          <div id="sheet-con-spellslots">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>
+              {spellsGroupedByLevel[1].slotsAvailable + "/" + spellsGroupedByLevel[1].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[2].slotsAvailable + "/" + spellsGroupedByLevel[2].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[3].slotsAvailable + "/" + spellsGroupedByLevel[3].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[4].slotsAvailable + "/" + spellsGroupedByLevel[4].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[5].slotsAvailable + "/" + spellsGroupedByLevel[5].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[6].slotsAvailable + "/" + spellsGroupedByLevel[6].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[7].slotsAvailable + "/" + spellsGroupedByLevel[7].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[8].slotsAvailable + "/" + spellsGroupedByLevel[8].slotsTotal}
+            </div>
+            <div>
+              {spellsGroupedByLevel[9].slotsAvailable + "/" + spellsGroupedByLevel[9].slotsTotal}
+            </div>
+          </div>
           {spellsGroupedByLevel.map((grouping) =>
-            grouping.spells.length == 0 ? null : (
+            grouping.spells.length == 0 && grouping.slotsTotal == 0 ? null : (
               <React.Fragment key={grouping.group}>
-                <span>{grouping.group}</span>
+                <span>
+                  {grouping.group == "Cantrips"
+                    ? grouping.group
+                    : grouping.group + " " + grouping.slotsAvailable + "/" + grouping.slotsTotal}
+                </span>
                 {grouping.spells.map((s) => SpellContent(s))}
               </React.Fragment>
             ),

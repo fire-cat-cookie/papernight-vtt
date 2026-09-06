@@ -6,4 +6,5 @@ export interface CharStatus {
   hp_reduction: number;
   hit_dice_missing: Dice[];
   inspiration: boolean;
+  spell_slots_used: { level: number; used: number }[];
 }
