@@ -41,6 +41,6 @@ export interface CharComposed {
   size: CreatureSize;
   proficiency_bonus: number;
   features: { feature: Feature; source: string }[];
-  spells: { spell: Spell; source: string }[];
+  spellcasting: { spell: Spell; source: string }[];
   status: CharStatus;
 }

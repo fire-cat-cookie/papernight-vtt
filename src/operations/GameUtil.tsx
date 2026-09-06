@@ -158,7 +158,7 @@ export const GameUtil = {
         }
         break;
       case "spell":
-        return char.spells?.find((s) => s.spell.name == r.value) != undefined;
+        return char.spellcasting?.find((s) => s.spell.name == r.value) != undefined;
       case "choice":
         let choiceFeature = char.features.find((f) => f.feature.name == r.value.feature)?.feature;
         let selectedChoices = choiceFeature?.choices?.selected;

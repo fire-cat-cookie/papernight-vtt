@@ -160,7 +160,7 @@ export function ComposeChar(charData: CharData): CharComposed {
     size: charData.lineage ? charData.lineage.size : CreatureSize.None,
     proficiency_bonus: proficiencyBonus(charData),
     features: evaluatedFeatures(charData),
-    spells: getSpells(charData),
+    spellcasting: getSpells(charData),
     status: charData.status,
   };
 }

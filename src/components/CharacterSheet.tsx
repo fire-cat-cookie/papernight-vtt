@@ -9,8 +9,10 @@ import { Ability } from "../types/Ability";
 import React from "react";
 import { Skill } from "../types/Skill";
 import Collapsible from "./Collapsible";
+import * as GetStaticData from "../operations/GetStaticData";
 import { GameUtil } from "../operations/GameUtil";
 import { Feature } from "../types/Feature";
+import { Spell } from "../types/Spell";
 
 type Props = {
   char: CharComposed;
@@ -356,17 +358,47 @@ export default function CharacterSheet(props: Props) {
   }
 
   function renderSpellsTabContent() {
-    let spellsSortedByLevel = char.spells.sort((a, b) => a.spell.level - b.spell.level);
-    let content = spellsSortedByLevel.map((s) => (
-      <div className="sheet-column" key={s.source + " " + s.spell.name}>
-        <Collapsible
-          heading={s.spell.name}
-          className={"label-heading"}
-          content={GameUtil.DisplayMarkdown(s.spell.description)}
-        ></Collapsible>
+    let gainSpellsFeatures = char.features.filter((f) => f.feature.gainSpells != undefined);
+
+    let featuresContent = gainSpellsFeatures.map((f) => (
+      <div className="sheet-column" key={f.source + " " + f.feature.name}>
+        <h4>{f.feature.name}</h4>
+        {featureSpellsContent(f)}
       </div>
     ));
-    return <div className="sheet-sections sheet-feature-list">{content}</div>;
+
+    function featureSpellsContent(f: { feature: Feature; source: string }) {
+      let spells: { spell: Spell; source: string }[] = [];
+      for (let s of f.feature.gainSpells.selected ?? []) {
+        let foundSpell = GetStaticData.getSpell(s.name);
+        if (foundSpell) {
+          spells.push({ spell: foundSpell, source: f.source });
+        }
+      }
+      return spells.map((s) => SpellContent(s));
+    }
+
+    let spellsSortedByLevel = char.spellcasting.sort((a, b) => a.spell.level - b.spell.level);
+
+    function SpellContent(s: { spell: Spell; source: string }) {
+      return (
+        <div className="sheet-column" key={s.source + " " + s.spell.name}>
+          <Collapsible
+            heading={s.spell.name}
+            className={"label-heading"}
+            content={GameUtil.DisplayMarkdown(s.spell.description)}
+          ></Collapsible>
+        </div>
+      );
+    }
+    let spellcastingContent = spellsSortedByLevel.map((s) => SpellContent(s));
+    return (
+      <div className="sheet-sections sheet-feature-list">
+        {featuresContent}
+        {spellsSortedByLevel.length > 0 && <h4>Class spells</h4>}
+        {spellcastingContent}
+      </div>
+    );
   }
 
   function renderFeaturesTabContent() {
