@@ -370,7 +370,7 @@ export default function CharacterSheet(props: Props) {
   }
 
   function renderFeaturesTabContent() {
-    let hiddenFeatures = ["Languages", "Ability Scores", "Darkvision"];
+    let hiddenFeatures = GameUtil.GetHiddenFeatures();
     let featuresFiltered = char.features.filter(
       (f) =>
         !f.feature.abilityScoreImprovement &&
