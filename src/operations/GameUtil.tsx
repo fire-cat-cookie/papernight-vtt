@@ -7,6 +7,8 @@ import { CharComposed } from "../types/CharComposed";
 import { Requirement } from "../types/Requirement";
 import { CharData } from "../types/CharData";
 import { Formula } from "../types/Formula";
+import * as GetStaticData from "../operations/GetStaticData";
+import { Class } from "../types/Class";
 
 export const GameUtil = {
   FeatureText_ASI:
@@ -287,5 +289,18 @@ export const GameUtil = {
       result = formula.operands.reduce((a, b) => a + b.value, 0);
     }
     return result;
+  },
+
+  GetExpandedSpellList(_class: Class) {
+    let spells = GetStaticData.getClassSpells(_class.name);
+    let additionalSpellNames: string[] = [];
+    _class?.features
+      ?.filter((f) => f.addToSpellList != undefined)
+      ?.map((f) => additionalSpellNames.push(...f.addToSpellList));
+    _class?.subclass?.features
+      ?.filter((f) => f.addToSpellList != undefined)
+      ?.map((f) => additionalSpellNames.push(...f.addToSpellList));
+    spells.push(...GetStaticData.getSpellList(additionalSpellNames));
+    return spells;
   },
 };

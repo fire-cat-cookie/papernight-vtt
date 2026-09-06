@@ -17,6 +17,18 @@
         "| 3rd | fireball, stinking cloud |",
         "| 4th | fire shield, wall of fire |",
         "| 5th | flame strike, hallow |"
+      ],
+      "addToSpellList": [
+        "Burning Hands",
+        "Command",
+        "Blindness/Deafness",
+        "Scorching Ray",
+        "Fireball",
+        "Stinking Cloud",
+        "Fire Shield",
+        "Wall of Fire",
+        "Flame Strike",
+        "Hallow"
       ]
     },
     {

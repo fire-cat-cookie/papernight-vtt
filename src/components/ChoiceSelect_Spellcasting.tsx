@@ -3,13 +3,13 @@ import "./CharacterBuilderClass.scss";
 import { Feature } from "../types/Feature";
 import { CharDataAction } from "../operations/CharDataReducer";
 import { Class } from "../types/Class";
-import * as GetStaticData from "../operations/GetStaticData";
 import { CharData } from "../types/CharData";
 import { GameUtil } from "../operations/GameUtil";
 import { CharComposed } from "../types/CharComposed";
 import ChoiceSelect from "./ChoiceSelect";
 import SpellInfoHeader from "./SpellInfoHeader";
 import { Spell } from "../types/Spell";
+import { useEffect } from "react";
 
 type Props = {
   feature: Feature;
@@ -43,7 +43,7 @@ export function SpellNamesGrouped(options: Spell[]) {
   ];
   let spellNamesGroupedArray: { group: string; values: string[] }[] = [];
   for (let i = 0; i < levelsAsText.length; i++) {
-    let spellsAtThisLevel = spellsByLevel.get(i) ?? [];
+    let spellsAtThisLevel = spellsByLevel.get(i)?.sort() ?? [];
     if (spellsAtThisLevel.length > 0) {
       spellNamesGroupedArray.push({ group: levelsAsText[i], values: spellsByLevel.get(i) ?? [] });
     }
@@ -54,7 +54,7 @@ export function SpellNamesGrouped(options: Spell[]) {
 export default function ChoiceSelect_Spellcasting(props: Props) {
   let feature = props.feature;
   let selectedClass = props.selectedClass;
-  let options: Spell[] = GetStaticData.getClassSpells(selectedClass?.name ?? "");
+  let options: Spell[] = GameUtil.GetExpandedSpellList(selectedClass);
   if (feature.name == "Pact Magic") {
     options = options.filter((s) => s.level < 6);
   }
@@ -64,6 +64,15 @@ export default function ChoiceSelect_Spellcasting(props: Props) {
     totalSpells - (feature?.spellcasting?.filter((s) => s.level > 0)?.length ?? 0);
   let availableCantrips =
     totalCantrips - (feature?.spellcasting?.filter((s) => s.level == 0)?.length ?? 0);
+
+  //remove spells that are no longer on the options list
+  useEffect(() => {
+    for (let spell of feature.spellcasting ?? []) {
+      if (options.find((o) => o.name == spell.name) == undefined) {
+        OnOptionRemove(spell.name);
+      }
+    }
+  }, [options]);
 
   function HeaderContent() {
     return (

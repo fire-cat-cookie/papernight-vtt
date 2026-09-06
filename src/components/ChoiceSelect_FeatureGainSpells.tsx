@@ -11,6 +11,7 @@ import { CharComposed } from "../types/CharComposed";
 import ChoiceSelect from "./ChoiceSelect";
 import SpellInfoHeader from "./SpellInfoHeader";
 import { SpellNamesGrouped } from "./ChoiceSelect_Spellcasting";
+import { useEffect } from "react";
 
 type Props = {
   feature: Feature;
@@ -27,7 +28,7 @@ export default function ChoiceSelect_FeatureGainSpells(props: Props) {
   let options = GetStaticData.getSpellList(spellList?.spellNames ?? []);
 
   if (spellList?.source) {
-    options = GetStaticData.getClassSpells(props.selectedClass.name);
+    options = GameUtil.GetExpandedSpellList(props.selectedClass);
     if (spellList.spellLevel != undefined) {
       options = options.filter((s) => s.level == spellList.spellLevel);
     }
@@ -35,6 +36,15 @@ export default function ChoiceSelect_FeatureGainSpells(props: Props) {
       options = options.filter((s) => s.school == spellList.spellSchool);
     }
   }
+
+  //remove spells that are no longer on the options list
+  useEffect(() => {
+    for (let spell of feature.gainSpells?.selected ?? []) {
+      if (options.find((o) => o.name == spell.name) == undefined) {
+        OnOptionRemove(spell.name);
+      }
+    }
+  }, [options]);
 
   let choicesNumber = feature.gainSpells?.number ?? 0;
   if (feature.gainSpells?.variableNumber) {

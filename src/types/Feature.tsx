@@ -17,6 +17,7 @@ export interface Feature {
   conditional_effects: ConditionalEffect[];
   resistances: DamageType[];
   gainSpells: GainSpells;
+  addToSpellList: string[];
   spellcastingFeature: boolean;
   spellcasting: Spell[];
   bonuses: Bonus[];
