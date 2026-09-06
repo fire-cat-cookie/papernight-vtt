@@ -63,24 +63,33 @@ export const GameUtil = {
   },
 
   DisplayFeatureDescription: function (feature: Feature, includeSubFeatures: boolean) {
+    if (!feature) {
+      return null;
+    }
     let description = this.GetFeatureDescription(feature);
     if (description == undefined) {
       return null;
     }
+    let featureChoices: Feature[] = [];
+    let gainSpellsChoices: string[] = [];
+    if (includeSubFeatures) {
+      featureChoices = feature.choices?.selected ?? [];
+      if (!feature.gainSpells?.fixed) {
+        gainSpellsChoices = feature.gainSpells?.selected?.map((s) => s.name) ?? [];
+      }
+    }
+    let featureChoicesDisplay =
+      featureChoices.length == 0 ? null : (
+        <p>Selection: {featureChoices.map((f) => f.name).join(", ")}</p>
+      );
+    let gainSpellsDisplay =
+      gainSpellsChoices.length == 0 ? null : <p>Selection: {gainSpellsChoices.join(", ")}</p>;
+
     return (
       <React.Fragment>
         {GameUtil.DisplayMarkdown(description)}
-        {includeSubFeatures &&
-          feature.choices &&
-          feature.choices.selected
-            ?.filter((f) => f != undefined)
-            .map((f) => (
-              <React.Fragment key={f.name}>
-                <br></br>
-                <p>{f.name}</p>
-                {feature && this.DisplayFeatureDescription(f, false)}
-              </React.Fragment>
-            ))}
+        {featureChoicesDisplay}
+        {gainSpellsDisplay}
       </React.Fragment>
     );
   },

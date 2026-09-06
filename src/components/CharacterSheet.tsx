@@ -10,6 +10,7 @@ import React from "react";
 import { Skill } from "../types/Skill";
 import Collapsible from "./Collapsible";
 import { GameUtil } from "../operations/GameUtil";
+import { Feature } from "../types/Feature";
 
 type Props = {
   char: CharComposed;
@@ -370,39 +371,35 @@ export default function CharacterSheet(props: Props) {
 
   function renderFeaturesTabContent() {
     let hiddenFeatures = ["Languages", "Ability Scores", "Darkvision"];
-
-    return (
-      <div className="sheet-sections sheet-feature-list">
-        {char.features
-          .filter(
-            (f) =>
-              !f.feature.abilityScoreImprovement &&
-              !f.feature.gainSubclassFeature &&
-              hiddenFeatures.indexOf(f.feature.name) == -1,
-          )
-          .map((f) => (
-            <div
-              className="sheet-column"
-              key={f.source + " " + f.feature.level + " " + f.feature.name}
-            >
-              <Collapsible
-                heading={
-                  f.feature.name +
-                  (f.feature.limitedUse
-                    ? " [ " +
-                      f.feature.limitedUse.uses +
-                      " / " +
-                      f.feature.limitedUse.recharge +
-                      " ]"
-                    : "")
-                }
-                className={"label-heading"}
-                content={GameUtil.DisplayFeatureDescription(f.feature, true)}
-              ></Collapsible>
-            </div>
-          ))}
-      </div>
+    let featuresFiltered = char.features.filter(
+      (f) =>
+        !f.feature.abilityScoreImprovement &&
+        !f.feature.gainSubclassFeature &&
+        hiddenFeatures.indexOf(f.feature.name) == -1,
     );
+
+    function featureContent(f: Feature, source: string) {
+      let limitedUse = "";
+      if (f.limitedUse) {
+        limitedUse = " [ " + f.limitedUse.uses + " / " + f.limitedUse.recharge + " ]";
+      }
+      let heading = f.name + limitedUse;
+      let key = source + " " + f.level + " " + f.name;
+
+      return (
+        <div className="sheet-column" key={key}>
+          <Collapsible
+            heading={heading}
+            className={"label-heading"}
+            content={GameUtil.DisplayFeatureDescription(f, true)}
+          ></Collapsible>
+        </div>
+      );
+    }
+
+    let featuresContent = featuresFiltered.map((f) => featureContent(f.feature, f.source));
+
+    return <div className="sheet-sections sheet-feature-list">{featuresContent}</div>;
   }
 
   function renderActionsAndFeatures() {
