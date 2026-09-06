@@ -368,35 +368,67 @@ export default function CharacterSheet(props: Props) {
     ));
 
     function featureSpellsContent(f: { feature: Feature; source: string }) {
-      let spells: { spell: Spell; source: string }[] = [];
+      let spells: Spell[] = [];
       for (let s of f.feature.gainSpells.selected ?? []) {
         let foundSpell = GetStaticData.getSpell(s.name);
         if (foundSpell) {
-          spells.push({ spell: foundSpell, source: f.source });
+          spells.push(foundSpell);
         }
       }
       return spells.map((s) => SpellContent(s));
     }
 
-    let spellsSortedByLevel = char.spellcasting.sort((a, b) => a.spell.level - b.spell.level);
-
-    function SpellContent(s: { spell: Spell; source: string }) {
+    function SpellContent(s: Spell) {
       return (
-        <div className="sheet-column" key={s.source + " " + s.spell.name}>
+        <div className="sheet-column" key={s.name}>
           <Collapsible
-            heading={s.spell.name}
+            heading={s.name}
             className={"label-heading"}
-            content={GameUtil.DisplayMarkdown(s.spell.description)}
+            content={GameUtil.DisplayMarkdown(s.description)}
           ></Collapsible>
         </div>
       );
     }
-    let spellcastingContent = spellsSortedByLevel.map((s) => SpellContent(s));
+    function SpellcastingContent() {
+      const levelsAsText = [
+        "Cantrips",
+        "1st Level",
+        "2nd Level",
+        "3rd Level",
+        "4th Level",
+        "5th Level",
+        "6th Level",
+        "7th Level",
+        "8th Level",
+        "9th Level",
+      ];
+      let spellsGroupedByLevel: { group: string; spells: Spell[] }[] = [];
+      let spellsSortedByLevel = char.spellcasting.sort((a, b) => a.spell.level - b.spell.level);
+      for (let level = 0; level < 10; level++) {
+        spellsGroupedByLevel.push({
+          group: levelsAsText[level],
+          spells:
+            spellsSortedByLevel.filter((s) => s.spell.level == level)?.map((s) => s.spell) ?? [],
+        });
+      }
+      return (
+        <>
+          {spellsSortedByLevel.length > 0 && <h4>Class spells</h4>}
+          {spellsGroupedByLevel.map((grouping) =>
+            grouping.spells.length == 0 ? null : (
+              <React.Fragment key={grouping.group}>
+                <span>{grouping.group}</span>
+                {grouping.spells.map((s) => SpellContent(s))}
+              </React.Fragment>
+            ),
+          )}
+        </>
+      );
+    }
     return (
       <div className="sheet-sections sheet-feature-list">
         {featuresContent}
-        {spellsSortedByLevel.length > 0 && <h4>Class spells</h4>}
-        {spellcastingContent}
+        {SpellcastingContent()}
       </div>
     );
   }
